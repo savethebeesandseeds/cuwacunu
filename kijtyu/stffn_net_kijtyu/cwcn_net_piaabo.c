@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include "fann.h"
-#include "cwcn_net_utils.h"
+#include "cwcn_net_piaabo.h"
 
 float clamp(float d, float min, float max) {
   const float t = d < min ? min : d;

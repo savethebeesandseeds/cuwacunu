@@ -1,17 +1,22 @@
 #include <stdio.h>
-#include "cwcn_net_utils.h"
-#include "cwcn_net_data_mech.h"
-#include "cwcn_net_rl_trainer.h"
+#include <stdlib.h>
+#include "wikimyei.config.h"
+#include "cwcn_security.h"
+#include "cwcn_wikimyei.mech.h"
+
 int main() {
 	// ¿what about gpu?
 	// ¿what about paralelism?
 	// --> 
 	// define the model 
-	define_network();
+	wikimyei_jkimyei_neural();
+	
 	// define optimizer
 	// 
+	
 	while(cwcn_dehash_step()){
-		wikimyei_reinforced_neutal();
+		printf("step\n");
+		jkimyei_wikimyei();
 	}
 	return 0;
 }

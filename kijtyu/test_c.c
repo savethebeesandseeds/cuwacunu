@@ -1,11 +1,11 @@
 #include <stdio.h>
-#include <stdlib.h>
-int waka = 10;
+#define LIBERT "stdlib.h"
+#include LIBERT
 #define BATCH_SIZE 100
 #define MINI_BATCH_SIZE 20
-void f_waka(int waka){
-    printf("%d\n",waka);
-}
+#define waki 10
+int waka = 10;
+
 void f_waka(int waka1){
     printf("%d\n",waka);
 }
@@ -29,5 +29,6 @@ int main(){
     printf("batch_size: %d, rand_idx_size: %d\n", batch_size, rand_idx_size);
     f_waka(12);
     printf("%d\n",waka);
-    printf("%d",BATCH_SIZE/MINI_BATCH_SIZE);
+    printf("%d\n",BATCH_SIZE/MINI_BATCH_SIZE);
+    printf("%d\n", (unsigned int)waki);
 }
