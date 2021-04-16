@@ -1,34 +1,71 @@
 #include <stdio.h>
-#define LIBERT "stdlib.h"
-#include LIBERT
-#define BATCH_SIZE 100
-#define MINI_BATCH_SIZE 20
-#define waki 10
-int waka = 10;
+#include <stdlib.h>
 
-void f_waka(int waka1){
-    printf("%d\n",waka);
+typedef struct trayectory {
+    int val;
+} trayectory_t;
+
+typedef struct queue {
+    trayectory_t *trayectory;
+    struct queue *next;
+} queue_t;
+
+trayectory_t * define_trayectory(int val){
+    trayectory_t *new_trayectory = malloc(sizeof(trayectory_t));
+    new_trayectory->val = val;
+    return new_trayectory;
 }
-int main(){
-    int x = 10;
-    int *y;
-    printf("x:%d, y:%ls\n", x, y);
-    x /= 0.0;
-    double w = 10;
-    w /= 0.0;
-    printf("x:%d\n", x);
-    printf("w:%f\n", w);
-    float states[100];
-    int batch_size=(int)sizeof(states)/sizeof(states[0]);
-    float rand_idx[100];
-    for(int idx=0;idx<batch_size;idx++){
-        rand_idx[idx] = rand() % batch_size;
-        printf("%d - %f\n",idx, rand_idx[idx]);
+
+void enqueue(queue_t **head, trayectory_t *new_trayectory) {
+    queue_t *new_node = malloc(sizeof(queue_t));
+    if (!new_node) return;
+    new_node->trayectory = new_trayectory;
+    new_node->next = *head;
+    *head = new_node;
+}
+
+int dequeue(queue_t **head) {
+    queue_t *current, *prev = NULL;
+    int retval = -1;
+    if (*head == NULL) return -1;
+    current = *head;
+    while (current->next != NULL) {
+        prev = current;
+        current = current->next;
     }
-    int rand_idx_size=(int)sizeof(states)/sizeof(states[0]);
-    printf("batch_size: %d, rand_idx_size: %d\n", batch_size, rand_idx_size);
-    f_waka(12);
-    printf("%d\n",waka);
-    printf("%d\n",BATCH_SIZE/MINI_BATCH_SIZE);
-    printf("%d\n", (unsigned int)waki);
+    retval = current->trayectory->val;
+    free(current);
+    if (prev)
+        prev->next = NULL;
+    else
+        *head = NULL;
+    return retval;
+}
+
+void print_queue(queue_t *head) {
+    queue_t *current = head;
+    while (current != NULL) {
+        printf("%d\n", current->trayectory->val);
+        current = current->next;
+    }
+}
+
+int main() {
+    queue_t *head = NULL;
+    int ret;
+    printf("waka 1 \n");
+    enqueue(&head, define_trayectory(11));
+    enqueue(&head, define_trayectory(22));
+    enqueue(&head, define_trayectory(33));
+    enqueue(&head, define_trayectory(44));
+    printf("waka 2 \n");
+    print_queue(head);
+    printf("waka 2 \n");
+    
+    while ((ret=dequeue(&head)) > 0) {
+        printf("dequeued %d\n", ret);
+    }
+    printf("done. head=%p\n", head);
+
+    return 0;
 }

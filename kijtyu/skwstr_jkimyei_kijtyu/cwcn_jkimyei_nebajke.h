@@ -1,0 +1,21 @@
+#include "wikimyei.config.h"
+#ifndef PPO_NEBAJKE_INCLUDED
+#define PPO_NEBAJKE_INCLUDED
+void skwstr_jkimyei_iter(
+	float states[BATCH_SIZE][NUM_STATES], 
+	float actions[BATCH_SIZE][NUM_ACTIONS], 
+	float log_probs[BATCH_SIZE][NUM_ACTIONS], 
+	float returns[BATCH_SIZE][NUM_RETURNS],
+	float adventage[BATCH_SIZE][NUM_ACTIONS],
+	float states_handler[MINI_BATCH_SIZE][NUM_STATES],
+	float actions_handler[MINI_BATCH_SIZE][NUM_ACTIONS], 
+	float log_probs_handler[MINI_BATCH_SIZE][NUM_ACTIONS], 
+	float returns_handler[MINI_BATCH_SIZE][NUM_RETURNS],
+	float adventage_handler[MINI_BATCH_SIZE][NUM_ACTIONS]);
+void skwstr_jkimyei_wikimyei(
+	float states[BATCH_SIZE][NUM_STATES], 
+	float actions[BATCH_SIZE][NUM_ACTIONS], 
+	float log_probs[BATCH_SIZE][NUM_ACTIONS], 
+	float returns[BATCH_SIZE][NUM_RETURNS],
+	float adventage[BATCH_SIZE][NUM_ACTIONS]);
+#endif

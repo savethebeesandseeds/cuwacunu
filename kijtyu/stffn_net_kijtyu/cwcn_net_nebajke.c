@@ -1,18 +1,18 @@
 #include "fann.h"
 #include "cwcn_net_nebajke.h"
 #include "wikimyei.config.h"
-void cwcn_net_uwaabo(float *state, float *cajtucu_handler){
+void cwcn_net_uwaabo(float *ujcamei, float *cajtucu){
 	// standarize
-	printf(">> cwcn_net_uwaabo NOT IMPLEMENTED...");
+	printf(">> cwcn_net_uwaabo\n");
+	cajtucu = ujcamei;
 }
 
-struct fann * cwcn_net_ipivye(
+struct fann * cwcn_ipivye_net(
     const unsigned int  num_layers,
     const unsigned int  num_ujcamei,
     const unsigned int  num_neurons_hidden,
     const unsigned int  num_cajtucu){
-	
-	printf("IPIVYE network.\n");
+	printf(">> cwcn_ipivye_net\n");
 	// NETWORK
 	printf("\n--------WAAJACU---------\n");
 	struct fann *ann = fann_create_standard(

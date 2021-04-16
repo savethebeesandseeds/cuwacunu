@@ -1,16 +1,11 @@
 #include <stdio.h>
-#include <stdbool.h>
 #include "fann.h"
+#include "wikimyei.config.h"
 #include "cwcn_net_piaabo.h"
-
-float clamp(float d, float min, float max) {
-  const float t = d < min ? min : d;
-  return t > max ? max : t;
-}
-
+#include "cwcn_kemu_piaabo.h"
 void cwcn_display_network(struct fann *ann){
-    printf("Showing netowk.\n");
-	printf("---------fann_print_parameters---------\n");
+	printf(">> cwcn_display_network\n");
+    printf("---------fann_print_parameters---------\n");
 	fann_print_parameters(ann);
 	printf("---------mine--------------------------\n");
 	// TYPE

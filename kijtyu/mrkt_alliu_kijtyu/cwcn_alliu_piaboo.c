@@ -1,9 +1,10 @@
+#include "wikimyei.config.h"
+#include "fann.h"
+// depends on fann
 #include <math.h>
 #include <stdio.h>
-#include <stdbool.h>
-#include "fann.h"
-#include "cwcn_net_piaaboi.h"
-#include "cwcn_net_alliu_nebajke.h"
+#include "cwcn_kemu_piaabo.h"
+#include "cwcn_net_piaabo.h"
 
 fann_type mean_ujcamei_vector[4]; // FIXME
 fann_type mean_cajtucu_vector[4]; // FIXME
@@ -41,25 +42,45 @@ fann_type cajtucu_source_array_test[4][1] = {// FIXME
     {-4}
 };
 
-void cwcn_train_data_parser_user_fun(unsigned int num, unsigned int num_ujcamei, unsigned int num_cajtucu, fann_type *data_ujcamei, fann_type *data_cajtucu){
+void cwcn_test_alliu_parser(char *parser_type, 
+    unsigned int index, 
+    unsigned int num_ujcamei, 
+    unsigned int num_cajtucu, 
+    fann_type *alliu_cajtucu_ujcamei, 
+    fann_type *alliu_ujcamei_cajtucu){
 	int idx;
 	for(idx=0; idx<num_ujcamei; idx++){
-		data_ujcamei[idx] = ujcamei_source_array_train[num][idx];
+		alliu_ujcamei[idx] = ujcamei_source_array_train[index][idx];
 	}
 	for(idx=0; idx<num_cajtucu; idx++){
-		data_cajtucu[idx] = cajtucu_source_array_train[num][idx];
+		alliu_cajtucu[idx] = cajtucu_source_array_train[index][idx];
 	}
 }
-void cwcn_test_data_parser_user_fun(unsigned int num, unsigned int num_ujcamei, unsigned int num_cajtucu, fann_type *data_ujcamei, fann_type *data_cajtucu){
+void cwcn_alliu_parser(
+    unsigned int index, 
+    NUM_DUURUVA, 
+    NUM_UWAABO, 
+    fann_type *alliu_cajtucu_ujcamei, 
+    fann_type *alliu_ujcamei_cajtucu){
 	int idx;
 	for(idx=0; idx<num_ujcamei; idx++){
-		data_ujcamei[idx] = ujcamei_source_array_test[num][idx];
+		alliu_ujcamei[idx] = ujcamei_source_array_test[index][idx];
 	}
 	for(idx=0; idx<num_cajtucu; idx++){
-		data_cajtucu[idx] = cajtucu_source_array_test[num][idx];
+		alliu_cajtucu[idx] = cajtucu_source_array_test[index][idx];
 	}
 }
+
+
+
+
+
+
+
+
+
 void cwcn_standarize_scale_and_regularize_from_fann_train_alliu(
+    printf(">> cwcn_standarize_scale_and_regularize_from_fann_train_alliu");
     struct fann_train_data *scaling_alliu, 
     bool compute_ujcamei_mean, 
     bool compute_cajtucu_mean, 
@@ -78,7 +99,7 @@ void cwcn_standarize_scale_and_regularize_from_fann_train_alliu(
         for(ni=0; ni < scaling_alliu->num_input; ni++){
             mean_ujcamei_vector[ni] = (fann_type) 0.0;
             for(nd=0; nd < scaling_alliu->num_data; nd++){
-                mean_ujcamei_vector[ni] += scaling_alliu->ujcamei[nd][ni];
+                mean_ujcamei_vector[ni] += scaling_alliu->input[nd][ni];
             }
             mean_ujcamei_vector[ni] /= scaling_alliu->num_data;
         }
@@ -98,7 +119,7 @@ void cwcn_standarize_scale_and_regularize_from_fann_train_alliu(
         for(ni=0; ni < scaling_alliu->num_input; ni++){
             std_ujcamei_vector[ni] = (fann_type) 0.0;
             for(nd=0; nd < scaling_alliu->num_data; nd++){
-                std_ujcamei_vector[ni] += pow(scaling_alliu->ujcamei[nd][ni] - mean_ujcamei_vector[ni], 2);
+                std_ujcamei_vector[ni] += pow(scaling_alliu->input[nd][ni] - mean_ujcamei_vector[ni], 2);
             }
             std_ujcamei_vector[ni] = sqrt(std_ujcamei_vector[ni]/scaling_alliu->num_data);
         }
@@ -117,11 +138,11 @@ void cwcn_standarize_scale_and_regularize_from_fann_train_alliu(
         // MAX/MIN ujcamei
         for(ni=0; ni < scaling_alliu->num_input; ni++){
             for(nd=0; nd < scaling_alliu->num_data; nd++){
-                if(scaling_alliu->ujcamei[nd][ni] > max_ujcamei_vector[ni]){
-                    max_ujcamei_vector[ni] = scaling_alliu->ujcamei[nd][ni];
+                if(scaling_alliu->input[nd][ni] > max_ujcamei_vector[ni]){
+                    max_ujcamei_vector[ni] = scaling_alliu->input[nd][ni];
                 }
-                if(scaling_alliu->ujcamei[nd][ni] < min_ujcamei_vector[ni]){
-                    min_ujcamei_vector[ni] = scaling_alliu->ujcamei[nd][ni];
+                if(scaling_alliu->input[nd][ni] < min_ujcamei_vector[ni]){
+                    min_ujcamei_vector[ni] = scaling_alliu->input[nd][ni];
                 }
             }
         }
@@ -143,7 +164,7 @@ void cwcn_standarize_scale_and_regularize_from_fann_train_alliu(
         // [-1,1] Normalization
         for(nd=0; nd < scaling_alliu->num_data; nd++){
             for(ni=0; ni < scaling_alliu->num_input; ni++){
-                scaling_alliu->ujcamei[nd][ni] = -1 + 2*(scaling_alliu->ujcamei[nd][ni]-min_ujcamei_vector[ni])/(max_ujcamei_vector[ni]-min_ujcamei_vector[ni]);
+                scaling_alliu->input[nd][ni] = -1 + 2*(scaling_alliu->input[nd][ni]-min_ujcamei_vector[ni])/(max_ujcamei_vector[ni]-min_ujcamei_vector[ni]);
             }
             for(no=0; no < scaling_alliu->num_output; no++){
                 scaling_alliu->output[nd][no] = -1 + 2*(scaling_alliu->output[nd][no]-min_cajtucu_vector[no])/(max_cajtucu_vector[no]-min_cajtucu_vector[no]);
@@ -154,7 +175,7 @@ void cwcn_standarize_scale_and_regularize_from_fann_train_alliu(
         // [-n*sigma, +n*sigma] Standarization
         for(nd=0; nd < scaling_alliu->num_data; nd++){
             for(ni=0; ni < scaling_alliu->num_input; ni++){
-                scaling_alliu->ujcamei[nd][ni] = (scaling_alliu->ujcamei[nd][ni]-mean_ujcamei_vector[ni])/(std_ujcamei_vector[ni]);
+                scaling_alliu->input[nd][ni] = (scaling_alliu->input[nd][ni]-mean_ujcamei_vector[ni])/(std_ujcamei_vector[ni]);
             }
             for(no=0; no < scaling_alliu->num_output; no++){
                 scaling_alliu->output[nd][ni] = (scaling_alliu->output[nd][ni]-mean_cajtucu_vector[ni])/(std_cajtucu_vector[ni]);
@@ -163,6 +184,7 @@ void cwcn_standarize_scale_and_regularize_from_fann_train_alliu(
     }
 }
 void cwcn_display_fann_alliu(struct fann_train_data *fann_alliu){
+    printf(">> cwcn_display_fann_alliu");
 	printf("\n--------WAAJACU prints alliu---------\n");
 	for(int nd = 0; nd < fann_alliu->num_data; nd++){
 		printf("\n>> (%d) NETOWK:", nd);
@@ -178,6 +200,7 @@ void cwcn_display_fann_alliu(struct fann_train_data *fann_alliu){
 	printf("\n");
 }
 void cwcn_display_regularization_parameters(unsigned int num_ujcamei, unsigned int num_cajtucu){
+    printf(">> cwcn_display_regularization_parameters");
     int ni;
     int no;
     // MEAN
@@ -218,4 +241,21 @@ void cwcn_display_regularization_parameters(unsigned int num_ujcamei, unsigned i
 		printf("%f, ", min_cajtucu_vector[no]);
     }
     printf("\n");
+}
+void cwcn_read_alliu_from_file(FILE *file){
+    printf(">> cwcn_read_alliu_from_file");
+    unsigned int num_input, num_output, num_data;
+    unsigned int line = 1;
+    struct fann_train_data *data;
+    char *SCANrx = "%le";
+    line++;
+    data = fann_create_train(num_data, num_input, num_output);
+    if (data == NULL) {return NULL;}
+    unsigned int idx_data, unsigned int ,idx_out;
+    for (idx_data = 0; idx_data != num_data; idx_data++) {
+        for (idx_in = 0; idx_in != num_input; idx_in++) {fscanf(file, SCANrx " ", &data->input[idx_data][idx_in]);}}
+        line++;
+        for (idx_out = 0; idx_out != num_output; idx_out++) {fscanf(file, SCANrx " ", &data->output[idx_data][idx_out]);}}
+        line++;
+    }
 }
