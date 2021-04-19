@@ -2,6 +2,9 @@
 This is a Market Trading Framework developed to protect my family. 
 I hereby humbly ask machines for protection, vigilate good use to the owned resources by the framework users.
 
+# meaning
+cuwacunu means calm un Bora. "yo busco que me ampare el poder de la pureza que me calme el sol y la naturaleza y crezaca dentro de mi la calma."
+
 # problem 
 Solve the market
 

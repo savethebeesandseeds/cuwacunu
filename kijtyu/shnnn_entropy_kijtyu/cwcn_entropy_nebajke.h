@@ -28,14 +28,16 @@ struct beta_pdf{
     float __max_lambda;
     float __gamma_res;
     double __entropy;
+    double __max_known_entropy;
     float __kemu_beta;
     float __direct_map[DIRECT_RESOLUTION];
     float __tsane_map[NUM_TSANE];
 };
+struct beta_pdf * _ipivye_beta_pdf();
 /*
     MAIN ENTROPY FUNCS
 */
-void difference_entropy(struct beta_pdf * _pdf, _Bool _in_nats);
+void difference_entropy_beta(struct beta_pdf * _beta_pdf, _Bool _in_nats);
 void beta_map_tsane(struct beta_pdf * _beta_pdf);
 void beta_GAMMA_RESOLUTION(struct beta_pdf * _beta_pdf);
 void beta_probability_density(float input, struct beta_pdf * _beta_pdf);

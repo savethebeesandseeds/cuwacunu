@@ -1,6 +1,7 @@
 #include "wikimyei.config.h"
 
 int main() {
+	start_enviroment();
 	printf(">> cwcn_btc_fut_wikimyei");
 	// ¿what about gpu?
 	// ¿what about paralelism?

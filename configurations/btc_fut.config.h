@@ -1,3 +1,5 @@
+#include <time.h>
+#include <stdlib.h>
 #include "fann.h"
 #include "cwcn_security.h"
 #include "cwcn_alliu_piaabo.h"

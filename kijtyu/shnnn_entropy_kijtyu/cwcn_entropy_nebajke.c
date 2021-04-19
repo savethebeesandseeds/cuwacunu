@@ -1,28 +1,13 @@
 #include "cwcn_entropy_nebajke.h"
 // Discreet ENTROPY
-void difference_entropy(struct beta_pdf * _pdf, _Bool _in_nats){
-    if(_in_nats){ // in nats!
-        _pdf->__entropy = 0;
-        for(int idx=0; idx < DIRECT_RESOLUTION;idx++){
-            if(_pdf->__direct_map[idx]>0.001*DIRECT_RESOLUTION){
-                _pdf->__entropy += (-1)*_pdf->__direct_map[idx]*log(_pdf->__direct_map[idx]);
-            }
-        }
-    } else{ // in bits
-        _pdf->__entropy = 0;
-        for(int idx=0; idx < DIRECT_RESOLUTION;idx++){
-            if(_pdf->__direct_map[idx]>0.001*DIRECT_RESOLUTION){
-                _pdf->__entropy += (-1)*_pdf->__direct_map[idx]*log2(_pdf->__direct_map[idx]);
-            }
-        }
-    }
-}
+// void difference_entropy(float *__direct_map[DIRECT_RESOLUTION], double *__entropy, double *__max_known_entropy, _Bool _in_nats){
+
 /*
     UTILS
 */
 float GAMMA(float input, float gamma_res){ // FIXME, find the optimal range of discrete GAMMA
     float g_v = 1;
-    for(unsigned short fact=1;fact<=input * gamma_res - 1; fact++){
+    for(unsigned short fact=1;fact<=input * gamma_res * GAMMA_SCALE - 1; fact++){
         g_v = g_v * (fact);
     }
     // printf("FACTORIAL: >> input: %f, gamma_res: %f, goesto: %f == %f.\n",input, gamma_res, input * gamma_res - 1, g_v);
@@ -31,19 +16,72 @@ float GAMMA(float input, float gamma_res){ // FIXME, find the optimal range of d
 float DIGAMMA(float input){
     return log(input)-1/2/input;
 }
-float B_fun(float alpha, float beta, float gamma_res, _Bool allow_div){
+float B_fun(float A, float Z, float gamma_res, _Bool allow_div){
     if(allow_div){
-        return GAMMA((float)alpha/2.0, gamma_res)*GAMMA(beta/2.0, gamma_res)/GAMMA((alpha+beta)/2.0, gamma_res);
+        return GAMMA((float)A/2.0, gamma_res)*GAMMA(Z/2.0, gamma_res)/GAMMA((A+Z)/2.0, gamma_res);
     } else {
-        return GAMMA(alpha, gamma_res)*GAMMA(beta, gamma_res)/GAMMA((alpha+beta), gamma_res);
+        return GAMMA(A, gamma_res)*GAMMA(Z, gamma_res)/GAMMA((A+Z), gamma_res);
     }
 }
+
+
+
+
+
+
+
+
+
+
+
 /*
     Distribuciones de probabilidad
 */
+
+
+
 /*
     BETA distribution
 */
+struct beta_pdf * _ipivye_beta_pdf(){
+    printf(">> _ipivye_beta_pdf\n");
+	struct beta_pdf * new_beta_pdf = malloc(sizeof(struct beta_pdf));
+    new_beta_pdf->__lambda_index=0;
+    new_beta_pdf->__eta_index=0;
+    new_beta_pdf->__lambda=0;
+    new_beta_pdf->__eta=0;
+    new_beta_pdf->__max_lambda=MAX_BETA_LAMBDA;
+    new_beta_pdf->__max_eta=MAX_ETA_LAMBDA;
+    for(int idx=0;idx<DIRECT_RESOLUTION;idx++){
+        new_beta_pdf->__direct_map[idx]=0;
+    }
+    for(int idx=0;idx<NUM_TSANE;idx++){
+        new_beta_pdf->__tsane_map[idx]=0;
+    }
+    new_beta_pdf->__entropy=0;
+    new_beta_pdf->__max_known_entropy = -65536;
+	return new_beta_pdf;
+}
+void difference_entropy_beta(struct beta_pdf * _beta_pdf, _Bool _in_nats){
+    if(_in_nats){ // in nats!
+        _beta_pdf->__entropy = 0;
+        for(int idx=0; idx < DIRECT_RESOLUTION;idx++){
+            if(_beta_pdf->__direct_map[idx]>0.00001*DIRECT_RESOLUTION){
+                _beta_pdf->__entropy += (-1)*_beta_pdf->__direct_map[idx]*log(_beta_pdf->__direct_map[idx]);
+            }
+        }
+    } else{ // in bits
+        _beta_pdf->__entropy = 0;
+        for(int idx=0; idx < DIRECT_RESOLUTION;idx++){
+            if(_beta_pdf->__direct_map[idx]>0.00001*DIRECT_RESOLUTION){
+                _beta_pdf->__entropy += (-1)*_beta_pdf->__direct_map[idx]*log2(_beta_pdf->__direct_map[idx]);
+            }
+        }
+    }
+    if(_beta_pdf->__entropy>_beta_pdf->__max_known_entropy){
+        _beta_pdf->__max_known_entropy=_beta_pdf->__entropy;
+    }
+}
 void beta_map_tsane(struct beta_pdf * _beta_pdf){
     // FIXME, this computational method can be better
     unsigned int ctx=0;
@@ -57,9 +95,8 @@ void beta_map_tsane(struct beta_pdf * _beta_pdf){
     }
 }
 void beta_GAMMA_RESOLUTION(struct beta_pdf * _beta_pdf){
-    _beta_pdf->__gamma_res = (float) \
-    (_beta_pdf->__lambda + _beta_pdf->__eta)*((_beta_pdf->__max_lambda+1)*(_beta_pdf->__max_eta+1))/\
-    ((_beta_pdf->__eta+1)*(_beta_pdf->__lambda+1))/(_beta_pdf->__max_lambda+_beta_pdf->__max_eta) * 0.1;
+    // _beta_pdf->__gamma_res = (float) (_beta_pdf->__lambda + _beta_pdf->__eta)*((_beta_pdf->__max_lambda+1)*(_beta_pdf->__max_eta+1))/((_beta_pdf->__eta+1)*(_beta_pdf->__lambda+1))/(_beta_pdf->__max_lambda+_beta_pdf->__max_eta) * 0.1;
+    _beta_pdf->__gamma_res = (float) (_beta_pdf->__max_lambda + _beta_pdf->__max_eta);
     // printf(">> _beta_pdf->__gamma_res: %f\n", _beta_pdf->__gamma_res);
 }
 // BETA
@@ -104,6 +141,33 @@ void differential_entropy_beta(struct beta_pdf * _beta_pdf, _Bool _in_nats){
     }
     // printf(">> DIFFENTIAL ENTROPY: numeator: %f, denominator: %f, entropy: %f\n", numerator, denominator, _beta_pdf->__entropy);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // // CAUCHY
 // float probability_density_cauchy(float input){
