@@ -5,9 +5,9 @@
 #define clrscr() printf("\e[1;1H\e[2J")
 #ifndef KEMU_INCLUDED
 #define KEMU_INCLUDED
-_Bool CWCN_TRUE = 0b1;
-_Bool CWCN_FALSE = 0b0;
-// typedef enum{CWCN_TRUE, CWCN_FALSE} bool;
+_Bool ___CWCN_TRUE = 0b1; // #FIXME
+_Bool ___CWCN_FALSE = 0b0; // #FIXME double declaration maybe
+// typedef enum{___CWCN_TRUE, CWCN_FALSE} bool;
 #define max(a,b)({__typeof__(a) _a=(a);__typeof__(b) _b=(b);_a > _b ? _a : _b;})
 #define min(a,b)({__typeof__(a) _a=(a);__typeof__(b) _b=(b);_a < _b ? _a : _b;})
 #define array_size(a)({__typeof__(a) *_a=(a);__sizeof__(_a)/(__sizeof__(_a[0]));})
