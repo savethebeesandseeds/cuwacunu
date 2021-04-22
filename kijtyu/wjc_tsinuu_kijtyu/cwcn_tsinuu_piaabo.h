@@ -1,5 +1,3 @@
-#include <math.h>
-#include <time.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
@@ -14,11 +12,9 @@
 #endif
 #ifndef TSINUU_PIAABO_INCLUDED
 #define TSINUU_PIAABO_INCLUDED
-#define ARRAY_SIZE(x) (unsigned int)(sizeof(x)/sizeof((x)[0])) // not used in tsinuu.h.c
-typedef ___cwcn_bool {
-    _Bool ___CWCN_TRUE = 0b1;
-    _Bool ___CWCN_FALSE = 0b0;
-} ___cwcn_bool_t;
+typedef _Bool ___cwcn_bool_t;
+#define ___CWCN_TRUE (___cwcn_bool_t) 0b1
+#define ___CWCN_FALSE (___cwcn_bool_t) 0b0
 #ifdef NAT_TYPE
     typedef enum{
         NAT, // NATS is a measure of entropy.
@@ -30,10 +26,10 @@ typedef ___cwcn_bool {
         LINEAR  // y=x
     } __list_activations_t;
     typedef float (__cwcn_type_t);
-    #define __cwcn_infinite (__cwcn_type_t) 0x1/0x0
-    typedef __cwcn_type_t (*__function_pointer_t)(__cwcn_type_t);
     #define __cwcn_type_size sizeof(__cwcn_type_t) // #FIXME not in use
-    #define __function_pointer_t_size sizeof(__function_pointer_t) // 
+    typedef __cwcn_type_t (*__function_pointer_t)(__cwcn_type_t);
+    #define __function_pointer_t_size sizeof(__function_pointer_t)
+    #define __cwcn_infinite (__cwcn_type_t) 0xFFFFFFFF
     typedef struct __cartecian_tensor {
         __cwcn_type_t __coord_x;
         __cwcn_type_t __coord_y;
@@ -45,7 +41,7 @@ typedef ___cwcn_bool {
         __cwcn_type_t __std;
         __cwcn_type_t __mean;
         __cwcn_type_t __entropy;
-    } __dist_coord_t;
+    } __dist_tensor_t;
     typedef struct __node_stack_coord { // the coordinate of node in layer
         unsigned int __node_index;
     } __node_stack_coord_t;
@@ -86,7 +82,7 @@ typedef ___cwcn_bool {
         __cwcn_type_t __bias;
         __cwcn_type_t __grad;
         __cwcn_type_t __error;
-        __dist_coord_t __dist;
+        __dist_tensor_t * __dist;
     } __node_kemu_t;
     typedef struct __line_kemu {
         __cwcn_type_t __weight;
@@ -94,10 +90,14 @@ typedef ___cwcn_bool {
     } __line_kemu_t;
     typedef struct __layer_kemu { // #FIXME empty
     } __layer_kemu_t;
-    typedef struct __line_coords {
-        __line_stack_coord_t * __ln_s_coord;
-        __cartecian_tensor_t * __xyz_coord;
-    } __line_coords_t;
+    typedef struct __attribute_tsinuu { // to create a new tsinuu define input attribute with at least __NUM_TOTAL_LAYERS, __layers_sizes, __is_symetric and __layers_activation;
+        unsigned int __NUM_TOTAL_NODES; // optional to create new
+        unsigned int __NUM_TOTAL_LINES; // optional to create new
+        unsigned int __NUM_TOTAL_LAYERS; // count INPUT, count HIDDEN, count OUTPUT
+        unsigned int *__layers_sizes; // Include input size, each hidden size and output size in a vector
+        ___cwcn_bool_t __is_symetric;
+        __list_activations_t * __layers_activation;
+    } __attribute_tsinuu_t;
     typedef struct __layer_coords {
         __layer_stack_coord_t * __l_s_coord; // used for confirmation porpouses
     } __layer_coords_t;
@@ -106,20 +106,24 @@ typedef ___cwcn_bool {
         __node_stack_coord_t * __n_s_coord;
         __cartecian_tensor_t * __xyz_coord;
     } __node_coords_t;
+    typedef struct __line_coords {
+        __line_stack_coord_t * __ln_s_coord;
+        __cartecian_tensor_t * __xyz_coord;
+        __node_coords_t * __to_node;
+        __node_coords_t * __from_node;
+    } __line_coords_t;
     typedef struct __node_tsinuu {
         __node_kemu_t * __n_kemu;
         __node_coords_t * __n_coord;
         __list_activations_t __type; 
-        __function_pointer_t * __direct;
-        __function_pointer_t * __inverse;
-        __function_pointer_t * __direct_derivate;   // RL train
-        __function_pointer_t * __inverse_derivate;  // IL train
+        __function_pointer_t __direct;
+        __function_pointer_t __inverse;
+        __function_pointer_t __direct_derivate;   // RL train
+        __function_pointer_t __inverse_derivate;  // IL train
         __nodeboolean_parametric_t * __nbp;
     } __node_tsinuu_t;
     typedef struct __line_tsinuu {
-        __line_kemu_t * __l_kemu;
-        __node_tsinuu_t * __from_node;
-        __node_tsinuu_t * __to_node;
+        __line_kemu_t * __ln_kemu;
         __line_coords_t * __ln_coord;
         __list_activations_t __type;
         __lineboolean_parametric_t * __lnbp;
@@ -131,14 +135,6 @@ typedef ___cwcn_bool {
         __list_activations_t __layer_activation;
         __layerboolean_parametric_t * __lbp;
     } __layer_tsinuu_t;
-    typedef struct __attribute_tsinuu { // to create a new tsinuu define input attribute with at least __NUM_TOTAL_LAYERS, __layers_sizes, __is_symetric and __layers_activation;
-        unsigned int __NUM_TOTAL_NODES; // optional to create new
-        unsigned int __NUM_TOTAL_LINES; // optional to create new
-        unsigned int __NUM_TOTAL_LAYERS; // count INPUT, count HIDDEN, count OUTPUT
-        unsigned int *__layers_sizes; // Include input size, each hidden size and output size in a vector
-        ___cwcn_bool_t __is_symetric;
-        __list_activations_t * __layers_activation;
-    } __attribute_tsinuu_t;
     typedef struct __tsinuu {
         __layer_tsinuu_t **__layers;
         __line_tsinuu_t **__lines;
@@ -146,24 +142,59 @@ typedef ___cwcn_bool {
     } __tsinuu_t;
     __tsinuu_t * tsinuu_fabric(__attribute_tsinuu_t * _attributes);
     void tsinuu_destroy(__tsinuu_t * _tsinuu);
-    __cwcn_type_t * read_output(__tsinuu_t * _tsinuu);
+    void read_output(__tsinuu_t * _tsinuu, __cwcn_type_t * _result_vector);
+    void read_input(__tsinuu_t * _tsinuu, __cwcn_type_t * _result_vector);
     unsigned int total_layers(__tsinuu_t * _tsinuu);
     unsigned int total_nodes(__tsinuu_t * _tsinuu);
     unsigned int total_lines(__tsinuu_t * _tsinuu);
-    unsigned int layer_size(__tsinuu_t * _tsinuu, __layer_coord_t * _idx_l);
     unsigned int input_size(__tsinuu_t * _tsinuu);
     unsigned int output_size(__tsinuu_t * _tsinuu);
-    __node_tsinuu_t * node(__tsinuu_t * _tsinuu, __node_coords_t * _n_coord)
-    __kemu_tsinuu_t * node_kemu(__tsinuu_t * _tsinuu, __node_stack_coord_t * _idx_n);
+    __node_tsinuu_t * node(__tsinuu_t * _tsinuu, __node_coords_t * _n_coord);
+    __node_kemu_t * node_kemu(__tsinuu_t * _tsinuu, __node_coords_t * _n_coord);
+    __cwcn_type_t node_bias(__tsinuu_t * _tsinuu, __node_coords_t * _n_coord);
     __line_tsinuu_t * line(__tsinuu_t * _tsinuu, __line_coords_t * _ln_coord);
-__line_tsinuu_t * line_kemu(__tsinuu_t * _tsinuu, __line_coords_t * _ln_coord);
+    __line_kemu_t * line_kemu(__tsinuu_t * _tsinuu, __line_coords_t * _ln_coord);
     __cwcn_type_t line_weight(__tsinuu_t * _tsinuu, __line_coords_t * _ln_coord);
     void set_node(__tsinuu_t * _tsinuu, __node_tsinuu_t * _node, __node_coords_t * _n_coord);
-    void set_node_kemu(__tsinuu_t * _tsinuu, __kemu_tsinuu_t * _n_kemu,  __node_coords_t * _n_coord);
+    void set_node_kemu(__tsinuu_t * _tsinuu, __node_kemu_t * _n_kemu,  __node_coords_t * _n_coord);
     void set_input(__tsinuu_t * _tsinuu, __cwcn_type_t * _input_vector);
     void set_output(__tsinuu_t * _tsinuu, __cwcn_type_t * _output_vector);
+    void read_layer_value_as_vector_from_coord(__tsinuu_t * _tsinuu, __layer_coords_t * _l_coord, __cwcn_type_t * _result_vector);
+    void read_layer_value_as_vector_from_stack_coord(__tsinuu_t * _tsinuu, __layer_stack_coord_t * _l_s_coord, __cwcn_type_t * _result_vector);
     void reset_nodes_kemu(__tsinuu_t * _tsinuu, __node_stack_coord_t * _idx_n, __nodeboolean_parametric_t * _nbp);
     void reset_all_nodes_kemu(__tsinuu_t * _tsinuu, __nodeboolean_parametric_t * _nbp);
+    void tsinuu_initialize_weights_random(__tsinuu_t * _tsinuu, __cwcn_type_t _v_max, __cwcn_type_t _v_min);
+    void tsinuu_initialize_weights_zero(__tsinuu_t * _tsinuu);
+    unsigned int l_coord_to_l_index(__layer_coords_t * _l_coord);
+    unsigned int ln_coord_to_ln_index(__line_coords_t * _ln_coord);
+    unsigned int n_coord_to_n_index(__node_coords_t * _n_coord);
+    unsigned int n_coord_to_l_index(__node_coords_t * _n_coord);
+    __layer_coords_t * n_coord_to_l_coord(__node_coords_t * _n_coord);
+    __layer_stack_coord_t * layer_index_to_layer_stack_coord(__tsinuu_t * _tsinuu, unsigned int _l_s_index);
+    __layer_coords_t * layer_index_to_layer_coord(__tsinuu_t * _tsinuu, unsigned int _l_s_index);
+    __line_stack_coord_t * line_index_to_line_stack_coord(__tsinuu_t * _tsinuu, unsigned int _ln_s_index);
+    __line_coords_t * line_index_to_line_coord(__tsinuu_t * _tsinuu, unsigned int _ln_s_index);
+    __node_stack_coord_t * index_to_node_stack_coord(__tsinuu_t * _tsinuu, unsigned int _l_s_index, unsigned int _n_s_index);
+    __node_coords_t * index_to_node_coord(__tsinuu_t * _tsinuu, unsigned int _l_s_index, unsigned int _n_s_index);
+    ___cwcn_bool_t is_layer_index_input(__tsinuu_t * _tsinuu, unsigned int __l_index);
+    ___cwcn_bool_t is_layer_index_output(__tsinuu_t * _tsinuu, unsigned int __l_index);
+    unsigned int layer_size_from_layer_coord(__tsinuu_t * _tsinuu, __layer_coords_t * _l_coord);
+    unsigned int layer_size_from_layer_stack_index(__tsinuu_t * _tsinuu, unsigned int _l_s_index);
+    unsigned int count_total_nodes(__tsinuu_t * _tsinuu);
+    unsigned int count_total_lines(__tsinuu_t * _tsinuu);
+    __cartecian_tensor_t * get_node_xyz(__tsinuu_t * _tsinuu, __node_coords_t * _n_coord);
+    __cwcn_type_t get_node_x(__tsinuu_t * _tsinuu, __node_coords_t * _n_coord);
+    __cwcn_type_t get_node_y(__tsinuu_t * _tsinuu, __node_coords_t * _n_coord);
+    __cwcn_type_t get_node_z(__tsinuu_t * _tsinuu, __node_coords_t * _n_coord);
+    __cartecian_tensor_t * get_line_xyz(__tsinuu_t * _tsinuu, __line_coords_t * _ln_coord);
+    __cwcn_type_t get_line_x(__tsinuu_t * _tsinuu, __line_coords_t * _ln_coord);
+    __cwcn_type_t get_line_y(__tsinuu_t * _tsinuu, __line_coords_t * _ln_coord);
+    __cwcn_type_t get_line_z(__tsinuu_t * _tsinuu, __line_coords_t * _ln_coord);
+    __node_coords_t * node_coords_from_xyz(__tsinuu_t * _tsinuu, __cartecian_tensor_t * _xyz);
+    void reset_node_kemu(__node_tsinuu_t * _node);
+    void reset_kemu_forall_nodes(__tsinuu_t * _tsinuu);
+    void reset_line_kemu(__line_tsinuu_t * _line);
+    void reset_kemu_forall_lines(__tsinuu_t * _tsinuu);
 #else 
     #ifdef BIN_TYPE
         typedef __uint8_t (__cwcn_type_t);
@@ -171,106 +202,3 @@ __line_tsinuu_t * line_kemu(__tsinuu_t * _tsinuu, __line_coords_t * _ln_coord);
     #endif
 #endif
 #endif
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-unsigned int l_coord_to_l_index(__layer_coords_t * _l_coord);
-unsigned int ln_coord_to_ln_index(__line_coords_t * _ln_coord);
-unsigned int n_coord_to_n_index(__node_coords_t * _n_coord);
-unsigned int n_coord_to_l_index(__node_coords_t * _n_coord);
-__layer_coords_t * n_coord_to_l_coord(__node_coords_t * _n_coord);
-__layer_coords_t * index_to_layer_coord(unsigned int _l_s_index);
-__node_coords_t * index_to_node_coord(unsigned int _l_s_index, unsigned int _n_s_index);
-___cwcn_bool_t is_layer_index_input(__tsinuu_t * _tsinuu, __layer_stack_coord_t * _l_s_coord);
-___cwcn_bool_t is_layer_index_output(__tsinuu_t * _tsinuu, __layer_stack_coord_t * _l_s_coord);
-unsigned int layer_size_from_layer_coord(__tsinuu_t * _tsinuu, __layer_coords_t * _l_coord);
-unsigned int layer_size_from_layer_stack_index(__tsinuu_t * _tsinuu, unsigned int _l_index);
-unsigned int count_total_nodes(__tsinuu_t * _tsinuu);
-unsigned int count_total_lines(__tsinuu_t * _tsinuu);
-__cartecian_tensor_t * get_node_xyz(__tsinuu_t * _tsinuu, __node_coords_t _n_coord);
-__cwcn_type_t get_node_x(__tsinuu_t * _tsinuu, __node_coords_t * _n_coord);
-__cwcn_type_t get_node_y(__tsinuu_t * _tsinuu, __node_coords_t * _n_coord);
-__cwcn_type_t get_node_z(__tsinuu_t * _tsinuu, __node_coords_t * _n_coord);
-__cartecian_tensor_t * get_line_xyz(__tsinuu_t * _tsinuu, __line_stack_coord_t * _ln_coord);
-__cwcn_type_t get_line_x(__tsinuu_t * _tsinuu, __line_stack_coord_t * _ln_coord);
-__cwcn_type_t get_line_y(__tsinuu_t * _tsinuu, __line_stack_coord_t * _ln_coord);
-__cwcn_type_t get_line_z(__tsinuu_t * _tsinuu, __line_stack_coord_t * _ln_coord);
-__node_kemu_t * node_kemu(__tsinuu_t * _tsinuu, __node_coords_t * _n_coord);
-__cwcn_type_t node_bias(__tsinuu_t * _tsinuu, __node_coords_t * _n_coord);
-__node_coords_t * node_coords_from_xyz(__tsinuu_t * _tsinuu, __cartecian_tensor_t * _xyz);
-void reset_node_kemu(__node_tsinuu_t * _node);
-void reset_kemu_forall_nodes(__tsinuu_t * _tsinuu);
-void reset_line_kemu(__line_tsinuu_t * _line);
-void reset_kemu_forall_lines(__tsinuu_t * _tsinuu);
-
-
-
-
-unsigned int total_layers(__tsinuu_t * _tsinuu)
-unsigned int total_nodes(__tsinuu_t * _tsinuu)
-unsigned int total_lines(__tsinuu_t * _tsinuu)
-unsigned int l_coord_to_l_index(__layer_coords_t * _l_coord)
-unsigned int ln_coord_to_ln_index(__line_coords_t * _ln_coord)
-unsigned int n_coord_to_n_index(__node_coords_t * _n_coord)
-unsigned int n_coord_to_l_index(__node_coords_t * _n_coord)
-__layer_coords_t * n_coord_to_l_coord(__node_coords_t * _n_coord)
-__layer_coords_t * index_to_layer_coord(unsigned int _l_s_index)
-__node_coords_t * index_to_node_coord(unsigned int _l_s_index, unsigned int _n_s_index)
-___cwcn_bool_t is_layer_index_input(__tsinuu_t * _tsinuu, __layer_stack_coord_t * _l_s_coord)
-___cwcn_bool_t is_layer_index_output(__tsinuu_t * _tsinuu, __layer_stack_coord_t * _l_s_coord)
-unsigned int layer_size_from_layer_coord(__tsinuu_t * _tsinuu, __layer_coords_t * _l_coord)
-unsigned int layer_size_from_layer_stack_index(__tsinuu_t * _tsinuu, unsigned int _l_index)
-unsigned int input_size(__tsinuu_t * _tsinuu)
-unsigned int output_size(__tsinuu_t * _tsinuu)
-unsigned int count_total_nodes(__tsinuu_t * _tsinuu)
-unsigned int count_total_lines(__tsinuu_t * _tsinuu)
-__cartecian_tensor_t * get_node_xyz(__tsinuu_t * _tsinuu, __node_coords_t _n_coord)
-__cwcn_type_t get_node_x(__tsinuu_t * _tsinuu, __node_coords_t * _n_coord)
-__cwcn_type_t get_node_y(__tsinuu_t * _tsinuu, __node_coords_t * _n_coord)
-__cwcn_type_t get_node_z(__tsinuu_t * _tsinuu, __node_coords_t * _n_coord)
-__cartecian_tensor_t * get_line_xyz(__tsinuu_t * _tsinuu, __line_stack_coord_t * _ln_coord)
-__cwcn_type_t get_line_x(__tsinuu_t * _tsinuu, __line_stack_coord_t * _ln_coord)
-__cwcn_type_t get_line_y(__tsinuu_t * _tsinuu, __line_stack_coord_t * _ln_coord)
-__cwcn_type_t get_line_z(__tsinuu_t * _tsinuu, __line_stack_coord_t * _ln_coord)
-__node_tsinuu_t * node(__tsinuu_t * _tsinuu, __node_coords_t * _n_coord)
-__node_kemu_t * node_kemu(__tsinuu_t * _tsinuu, __node_coords_t * _n_coord)
-__cwcn_type_t node_bias(__tsinuu_t * _tsinuu, __node_coords_t * _n_coord)
-__node_coords_t * node_coords_from_xyz(__tsinuu_t * _tsinuu, __cartecian_tensor_t * _xyz)
-__line_tsinuu_t * line(__tsinuu_t * _tsinuu, __line_coords_t * _ln_coord)
-__line_tsinuu_t * line_kemu(__tsinuu_t * _tsinuu, __line_coords_t * _ln_coord)
-__cwcn_type_t line_weight(__tsinuu_t * _tsinuu, __line_coords_t * _ln_coord)
-void set_node(__tsinuu_t * _tsinuu, __node_tsinuu_t * _node, __node_coords_t * _n_coord)
-void set_node_kemu(__tsinuu_t * _tsinuu, __kemu_tsinuu_t * _n_kemu,  __node_coords_t * _n_coord)
-void reset_node_kemu(__node_tsinuu_t * _node)
-void reset_kemu_forall_nodes(__tsinuu_t * _tsinuu)
-void reset_line_kemu(__line_tsinuu_t * _line)
-void reset_kemu_forall_lines(__tsinuu_t * _tsinuu)
-__cwcn_type_t * read_layer_value_as_vector_from_coord(__tsinuu_t * _tsinuu, __layer_coords_t * _l_coord)
-__cwcn_type_t * read_layer_value_as_vector_from_idx(__tsinuu_t * _tsinuu, __layer_stack_coord_t * _l_s_coord)
-__cwcn_type_t * read_output(__tsinuu_t * _tsinuu)
-void set_input(__tsinuu_t * _tsinuu, __cwcn_type_t * _input_vector)
-void set_output(__tsinuu_t * _tsinuu, __cwcn_type_t * _output_vector)
-__tsinuu_t * tsinuu_fabric(__attribute_tsinuu_t * _attributes)
-void tsinuu_destroy(__tsinuu_t * _tsinuu)
