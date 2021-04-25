@@ -3,10 +3,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
+#include <time.h>
 #include "cwcn_tsinuu_piaabo.h"
-#ifndef TSINUU_DEBUG
-#define TSINUU_DEBUG
-#endif
 #ifndef NAT_TYPE
 #define NAT_TYPE
 #endif
@@ -16,24 +14,28 @@
 #ifndef TSINUU_NEBAJKE_INCLUDED
 #define TSINUU_NEBAJKE_INCLUDED
 #ifdef NAT_TYPE
-    typedef __cwcn_type_t (*__function_pointer_t)(__cwcn_type_t);
     __cwcn_type_t nat_sigmoid_direct(__cwcn_type_t _input);
     __cwcn_type_t nat_sigmoid_direct_derivate(__cwcn_type_t _input);
+    __cwcn_type_t nat_sigmoid_direct_derivate_fast(__cwcn_type_t _output);
     __cwcn_type_t nat_sigmoid_inverse(__cwcn_type_t _input);
     __cwcn_type_t nat_sigmoid_inverse_derivate(__cwcn_type_t _input);
     __cwcn_type_t linear_direct(__cwcn_type_t _input);
     __cwcn_type_t linear_direct_derivate(__cwcn_type_t _input);
     __cwcn_type_t linear_inverse(__cwcn_type_t _input);
     __cwcn_type_t linear_inverse_derivate(__cwcn_type_t _input);
-    void tsinuu_inverse_propagate(__tsinuu_t * _tsinuu, __cwcn_type_t * _output);
-    void jkimyei_weight_byinversediff(__tsinuu_t _tsinuu);
-    void jkimyei_bias_byinversediff(__tsinuu_t _tsinuu);
-    void tsinuu_direct_propagate(__tsinuu_t * _tsinuu, __cwcn_type_t * _input);
-    void jkimyei_weight_bydirectdiff(__tsinuu_t _tsinuu);
-    void jkimyei_bias_bydirectdiff(__tsinuu_t _tsinuu);
-    void cpte_kemu_firstordedgrad(__tsinuu_t _tsinuu, ___cwcn_bool_t cpte_direct, ___cwcn_bool_t cpte_inverse);
-    void cpte_kemu_bias(__tsinuu_t _tsinuu);
-    void cpte_kemu_maxmin(__tsinuu_t _tsinuu);
-    void cpte_kemu_dist(__tsinuu_t _tsinuu);
+
+    void dist_node_from_coord(__tsinuu_t *_tsinuu, __node_coords_t *_n_coord, __cwcn_type_t _value);
+    void dist_node_form_kemu(__tsinuu_t *_tsinuu, __node_kemu_t *_n_kemu, __cwcn_type_t _value);
+
+    void tsinuu_inverse_propagate_full_parametric(__tsinuu_t *_tsinuu);
+    void tsinuu_direct_propagate_full_parametric(__tsinuu_t *_tsinuu);
+    void tsinuu_direct_propagate_fast(__tsinuu_t *_tsinuu);
+    
+    void jkimyei_byinverseNABLA(__tsinuu_t *_tsinuu);
+    void jkimyei_bydirectNABLA(__tsinuu_t *_tsinuu, __cwcn_type_t *_output_wapaajco);
+    
+   __cwcn_type_t *wapaajco_bydifference(__tsinuu_t *_tsinuu, __cwcn_type_t *_correct_output);
+   __cwcn_type_t *wapaajco_bynodeentropymax(__tsinuu_t *_tsinuu); // #FIXME inplement
+    void set_seed();
 #endif
 #endif
