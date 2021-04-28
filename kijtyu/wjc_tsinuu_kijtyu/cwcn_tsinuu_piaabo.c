@@ -437,9 +437,9 @@ void reset_node_value(__node_tsinuu_t *_node){
     _node->__nbp->__has_value=___CWCN_FALSE;
 }
 void reset_node_grad(__node_tsinuu_t *_node){
-    _node->__n_kemu->__bias_grad=0x00;
-    _node->__n_kemu->__bias_nabla=0x00;
+    _node->__n_kemu->__nodeactivation_grad=0x00;
     _node->__n_kemu->__bias_delta=0x00;
+    _node->__n_kemu->__nabla=0x00; // nabla is a form of error
     _node->__nbp->__has_grad=___CWCN_FALSE;
 }
 void reset_line_grad(__line_tsinuu_t *_line){
@@ -453,8 +453,8 @@ void reset_node_kemu(__node_tsinuu_t *_node){
         _node->__n_kemu->__value=0x00;
     }
     if(!_node->__nbp->__pardon_grad){
-        _node->__n_kemu->__bias_grad=0x00;
-        _node->__n_kemu->__bias_nabla=0x00;
+        _node->__n_kemu->__nodeactivation_grad=0x00;
+        _node->__n_kemu->__nabla=0x00;
         _node->__n_kemu->__bias_delta=0x00;
     }
     if(!_node->__nbp->__pardon_bias){
@@ -588,6 +588,14 @@ void reset_all_lines_kemu(__tsinuu_t *_tsinuu){
         reset_line_kemu(_tsinuu->__lines[idx_ln]);
     }
 }
+void reset_layerdentities(__tsinuu_t *_tsinuu){
+    for(unsigned int ctx_b=0x00;ctx_b<total_layers(_tsinuu);ctx_b++){
+        _tsinuu->__attributes->__layerbias_density[ctx_b]=0x00;
+    }
+    for(unsigned int ctx_w=0x00;ctx_w<total_layers(_tsinuu)-0x01;ctx_w++){
+        _tsinuu->__attributes->__layerweight_density[ctx_w]=0x00;
+    }
+}
 /*
 
 */
@@ -622,7 +630,14 @@ void read_input(__tsinuu_t *_tsinuu, __cwcn_type_t *_result_vector){
     #endif
     read_layer_value_as_vector_from_stack_coord(_tsinuu, layer_index_to_layer_stack_coord(_tsinuu, 0x00), _result_vector); 
 }
+void read_wapaajco(__tsinuu_t *_tsinuu, __cwcn_type_t *_wapaajco_vector){
+    for(unsigned int idx_n=0x00;idx_n<layer_size_from_layer_stack_index(_tsinuu, output_layer_index(_tsinuu));idx_n++){
+        _wapaajco_vector[idx_n]=_tsinuu->__wapaajco->__w_vector[idx_n];
+    }
+}
+/*
 
+*/
 void set_input(__tsinuu_t *_tsinuu, __cwcn_type_t *_input_vector){
     for(unsigned int idx_n=0;idx_n<layer_size_from_layer_stack_index(_tsinuu, 0x00);idx_n++){
         node_kemu(_tsinuu, node_index_to_node_coord(_tsinuu, 0x00, idx_n))->__value = _input_vector[idx_n]; // #FIXME no assert for input vector size.
@@ -656,13 +671,30 @@ void set_output(__tsinuu_t *_tsinuu, __cwcn_type_t *_output_vector){
     #endif
 }
 void pardon_inputoutput_bias(__tsinuu_t *_tsinuu){
-    for(unsigned int idx_n=0;idx_n<layer_size_from_layer_stack_index(_tsinuu, 0x00);idx_n++){
+    for(unsigned int idx_n=0x00;idx_n<layer_size_from_layer_stack_index(_tsinuu, 0x00);idx_n++){
         node_kemu(_tsinuu, node_index_to_node_coord(_tsinuu, 0x00, idx_n))->__bias = 0x00;
         node(_tsinuu, node_index_to_node_coord(_tsinuu, 0x00, idx_n))->__nbp->__pardon_bias = ___CWCN_TRUE;
     }
-    for(unsigned int idx_n=0;idx_n<layer_size_from_layer_stack_index(_tsinuu, output_layer_index(_tsinuu));idx_n++){
+    for(unsigned int idx_n=0x00;idx_n<layer_size_from_layer_stack_index(_tsinuu, output_layer_index(_tsinuu));idx_n++){
         node_kemu(_tsinuu, node_index_to_node_coord(_tsinuu, output_layer_index(_tsinuu), idx_n))->__bias = 0x00;
         node(_tsinuu, node_index_to_node_coord(_tsinuu, output_layer_index(_tsinuu), idx_n))->__nbp->__pardon_bias=___CWCN_TRUE;
+    }
+}
+void pardon_all_bias(__tsinuu_t *_tsinuu){
+    unsigned int ctx_n=0X00;
+    for(unsigned int idx_l=0x00;idx_l<total_layers(_tsinuu);idx_l++){
+        if(_tsinuu->__attributes->__layers_activation[idx_l]==SIGMOID){
+            ctx_n++;
+        }
+    }
+    if(ctx_n>=total_layers(_tsinuu)-0x01){
+        fprintf(stdout,">>>> WARINING! pardon_all_bias with beeing defined all central layers as SIGMOID might rise problems.");
+    }
+    for(unsigned int idx_l=0x00;idx_l<total_layers(_tsinuu);idx_l++){
+        for(unsigned int idx_n=0x00;idx_n<layer_size_from_layer_stack_index(_tsinuu, idx_l);idx_n++){
+            node_kemu(_tsinuu, node_index_to_node_coord(_tsinuu, idx_l, idx_n))->__bias = 0x00;
+            node(_tsinuu, node_index_to_node_coord(_tsinuu, idx_l, idx_n))->__nbp->__pardon_bias = ___CWCN_TRUE;
+        }
     }
 }
 /*
@@ -743,7 +775,12 @@ __tsinuu_t *tsinuu_fabric(__attribute_tsinuu_t *_attributes){
     new_tsinuu->__attributes = malloc(sizeof(__attribute_tsinuu_t));
     new_tsinuu->__attributes->__alpha=_attributes->__alpha;
     new_tsinuu->__attributes->__eta=_attributes->__eta;
+    new_tsinuu->__attributes->__omega=_attributes->__omega;
+    new_tsinuu->__attributes->__omega_stiffess=_attributes->__omega_stiffess;
     new_tsinuu->__attributes->__is_symetric=_attributes->__is_symetric;
+    new_tsinuu->__attributes->__weight_limits=_attributes->__weight_limits;
+    new_tsinuu->__attributes->__bias_limits=_attributes->__bias_limits;
+    new_tsinuu->__attributes->__wapaajco_potency=_attributes->__wapaajco_potency;
     new_tsinuu->__attributes->__NUM_TOTAL_LAYERS = _attributes->__NUM_TOTAL_LAYERS;
     new_tsinuu->__attributes->__layers_sizes = malloc(total_layers(new_tsinuu)*sizeof(unsigned int));
     new_tsinuu->__attributes->__layers_activation = malloc(total_layers(new_tsinuu)*sizeof(__list_activations_t));
@@ -770,7 +807,12 @@ __tsinuu_t *tsinuu_fabric(__attribute_tsinuu_t *_attributes){
     }
     new_tsinuu->__attributes->__NUM_TOTAL_NODES = count_total_nodes(new_tsinuu);
     new_tsinuu->__attributes->__NUM_TOTAL_LINES = count_total_lines(new_tsinuu);
+    new_tsinuu->__attributes->__layerweight_density = malloc((total_layers(new_tsinuu)-0x01)*sizeof(__cwcn_type_t));
+    new_tsinuu->__attributes->__layerbias_density = malloc(total_layers(new_tsinuu)*sizeof(__cwcn_type_t));
     free(_attributes); // here config stops, and fabric takes automatically #FIXME maybe
+    reset_layerdentities(new_tsinuu);
+    new_tsinuu->__attributes->__forward_ln_index_list=malloc(total_lines(new_tsinuu)*sizeof(unsigned int));
+    new_tsinuu->__attributes->__backward_ln_index_list=malloc(total_lines(new_tsinuu)*sizeof(unsigned int));
     /*
         LOOP OVER LAYERS
     */
@@ -791,11 +833,29 @@ __tsinuu_t *tsinuu_fabric(__attribute_tsinuu_t *_attributes){
                     new_tsinuu->__layers[idx_l]->__nodes[idx_n]->__direct_derivate = & nat_sigmoid_direct_derivate;
                     new_tsinuu->__layers[idx_l]->__nodes[idx_n]->__inverse_derivate = & nat_sigmoid_inverse_derivate;
                     break;
+                case SIGNEDSIGMOID:
+                    new_tsinuu->__layers[idx_l]->__nodes[idx_n]->__direct = & nat_signedsigmoid_direct;
+                    new_tsinuu->__layers[idx_l]->__nodes[idx_n]->__inverse = & nat_signedsigmoid_inverse;
+                    new_tsinuu->__layers[idx_l]->__nodes[idx_n]->__direct_derivate = & nat_signedsigmoid_direct_derivate;
+                    new_tsinuu->__layers[idx_l]->__nodes[idx_n]->__inverse_derivate = & nat_signedsigmoid_inverse_derivate;
+                    break;
                 case LINEAR:
                     new_tsinuu->__layers[idx_l]->__nodes[idx_n]->__direct = & linear_direct;
                     new_tsinuu->__layers[idx_l]->__nodes[idx_n]->__inverse = & linear_inverse;
                     new_tsinuu->__layers[idx_l]->__nodes[idx_n]->__direct_derivate = & linear_direct_derivate;
                     new_tsinuu->__layers[idx_l]->__nodes[idx_n]->__inverse_derivate = & linear_inverse_derivate;
+                    break;
+                case RELU:
+                    new_tsinuu->__layers[idx_l]->__nodes[idx_n]->__direct = & relu_direct;
+                    new_tsinuu->__layers[idx_l]->__nodes[idx_n]->__inverse = & relu_inverse;
+                    new_tsinuu->__layers[idx_l]->__nodes[idx_n]->__direct_derivate = & relu_direct_derivate;
+                    new_tsinuu->__layers[idx_l]->__nodes[idx_n]->__inverse_derivate = & relu_inverse_derivate;
+                    break;
+                case SOFTPLUS:
+                    new_tsinuu->__layers[idx_l]->__nodes[idx_n]->__direct = & softplus_direct;
+                    new_tsinuu->__layers[idx_l]->__nodes[idx_n]->__inverse = & softplus_inverse;
+                    new_tsinuu->__layers[idx_l]->__nodes[idx_n]->__direct_derivate = & softplus_direct_derivate;
+                    new_tsinuu->__layers[idx_l]->__nodes[idx_n]->__inverse_derivate = & softplus_inverse_derivate;
                     break;
                 default:
                     fprintf(stderr, ">> ERROR, encounter unknown <tsinuu->__attributes->__layers_activation:[%d]> in <tsinuu_fabric>...\n",idx_l);
@@ -843,12 +903,22 @@ __tsinuu_t *tsinuu_fabric(__attribute_tsinuu_t *_attributes){
     tsinuu_initialize_bias_zero(new_tsinuu);
     /*
         LOOP OVER LINES
+        LOOP OVER LINES
+        LOOP OVER LINES
+        LOOP OVER LINES
+        LOOP OVER LINES
+        LOOP OVER LINES
+        LOOP OVER LINES
+        LOOP OVER LINES
+        LOOP OVER LINES
+        LOOP OVER LINES
+        LOOP OVER LINES
     */
-    new_tsinuu->__lines = malloc((new_tsinuu->__attributes->__NUM_TOTAL_LINES) *sizeof(__line_tsinuu_t));
+    new_tsinuu->__lines = malloc(total_lines(new_tsinuu) *sizeof(__line_tsinuu_t));
     unsigned int ln_ctx = 0x00;
     for(unsigned int idx_l_to=0x01; idx_l_to<total_layers(new_tsinuu); idx_l_to++){
-        for(unsigned int idx_n_to=0x00;idx_n_to<layer_size_from_layer_stack_index(new_tsinuu, idx_l_to);idx_n_to++){
-            for(unsigned int idx_n_from=0x00;idx_n_from<layer_size_from_layer_stack_index(new_tsinuu, idx_l_to-0x01);idx_n_from++){
+        for(unsigned int idx_n_from=0x00;idx_n_from<layer_size_from_layer_stack_index(new_tsinuu, idx_l_to-0x01);idx_n_from++){
+            for(unsigned int idx_n_to=0x00;idx_n_to<layer_size_from_layer_stack_index(new_tsinuu, idx_l_to);idx_n_to++){
                 new_tsinuu->__lines[ln_ctx] = malloc(sizeof(__line_tsinuu_t));
                 new_tsinuu->__lines[ln_ctx]->__lnbp = malloc(sizeof(__lineboolean_parametric_t));
                 new_tsinuu->__lines[ln_ctx]->__lnbp->__pardon_grad=___CWCN_FALSE;
@@ -867,13 +937,39 @@ __tsinuu_t *tsinuu_fabric(__attribute_tsinuu_t *_attributes){
                 new_tsinuu->__lines[ln_ctx]->__type = SCALAR; // #FIXME allow for other types
                 new_tsinuu->__lines[ln_ctx]->__ln_kemu = malloc(sizeof(__line_kemu_t));
                 reset_line_kemu(new_tsinuu->__lines[ln_ctx]);
+                new_tsinuu->__attributes->__backward_ln_index_list[ln_ctx]=ln_ctx; // lines are stack indexed backward
                 ln_ctx++;
             }
         }
     }
+    __line_coords_t *c_ln_coord;
+    unsigned int ln_ctx3=0x00;
+    for(unsigned int idx_l_to=0x01;idx_l_to<total_layers(new_tsinuu);idx_l_to++){
+        for(unsigned int idx_n_to=0x00;idx_n_to<layer_size_from_layer_stack_index(new_tsinuu, idx_l_to);idx_n_to++){
+            for(unsigned int idx_n_from=0x00;idx_n_from<layer_size_from_layer_stack_index(new_tsinuu, idx_l_to-0x01);idx_n_from++){
+                for(unsigned int ln_ctx2=0x00;ln_ctx2<ln_ctx;ln_ctx2++){
+                    c_ln_coord = new_tsinuu->__lines[ln_ctx2]->__ln_coord;
+                    if(n_coord_to_l_index(c_ln_coord->__to_node)==idx_l_to && n_coord_to_n_index(c_ln_coord->__to_node)==idx_n_to){
+                        if(n_coord_to_l_index(c_ln_coord->__from_node)==idx_l_to-0x01 && n_coord_to_n_index(c_ln_coord->__from_node)==idx_n_from){
+                            new_tsinuu->__attributes->__forward_ln_index_list[ln_ctx3] = ln_ctx2;
+                            ln_ctx3++;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    if(ln_ctx3 != ln_ctx){
+        fprintf(stderr, ">>>> ERROR: forward and backwatds line index mismatch.");
+        assert(0x00);
+    }
     // 
     reset_all_lines_kemu(new_tsinuu);
     tsinuu_initialize_weights_zero(new_tsinuu);
+    new_tsinuu->__wapaajco=malloc(sizeof(__wapaajco_tsinuu_t));
+    new_tsinuu->__wapaajco->__w_vector=malloc(output_size(new_tsinuu)*sizeof(__cwcn_type_t));
+    new_tsinuu->__wapaajco->__total_wapaajco=0x00;
     #ifdef TSINUU_DEBUG
         fprintf(stdout, ">>>> line count: %d must be eq to %d\n", new_tsinuu->__attributes->__NUM_TOTAL_LINES, ln_ctx);
     #endif
@@ -883,7 +979,7 @@ __tsinuu_t *tsinuu_fabric(__attribute_tsinuu_t *_attributes){
 
 */
 void tsinuu_destroy(__tsinuu_t *_tsinuu){
-    
+    // #FIXME lacking some (wapaajco)
     for(unsigned int idx_l=0x00; idx_l<total_layers(_tsinuu);idx_l++){
         for(unsigned int idx_n=0x00;idx_n<layer_size_from_layer_stack_index(_tsinuu, idx_l);idx_n++){
             free(_tsinuu->__layers[idx_l]->__nodes[idx_n]->__n_kemu->__dist); //
@@ -955,6 +1051,51 @@ void print_layer_by_coord(__tsinuu_t *_tsinuu, __layer_coords_t *_l_coord){
         node_kemu(_tsinuu, node_index_to_node_coord(_tsinuu, _l_coord->__l_s_coord->__layer_index, idx_n))->__value);
     }
 }
+void print_results(__tsinuu_t *_tsinuu){
+    __cwcn_type_t c_wapaajco_vector[output_size(_tsinuu)];
+    __cwcn_type_t c_input_vector[input_size(_tsinuu)];
+    __cwcn_type_t c_output_vector[output_size(_tsinuu)];
+    read_output(_tsinuu, c_output_vector);
+    read_input(_tsinuu, c_input_vector);
+    read_wapaajco(_tsinuu, c_wapaajco_vector);
+    for(unsigned int idx_n=0x00;idx_n<max(output_size(_tsinuu),input_size(_tsinuu));idx_n++){
+        if(idx_n<output_size(_tsinuu)){
+            if(fabs(c_wapaajco_vector[idx_n])>0.1){
+                fprintf(stdout,">>>> ------ >> \033[1;31m wapaajco \033[0m = %2.3f\t",c_wapaajco_vector[idx_n]);
+            } else {
+                fprintf(stdout,">>>> ------ >> \033[1;33m wapaajco \033[0m = %2.3f\t",c_wapaajco_vector[idx_n]);
+            }
+            fprintf(stdout, "\033[1;33m output[%d] \033[0m = %2.3f\t",idx_n, c_output_vector[idx_n]);
+        } else {
+            fprintf(stdout, "\t\t\t\t\t\t\t\t");
+        }
+        if(idx_n<input_size(_tsinuu)){
+            fprintf(stdout, "\033[1;33m input[%d] \033[0m = %2.3f\t",idx_n, c_input_vector[idx_n]);
+        } else {
+            fprintf(stdout, "\t\t\t\t\t\t");
+        }
+        if(idx_n<0x01) {
+            fprintf(stdout, "\033[1;33m total wapaajco \033[0m = %2.3f",_tsinuu->__wapaajco->__total_wapaajco);
+        }
+        fprintf(stdout, "\n");
+    }
+}
+void print_all_lines(__tsinuu_t *_tsinuu){
+    for(unsigned int idx_ln=0x00;idx_ln<total_lines(_tsinuu);idx_ln++){
+        fprintf(stdout,"[%d]/%d",idx_ln,total_lines(_tsinuu));
+        print_line_by_coord(_tsinuu, line_index_to_line_coord(_tsinuu,idx_ln));
+        fprintf(stdout,"\n");
+    }
+}
+void print_all_nodes(__tsinuu_t *_tsinuu){
+    for(unsigned int idx_l=0x00;idx_l<total_layers(_tsinuu);idx_l++){
+        for(unsigned int idx_n=0x00;idx_n<layer_size_from_layer_stack_index(_tsinuu,idx_l);idx_n++){
+            fprintf(stdout,"[%d][%d]",idx_l,idx_n);
+            print_node_by_coord(_tsinuu, node_index_to_node_coord(_tsinuu, idx_l,idx_n));
+            fprintf(stdout,"\n");
+        }
+    }
+}
 /*
 
 */
@@ -964,4 +1105,29 @@ unsigned int output_layer_index(__tsinuu_t *_tsinuu){
 }
 __layer_coords_t *output_layer_coord(__tsinuu_t *_tsinuu){
     return _tsinuu->__layers[output_layer_index(_tsinuu)]->__l_coord;
+}
+
+/*
+
+*/
+
+void clamp_bias(__tsinuu_t *_tsinuu, __node_kemu_t *_n_kemu){
+    _n_kemu->__bias=max(_n_kemu->__bias,_tsinuu->__attributes->__bias_limits->__min);
+    _n_kemu->__bias=min(_n_kemu->__bias,_tsinuu->__attributes->__bias_limits->__max);
+}
+void clamp_all_bias(__tsinuu_t *_tsinuu){
+    for(unsigned int idx_l=0x00;idx_l<total_layers(_tsinuu);idx_l++){
+        for(unsigned int idx_n=0x00;idx_n<layer_size_from_layer_stack_index(_tsinuu, idx_l);idx_n++){
+            clamp_bias(_tsinuu,node_kemu(_tsinuu, node_index_to_node_coord(_tsinuu, idx_l,idx_n)));
+        }
+    }
+}
+void clamp_weight(__tsinuu_t *_tsinuu, __line_kemu_t *_ln_kemu){
+    _ln_kemu->__weight=max(_ln_kemu->__weight,_tsinuu->__attributes->__weight_limits->__min);
+    _ln_kemu->__weight=min(_ln_kemu->__weight,_tsinuu->__attributes->__weight_limits->__max);
+}
+void clamp_all_weights(__tsinuu_t *_tsinuu){
+    for(unsigned int idx_ln=0x00;idx_ln<total_lines(_tsinuu);idx_ln++){
+        clamp_weight(_tsinuu,line_kemu(_tsinuu, line_index_to_line_coord(_tsinuu, idx_ln)));
+    }
 }

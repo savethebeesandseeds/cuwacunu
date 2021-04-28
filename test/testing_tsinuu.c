@@ -2,30 +2,49 @@
 #include <time.h>
 #include "cwcn_tsinuu_piaabo.h"
 #include "cwcn_tsinuu_nebajke.h"
-#define INPUT_SIZE (unsigned int) 3
-#define OUTPUT_SIZE (unsigned int) 2
-#define TOTAL_LAYERS (unsigned int) 3
+#define INPUT_SIZE (unsigned int) 1
+#define OUTPUT_SIZE (unsigned int) 1
+#define TOTAL_LAYERS (unsigned int) 9
+#define NUM_EPOCHS (unsigned int) 100
+#define DATA_COUNT (unsigned int) 100
+/*
+    LINEAR: (alpha=0.1, eta=0.1, omega=1.0, w_potency=2)
+    {INPUT_SIZE,5,10,25,50,25,10,5,OUTPUT_SIZE}: {LINEAR, RELU, RELU, RELU ,RELU ,RELU ,RELU , RELU , LINEAR }: (alpha=0.1, eta=0.9, omega=1.0, w_potency=0.019)
+*/
 int main(void){
     //
     printf("\n------->------\n");
     set_seed();
     // Configure tsinuu
-    unsigned int c_layers_sizes[TOTAL_LAYERS] = {INPUT_SIZE,3,OUTPUT_SIZE};
-    __list_activations_t c_activations_iho[TOTAL_LAYERS] = {LINEAR, SIGMOID, SIGMOID};
+    unsigned int c_layers_sizes[TOTAL_LAYERS] = {INPUT_SIZE,5,10,25,50,25,10,5,OUTPUT_SIZE};
+    __list_activations_t c_activations_iho[TOTAL_LAYERS] = {LINEAR, RELU, RELU, RELU ,RELU ,RELU ,RELU , RELU , LINEAR };
     // Fabric tsinuu
     __attribute_tsinuu_t *c_attribute_tsinuu = malloc(sizeof(__attribute_tsinuu_t));
     c_attribute_tsinuu->__NUM_TOTAL_LAYERS=TOTAL_LAYERS;
     c_attribute_tsinuu->__layers_sizes=c_layers_sizes;
     c_attribute_tsinuu->__layers_activation=c_activations_iho;
     c_attribute_tsinuu->__is_symetric=___CWCN_TRUE;
-    c_attribute_tsinuu->__alpha=0.9; // required to create new tsinuu
-    c_attribute_tsinuu->__eta=0.9; // required to create new tsinuu
+    c_attribute_tsinuu->__alpha=0.1; // alpha assert negative, is a mesure for resisting change; is if you kguht the friction of the learning; required to create new tsinuu
+    c_attribute_tsinuu->__eta=0.9; // eta is the error impulse, required to create new tsinuu
+    c_attribute_tsinuu->__omega=1.0; // required to create new tsinuu
+    c_attribute_tsinuu->__wapaajco_potency=0.0190; // the potency of the wapaajco
+    c_attribute_tsinuu->__omega_stiffess=1.0; // #FIXME not in use
+    c_attribute_tsinuu->__weight_limits=malloc(sizeof(__limits_t));
+    c_attribute_tsinuu->__weight_limits->__max=5.0;
+    c_attribute_tsinuu->__weight_limits->__min=-5.0;
+    c_attribute_tsinuu->__bias_limits=malloc(sizeof(__limits_t));
+    c_attribute_tsinuu->__bias_limits->__max=5.0;
+    c_attribute_tsinuu->__bias_limits->__min=-5.0;
     __tsinuu_t *c_tsinuu = tsinuu_fabric(c_attribute_tsinuu);
     // tsinuu_initialize_weights_zero(c_tsinuu);
     // tsinuu_initialize_bias_zero(c_tsinuu);
     tsinuu_initialize_weights_random(c_tsinuu, 0.5, -0.5);
     tsinuu_initialize_bias_random(c_tsinuu, 0.5, -0.5);
-    pardon_inputoutput_bias(c_tsinuu);
+    set_all_nodebooleanpardon_parametric(c_tsinuu, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00);
+    pardon_inputoutput_bias(c_tsinuu); // #FIXME check if needed of enabled
+    set_all_linebooleanpardon_parametric(c_tsinuu, 0x00, 0x00);
+    // pardon_all_bias(c_tsinuu);
+    // getchar();
     /* 
         SET THE PARAMETRICS:
         __nodeboolean_parametric_t {
@@ -49,48 +68,63 @@ int main(void){
             __has_grad      =0x0X
         }
     */
-    set_all_nodebooleanpardon_parametric(c_tsinuu, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00);
-    set_all_linebooleanpardon_parametric(c_tsinuu, 0x00, 0x00);
     /*
-        PROPAGATE
+        uwaabo
     */
     // fprintf(stdout, "--------->(PREV TRAINING)<---------\n");
     // for(unsigned int idx_n=0x00;idx_n<INPUT_SIZE;idx_n++){
-    //     fprintf(stdout, ">>>>(after propagate) suspect elemenet input[%d]=%f\n",idx_n, c_input_vector[idx_n]);
+    //     fprintf(stdout, ">>>>(after uwaabo) suspect elemenet input[%d]=%f\n",idx_n, c_input_vector[idx_n]);
     // }
     // for(unsigned int idx_n=0x00;idx_n<OUTPUT_SIZE;idx_n++){
-    //     fprintf(stdout, ">>>>(after propagate) suspect elemenet \t\toutput[%d]=%f\n",idx_n, c_output_vector[idx_n]);
+    //     fprintf(stdout, ">>>>(after uwaabo) suspect elemenet \t\toutput[%d]=%f\n",idx_n, c_output_vector[idx_n]);
     // }
     // fprintf(stdout, "--------->---------\n");
     /*
         TRAIN
     */
-    __cwcn_type_t *c_wapaajco;
-    // __cwcn_type_t *c_input_vector = malloc(INPUT_SIZE*sizeof(__cwcn_type_t));
-    __cwcn_type_t *c_output_vector = malloc(OUTPUT_SIZE*sizeof(__cwcn_type_t));
-    __cwcn_type_t c_input_vector[5][INPUT_SIZE]={{0,0,0},{0,0,0},{0,1,0},{0,0,1},{0,1,1}};
-    __cwcn_type_t c_correct_output[5][OUTPUT_SIZE]={{0,0},{0,0},{0,1},{0,1},{0,0}};
-    for(unsigned int ctx_epoch=0x00;ctx_epoch<10000;ctx_epoch++){
-        for(unsigned int ctx_p=0x00;ctx_p<5;ctx_p++){
-            // Propagate
-            set_input(c_tsinuu, c_input_vector[ctx_p]);
-            tsinuu_direct_propagate_full_parametric(c_tsinuu);
-            c_wapaajco=wapaajco_bydifference(c_tsinuu, c_correct_output[ctx_p]);
-            // for(unsigned int idx_n=0x00;idx_n<OUTPUT_SIZE;idx_n++){
-            //     c_wapaajco[idx_n]=c_wapaajco[idx_n];
-            // }
-            jkimyei_bydirectNABLA(c_tsinuu, c_wapaajco);
-            // read_input(c_tsinuu, *c_input_vector);
-            read_output(c_tsinuu, c_output_vector);
-            fprintf(stdout, "--------->(POST <%d>[%d])<---------\n",ctx_epoch,ctx_p);
-            for(unsigned int idx_n=0x00;idx_n<INPUT_SIZE;idx_n++){
-                fprintf(stdout, ">>>>[%d](after propagate) suspect elemenet input[%d]=%f\n",ctx_p,idx_n, c_input_vector[ctx_p][idx_n]);
-            }
-            for(unsigned int idx_n=0x00;idx_n<OUTPUT_SIZE;idx_n++){
-                fprintf(stdout, ">>>>[%d](after propagate) suspect elemenet \t\toutput[%d]=%f\n",ctx_p,idx_n, c_output_vector[idx_n]);
-            }
-            fprintf(stdout, "--------->---------\n");
+    // __cwcn_type_t *c_wapaajco=malloc(OUTPUT_SIZE*sizeof(__cwcn_type_t));
+    // __cwcn_type_t c_correct_output[6][OUTPUT_SIZE]={{0,0},{0,0},{0,1},{0,1},{0,0}};
+    // __cwcn_type_t c_input_vector[6][INPUT_SIZE]={{0,0},{0,0},{1,0},{0,1},{1,1}};
+    // __cwcn_type_t c_input_vector[4][INPUT_SIZE]={{0,0,0},{0,1,0},{0,0,1},{0,1,1}};
+    // __cwcn_type_t c_correct_output[4][OUTPUT_SIZE]={{0},{1},{1},{0}};
+
+    // __cwcn_type_t c_input_vector[DATA_COUNT][INPUT_SIZE]={{0},{1},{2},{3}};
+    // __cwcn_type_t c_correct_output[DATA_COUNT][OUTPUT_SIZE]={{0},{1},{2},{3}};
+    __cwcn_type_t c_input_vector[DATA_COUNT][INPUT_SIZE]={
+        {0.00},
+        {0.01},{0.02},{0.03},{0.04},{0.05},{0.06},{0.07},{0.08},{0.09},{0.1},
+        {0.11},{0.12},{0.13},{0.14},{0.15},{0.16},{0.17},{0.18},{0.19},{0.2},
+        {0.21},{0.22},{0.23},{0.24},{0.25},{0.26},{0.27},{0.28},{0.29},{0.3},
+        {0.31},{0.32},{0.33},{0.34},{0.35},{0.36},{0.37},{0.38},{0.39},{0.4},
+        {0.41},{0.42},{0.43},{0.44},{0.45},{0.46},{0.47},{0.48},{0.49},{0.5},
+        {0.51},{0.52},{0.53},{0.54},{0.55},{0.56},{0.57},{0.58},{0.59},{0.6},
+        {0.61},{0.62},{0.63},{0.64},{0.65},{0.66},{0.67},{0.68},{0.69},{0.7},
+        {0.71},{0.72},{0.73},{0.74},{0.75},{0.76},{0.77},{0.78},{0.79},{0.8},
+        {0.81},{0.82},{0.83},{0.84},{0.85},{0.86},{0.87},{0.88},{0.89},{0.9},
+        {0.91},{0.92},{0.93},{0.94},{0.95},{0.96},{0.97},{0.98},{0.99}};
+    __cwcn_type_t c_correct_output[DATA_COUNT][OUTPUT_SIZE];
+    for(unsigned int ctx_p=0x00;ctx_p<DATA_COUNT;ctx_p++){
+        for(unsigned int idx_v=0x00;idx_v<INPUT_SIZE;idx_v++){
+            c_correct_output[ctx_p][idx_v]=sin(sin(2*3.141592*c_input_vector[ctx_p][idx_v]));
         }
+    }
+    unsigned int rand_idx;
+    for(unsigned int ctx_epoch=0x00;ctx_epoch<NUM_EPOCHS;ctx_epoch++){
+        for(unsigned int ctx_p=0x00;ctx_p<DATA_COUNT;ctx_p++){
+            rand_idx = rand() % DATA_COUNT;    
+            // fprintf(stdout, " --- --- ---epoch:[ %d ] data:[ %d ] --- --- --- --- --- START ---\t",ctx_epoch,ctx_p);
+            // uwaabo
+            set_input(c_tsinuu, c_input_vector[rand_idx]);
+            tsinuu_direct_uwaabo_full_parametric(c_tsinuu);
+            wapaajco_bydifference(c_tsinuu, c_correct_output[rand_idx]);
+            // fprintf(stdout, "--------->(RESULTS) epoch:[ %d ] data:[ %d ]<---------\n",ctx_epoch,ctx_p);
+            // fprintf(stdout, "--------->(JIKIMYEI) epoch:[ %d ] data:[ %d ]<---------\n",ctx_epoch,ctx_p);
+            jkimyei_tsinuu_bydirectNABLA(c_tsinuu);
+            // getchar();
+            print_results(c_tsinuu);
+            fprintf(stdout,"\n");
+        }
+        // fprintf(stdout, "--------->END OF EPOCH<---------\n");
     }
     // for(bin_input = -0xF; bin_input<=0xF; bin_input++){
     //     bin_value = c_tsinuu->__nodes[0]->__direct(bin_input);
@@ -100,8 +134,10 @@ int main(void){
     // print_layer_by_coord(_tsinuu, layer_index_to_layer_coord(_tsinuu,0x00));
     // print_node_by_coord(c_tsinuu, node_index_to_node_coord(c_tsinuu,0x00,0x00));
     // print_line_by_coord(c_tsinuu, line_index_to_line_coord(c_tsinuu, 0x00));
-    printf("waka dao\n");
-    printf("waka din\n");
+    print_all_lines(c_tsinuu);
+    print_all_nodes(c_tsinuu);
     tsinuu_destroy(c_tsinuu);
-    printf("waka tao\n");
+    printf("\033[1;32mwaka dao\033[0m\n");
+    printf("\033[1;32mwaka din\033[0m\n");
+    printf("\033[1;32mwaka tao\033[0m\n");
 }

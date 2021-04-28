@@ -11,6 +11,8 @@
 #ifdef TSINUU_FORWARD
 #define TSINUU_FORWARD
 #endif
+// #define TSINUU_VERBOSE_1
+// #define TSINUU_VERBOSE_2
 // #ifdef TSINUU_BACKWARD
 // #define TSINUU_BACKWARD
 // #endif
@@ -28,8 +30,11 @@ typedef _Bool ___cwcn_bool_t;
     } __wbase_t; // not in use #FIXME
     typedef enum{
         SIGMOID,  // pretty powerfull sigmoid.
+        SIGNEDSIGMOID, // a sigmoid that goes from negative one to one.
         SCALAR, // y=a.x
-        LINEAR  // y=x
+        LINEAR,  // y=x
+        RELU,  // y=max(0,x)
+        SOFTPLUS // a suavizated relu
     } __list_activations_t;
     typedef float (__cwcn_type_t);
     #define __cwcn_type_size sizeof(__cwcn_type_t) // #FIXME not in use
@@ -54,6 +59,10 @@ typedef _Bool ___cwcn_bool_t;
         __cwcn_type_t __skewness;
         __cwcn_type_t __entropy;
     } __dist_tensor_t;
+    typedef struct __limits {
+        __cwcn_type_t __max;
+        __cwcn_type_t __min;
+    } __limits_t;
     typedef struct __node_stack_coord { // the coordinate of node in layer
         unsigned int __node_index;
     } __node_stack_coord_t;
@@ -90,9 +99,9 @@ typedef _Bool ___cwcn_bool_t;
         __cwcn_type_t __value;
         __cwcn_type_t __error;
         __cwcn_type_t __bias;
-        __cwcn_type_t __bias_grad; // grad is derivate
-        __cwcn_type_t __bias_nabla; // nabla is the error chained to derivates
-        __cwcn_type_t __bias_delta; // delta is the actual change
+        __cwcn_type_t __bias_delta; // delta actual change
+        __cwcn_type_t __nodeactivation_grad; // the node acitvation function derivate evaluated in the forward pass.
+        __cwcn_type_t __nabla; // nabla is the error propagated by differential chain backward.
         __dist_tensor_t *__dist;
     } __node_kemu_t;
     typedef struct __line_kemu {
@@ -110,6 +119,15 @@ typedef _Bool ___cwcn_bool_t;
         __list_activations_t *__layers_activation;
         __cwcn_type_t __alpha; // required to create new tsinuu
         __cwcn_type_t __eta; // required to create new tsinuu
+        __cwcn_type_t __omega; // required to create new tsinuu
+        __cwcn_type_t __omega_stiffess; // requiresd to create new tsinuu
+        __cwcn_type_t __wapaajco_potency; // required to create new tsinuu
+        __limits_t *__weight_limits; // requiresd to create new tsinuu
+        __limits_t *__bias_limits; // requiresd to create new tsinuu
+        __cwcn_type_t *__layerweight_density;
+        __cwcn_type_t *__layerbias_density;
+        unsigned int *__forward_ln_index_list;
+        unsigned int *__backward_ln_index_list;
     } __attribute_tsinuu_t;
     typedef struct __layer_coords {
         __layer_stack_coord_t *__l_s_coord; // used for confirmation porpouses
@@ -125,6 +143,10 @@ typedef _Bool ___cwcn_bool_t;
         __node_coords_t *__to_node;
         __node_coords_t *__from_node;
     } __line_coords_t;
+    typedef struct __wapaajco_tsinuu {
+        __cwcn_type_t *__w_vector;
+        __cwcn_type_t __total_wapaajco;
+    } __wapaajco_tsinuu_t;
     typedef struct __node_tsinuu {
         __node_kemu_t *__n_kemu;
         __node_coords_t *__n_coord;
@@ -152,6 +174,7 @@ typedef _Bool ___cwcn_bool_t;
         __layer_tsinuu_t **__layers;
         __line_tsinuu_t **__lines;
         __attribute_tsinuu_t *__attributes;
+        __wapaajco_tsinuu_t *__wapaajco;
     } __tsinuu_t;
     
     __tsinuu_t *tsinuu_fabric(__attribute_tsinuu_t *_attributes);
@@ -159,6 +182,7 @@ typedef _Bool ___cwcn_bool_t;
 
     void read_output(__tsinuu_t *_tsinuu, __cwcn_type_t *_result_vector);
     void read_input(__tsinuu_t *_tsinuu, __cwcn_type_t *_result_vector);
+    void read_wapaajco(__tsinuu_t *_tsinuu, __cwcn_type_t *_wapaajco_vector);
     
     unsigned int total_layers(__tsinuu_t *_tsinuu);
     unsigned int total_nodes(__tsinuu_t *_tsinuu);
@@ -234,11 +258,15 @@ typedef _Bool ___cwcn_bool_t;
     void reset_all_nodes_kemu(__tsinuu_t *_tsinuu);
     void reset_line_kemu(__line_tsinuu_t *_line);
     void reset_all_lines_kemu(__tsinuu_t *_tsinuu);
+    void reset_layerdentities(__tsinuu_t *_tsinuu);
     
     void print_node_by_coord(__tsinuu_t *_tsinuu, __node_coords_t *_n_coord);
     void print_node_by_coord_with_argument(__tsinuu_t *_tsinuu, __node_coords_t *_n_coord, __cwcn_type_t _arg);
     void print_line_by_coord(__tsinuu_t *_tsinuu, __line_coords_t *_ln_coord);
     void print_layer_by_coord(__tsinuu_t *_tsinuu, __layer_coords_t *_l_coord);
+    void print_results(__tsinuu_t *_tsinuu);
+    void print_all_lines(__tsinuu_t *_tsinuu);
+    void print_all_nodes(__tsinuu_t *_tsinuu);
 
     void reset_node_value(__node_tsinuu_t *_node);
     void reset_node_grad(__node_tsinuu_t *_node);
@@ -253,9 +281,15 @@ typedef _Bool ___cwcn_bool_t;
     void reset_all_lines_grad(__tsinuu_t *_tsinuu);
 
     void pardon_inputoutput_bias(__tsinuu_t *_tsinuu);
+    void pardon_all_bias(__tsinuu_t *_tsinuu);
 
     unsigned int output_layer_index(__tsinuu_t *_tsinuu);
     __layer_coords_t *output_layer_coord(__tsinuu_t *_tsinuu);
+
+    void clamp_all_bias(__tsinuu_t *_tsinuu);
+    void clamp_bias(__tsinuu_t *_tsinuu, __node_kemu_t *_n_kemu);
+    void clamp_all_weights(__tsinuu_t *_tsinuu);
+    void clamp_weight(__tsinuu_t *_tsinuu, __line_kemu_t *_ln_kemu);
 #else 
     #ifdef BIN_TYPE
         typedef __uint8_t (__cwcn_type_t);

@@ -1,10 +1,10 @@
 #include "cwcn_tsinuu_nebajke.h"
 #include "cwcn_tsinuu_piaabo.h"
 
-// void tsinuu_inverse_propagate(__tsinuu_t *_tsinuu, __cwcn_type_t *_output);
+// void tsinuu_inverse_uwaabo(__tsinuu_t *_tsinuu, __cwcn_type_t *_output);
 // void jkimyei_weight_byinversediff(__tsinuu_t *_tsinuu);
 // void jkimyei_bias_byinversediff(__tsinuu_t _tsinuu);
-// void tsinuu_direct_propagate(__tsinuu_t *_tsinuu, __cwcn_type_t *_input);
+// void tsinuu_direct_uwaabo(__tsinuu_t *_tsinuu, __cwcn_type_t *_input);
 // void jkimyei_weight_bydirectdiff(__tsinuu_t *_tsinuu);
 // void jkimyei_bias_bydirectdiff(__tsinuu_t *_tsinuu);
 // void cpte_kemu_firstordedgrad(__tsinuu_t *_tsinuu, ___cwcn_bool_t cpte_direct, ___cwcn_bool_t cpte_inverse);
@@ -24,11 +24,30 @@ __cwcn_type_t nat_sigmoid_direct_derivate_fast(__cwcn_type_t _output){return _ou
 __cwcn_type_t nat_sigmoid_inverse(__cwcn_type_t _input){return log(_input/(1-_input));}
 __cwcn_type_t nat_sigmoid_inverse_derivate(__cwcn_type_t _input){return 1/(_input - _input*_input);}
 
+__cwcn_type_t nat_signedsigmoid_direct(__cwcn_type_t _input){
+    return 2.0/(1.0+exp(-2.0*_input))-1.0;}
+__cwcn_type_t nat_signedsigmoid_direct_derivate(__cwcn_type_t _input){
+    return (2.0*exp(-2.0*_input))/(exp(-2.0*_input)+1);} // #FIXME, better perfornce if direct value is saved.
+__cwcn_type_t nat_signedsigmoid_inverse(__cwcn_type_t _input){
+    return -0.5*log(2.0/(_input+1.0)-1.0);} // #FIXME  might be inestable
+__cwcn_type_t nat_signedsigmoid_inverse_derivate(__cwcn_type_t _input){
+    return -1.0/(_input*_input-1.0);} // #FIXME might be inestable
+
 __cwcn_type_t linear_direct(__cwcn_type_t _input){return _input;}
 __cwcn_type_t linear_direct_derivate(__cwcn_type_t _input){return 1.0;}
 __cwcn_type_t linear_inverse(__cwcn_type_t _input){return _input;}
 __cwcn_type_t linear_inverse_derivate(__cwcn_type_t _input){return 1.0;}
 // __cwcn_type_t bin_sigmoid_forward(__cwcn_type_t _input){return (__cwcn_type_t) 0x0F>>((__cwcn_type_t) 0x0F + (__cwcn_type_t) 0x0F<<(__cwcn_type_t) _input);} // #FIXME
+
+__cwcn_type_t relu_direct(__cwcn_type_t _input){return max(_input,0);}
+__cwcn_type_t relu_direct_derivate(__cwcn_type_t _input){if(_input>0){return 0x01;} else {return 0x00;}}
+__cwcn_type_t relu_inverse(__cwcn_type_t _input){return max(_input,0);}
+__cwcn_type_t relu_inverse_derivate(__cwcn_type_t _input){if(_input>0){return 0x01;} else {return 0x00;}}
+
+__cwcn_type_t softplus_direct(__cwcn_type_t _input){return log(1+exp(_input));}
+__cwcn_type_t softplus_direct_derivate(__cwcn_type_t _input){return 1.0/(1.0+exp(-_input));}
+__cwcn_type_t softplus_inverse(__cwcn_type_t _input){return log(exp(_input)-1.0);}
+__cwcn_type_t softplus_inverse_derivate(__cwcn_type_t _input){return 1.0/(exp(_input)-1.0)+1.0;}
 
 /*
     PARAMETERS OPERATIONS
@@ -82,7 +101,7 @@ void dist_node(__tsinuu_t *_tsinuu, __node_tsinuu_t *_node){ // #FIXME might be 
         #endif
     }
 }
-void tsinuu_direct_propagate_full_parametric(__tsinuu_t *_tsinuu){ // #FIXME make function pointing to line coord instead of node, #FIXME make nable for lines.
+void tsinuu_direct_uwaabo_full_parametric(__tsinuu_t *_tsinuu){ // #FIXME make function pointing to line coord instead of node, #FIXME make nable for lines.
     /* THIS METHOD ASSUMES PREVIUS DEFINITION OF NODE-and-LINE-BOOLEAN-PARAMETRICS:
         __nodeboolean_parametric_t {
             __pardon_value  (set) -
@@ -105,8 +124,10 @@ void tsinuu_direct_propagate_full_parametric(__tsinuu_t *_tsinuu){ // #FIXME mak
             __has_grad      =0x0X -
         }
     */
+    // #FIXME assert is direct
     reset_all_nodes_grad(_tsinuu);
     reset_all_noninputnodes_values(_tsinuu);
+    reset_layerdentities(_tsinuu);
     __cwcn_type_t c_sum = 0x00;
     __node_tsinuu_t *c_to_node;
     __node_tsinuu_t *c_from_node;
@@ -132,15 +153,17 @@ void tsinuu_direct_propagate_full_parametric(__tsinuu_t *_tsinuu){ // #FIXME mak
                         bias on the extrema. 
                         #FIXME find what is different for output.
                     */
+                    _tsinuu->__attributes->__layerweight_density[idx_l_to-0x01]=0x00;
                     for(unsigned int idx_n_from=0x00;idx_n_from<layer_size_from_layer_stack_index(_tsinuu, idx_l_to-0x01);idx_n_from++){
                         c_from_node = node(_tsinuu, node_index_to_node_coord(_tsinuu, idx_l_to-0x01, idx_n_from));
-                        c_line = line(_tsinuu, line_index_to_line_coord(_tsinuu, ln_ctx));
+                        c_line = line(_tsinuu, line_index_to_line_coord(_tsinuu, _tsinuu->__attributes->__forward_ln_index_list[ln_ctx]));
                         if(!c_line->__lnbp->__pardon_weight){
                             c_sum += c_line->__ln_kemu->__weight*c_from_node->__n_kemu->__value;
                         } else {
                             c_sum += c_from_node->__n_kemu->__value;
                         }
-                        // print_line_by_coord(_tsinuu, line_index_to_line_coord(_tsinuu, ln_ctx));
+                        _tsinuu->__attributes->__layerweight_density[idx_l_to-0x01]+=c_line->__ln_kemu->__weight;
+                        // print_line_by_coord(_tsinuu, line_index_to_line_coord(_tsinuu, _tsinuu->__attributes->__forward_ln_index_list[ln_ctx]));
                         // fprintf(stdout,"\n");
                         ln_ctx++; // accessing lines by this way is dangerous, # FIXME
                     }
@@ -149,11 +172,13 @@ void tsinuu_direct_propagate_full_parametric(__tsinuu_t *_tsinuu){ // #FIXME mak
                     c_sum += c_to_node->__n_kemu->__bias;
                 }
                 c_to_node->__n_kemu->__value = c_to_node->__direct(c_sum);
+                c_sum=max(c_sum,-5);
+                c_sum=min(c_sum,5);
                 if(!c_to_node->__nbp->__pardon_grad){
                     if(c_to_node->__type==SIGMOID){
-                        c_to_node->__n_kemu->__bias_grad=nat_sigmoid_direct_derivate_fast(c_to_node->__n_kemu->__value);
+                        c_to_node->__n_kemu->__nodeactivation_grad=nat_sigmoid_direct_derivate_fast(c_to_node->__n_kemu->__value);
                     } else {
-                        c_to_node->__n_kemu->__bias_grad=c_to_node->__direct_derivate(c_sum);
+                        c_to_node->__n_kemu->__nodeactivation_grad=c_to_node->__direct_derivate(c_sum);
                     }
                     c_to_node->__nbp->__has_grad=___CWCN_TRUE;
                 }
@@ -165,6 +190,7 @@ void tsinuu_direct_propagate_full_parametric(__tsinuu_t *_tsinuu){ // #FIXME mak
                 c_sum = 0x00;
             }
         }
+        // _tsinuu->__attributes->__layerweight_density[idx_l_to]=; ...
         // // fprintf(stdout, "------------------------(+1)LAYER----------------------\n");
         // // fprintf(stdout, "---------LAYER(from)------[%d][.]\n",idx_l_to);
         // // print_layer_by_coord(_tsinuu, layer_index_to_layer_coord(_tsinuu,idx_l_to-0x01));
@@ -179,14 +205,13 @@ void tsinuu_direct_propagate_full_parametric(__tsinuu_t *_tsinuu){ // #FIXME mak
     /*
         IS OF CLASS OUTPUT
     */
-    fprintf(stdout, "\n");
     #ifdef TSINUU_DEBUG
-        fprintf(stderr, ">>>> request <tsinuu_direct_propagate_full_parametric>\n");
+        fprintf(stderr, ">>>> request <tsinuu_direct_uwaabo_full_parametric>\n");
         fprintf(stderr, ">>>> suspect element value first output:\t %f\n",node(_tsinuu, node_index_to_node_coord(_tsinuu, output_layer_index(_tsinuu), 0x00))->__n_kemu->__value);
     #endif
 }
 
-// void tsinuu_direct_propagate_fast(__tsinuu_t *_tsinuu){ // #FIXME make function pointing to line coord instead of node
+// void tsinuu_direct_uwaabo_fast(__tsinuu_t *_tsinuu){ // #FIXME make function pointing to line coord instead of node
 //     /* THIS METHOD WORK WITH NODE-and-LINE-BOOLEAN-PARAMETRICS AS: (using fast serves not for jkimyei)
 //         __nodeboolean_parametric_t {
 //             __pardon_value  =0x00
@@ -214,7 +239,7 @@ void tsinuu_direct_propagate_full_parametric(__tsinuu_t *_tsinuu){ // #FIXME mak
 
 */
 
-void jkimyei_bydirectNABLA(__tsinuu_t *_tsinuu, __cwcn_type_t *_output_wapaajco){ // #FIXME make function pointing to line coord instead of node
+void jkimyei_tsinuu_bydirectNABLA(__tsinuu_t *_tsinuu){ // #FIXME make function pointing to line coord instead of node
     /* THIS METHOD ASSUMES PREVIUS DEFINITION OF NODE-and-LINE-BOOLEAN-PARAMETRICS:
         __nodeboolean_parametric_t {
             __pardon_value  (set)
@@ -237,89 +262,161 @@ void jkimyei_bydirectNABLA(__tsinuu_t *_tsinuu, __cwcn_type_t *_output_wapaajco)
             __has_grad      =0x0X
         }
     */
-    // #FIXME check __has_value
-    reset_all_nodes_error(_tsinuu);
-    __node_tsinuu_t *c_node1;
+    // #FIXME check if each node __has_value
+    __line_tsinuu_t *c_line;
+    __node_tsinuu_t *c_node_to;
+    __node_tsinuu_t *c_node_from;
+    __cwcn_type_t c_sum = 0x00;
+    __cwcn_type_t *c_wapaajco_vector=malloc(output_size(_tsinuu)*sizeof(__cwcn_type_t));
+    read_wapaajco(_tsinuu, c_wapaajco_vector);
+    reset_all_nodes_error(_tsinuu); // #FIXME what!
     /*
-        NODE IS OF CLASS OUTPUT, therefore has error.
-    */
-    fprintf(stdout,">> OYUTPUT\n");
-    for(unsigned int idx_n1=0x00;idx_n1<layer_size_from_layer_stack_index(_tsinuu, output_layer_index(_tsinuu));idx_n1++){
-        c_node1 = node(_tsinuu, node_index_to_node_coord(_tsinuu, output_layer_index(_tsinuu), idx_n1));
-        if(!c_node1->__nbp->__has_grad){
-            fprintf(stderr, ">>>> ERROR: output node must have (grad) [%d][%d].\n",0x00,idx_n1);
-            assert(0x00);
-        }
-        if(!c_node1->__nbp->__is_output){
-            fprintf(stderr, ">>>> ERROR: node was expected to be (output) [%d][%d].\n",0x00,idx_n1);
-            assert(0x00);
-        }
-        // c_node1->__n_kemu->__error=c_node1->__n_kemu->__value-_correct_output[idx_n1];
-        #ifdef TSINUU_DEBUG
-            fprintf(stdout, ">>>> WARNING: output node with no error computed.\n"); // #FIXME
-        #endif
-        c_node1->__n_kemu->__bias_nabla=_output_wapaajco[idx_n1]*c_node1->__n_kemu->__bias_grad;
-        fprintf(stdout,"node:[%d][%d]:\t__bias_nabla:%9.3f\t__bias_grad:%9.3f\t_output_wapaajco[%d]:%9.3f\n",output_layer_index(_tsinuu),idx_n1,c_node1->__n_kemu->__bias_nabla,c_node1->__n_kemu->__bias_grad,idx_n1,_output_wapaajco[idx_n1]);
-    }
-    /*
+        __NABLA (or backward pass during trainin)
+        
+        NODE IS OF CLASS OUTPUT, therefore has error. Calculate initial values for nabla
         NODE IS OF CLASS HIDDEN/INPUT, therefore has weight-lines.
     */
-    fprintf(stdout,">> HIDDEN INPUT\n");
-    __node_tsinuu_t *c_node2;
-    __cwcn_type_t c_sum = 0x00;
+    // goto last layer (output __nabla is special)
+    for(unsigned int idx_n_from=output_size(_tsinuu)-0x01;idx_n_from>=0x00;idx_n_from--){
+        c_node_from = node(_tsinuu, node_index_to_node_coord(_tsinuu, output_layer_index(_tsinuu), idx_n_from));
+        if(!c_node_from->__nbp->__has_grad){
+            fprintf(stderr, ">>>> ERROR: node must have (_has_grad) [%d][%d].\n",output_layer_index(_tsinuu),idx_n_from);
+            assert(0x00);
+        }
+        if(!c_node_from->__nbp->__is_output){
+            fprintf(stderr, "ERROR: problem with layers order...");
+            assert(0x00);
+        }
+        c_node_from->__n_kemu->__nabla=c_wapaajco_vector[idx_n_from]*c_node_from->__n_kemu->__nodeactivation_grad;
+        #ifdef TSINUU_VERBOSE_2
+            fprintf(stdout,"\033[0;35m");
+            fprintf(stdout,"NODE:[%d][%d]:  <<Nabla = _wapaajco*biasGrad.>>\t\t\tNabla:%2.5f   biasGrad:%2.3f   \033[0;32m_wapaajco[%d]\033[0m:%2.3f\n",output_layer_index(_tsinuu),idx_n_from,c_node_from->__n_kemu->__nabla,c_node_from->__n_kemu->__nodeactivation_grad,idx_n_from,c_wapaajco_vector[idx_n_from]);
+            fprintf(stdout,"\033[0m");
+        #endif
+        if(idx_n_from==0){break;}
+    }
+    // goto rest
+    ___cwcn_bool_t allin_flag = 0x00;
     unsigned int ln_ctx = total_lines(_tsinuu)-0x01;
-    for(unsigned int idx_l1=total_layers(_tsinuu)-0x02;idx_l1>=0x00;idx_l1--){
-        for(unsigned int idx_n1=0x00;idx_n1<layer_size_from_layer_stack_index(_tsinuu, idx_l1);idx_n1++){
-            c_node1 = node(_tsinuu, node_index_to_node_coord(_tsinuu, idx_l1, idx_n1));
-            if(!c_node1->__nbp->__has_grad){
-                fprintf(stderr, ">>>> ERROR: node must have (grad) [%d][%d].\n",idx_l1,idx_n1);
+    for(unsigned int idx_l_from=total_layers(_tsinuu)-0x02;idx_l_from>=0x00;idx_l_from--){ // omits input
+        for(unsigned int idx_n_from=layer_size_from_layer_stack_index(_tsinuu, idx_l_from)-0x01;idx_n_from>=0x00;idx_n_from--){
+            c_node_from = node(_tsinuu, node_index_to_node_coord(_tsinuu, idx_l_from, idx_n_from));
+            if(!c_node_from->__nbp->__has_grad){
+                fprintf(stderr, ">>>> ERROR: node must have (_has_grad) [%d][%d].\n",idx_l_from,idx_n_from);
                 assert(0x00);
             }
-            if(c_node1->__nbp->__is_output){
-                fprintf(stderr, ">>>> ERROR: node was expected to be (hidden) or (input) [%d][%d].\n",idx_l1,idx_n1);
-                assert(0x00);
-            }
-            for(unsigned int idx_n2=layer_size_from_layer_stack_index(_tsinuu, idx_l1+0x01)-0x01;idx_n2>=0x00;idx_n2--){
-                c_node2 = node(_tsinuu, node_index_to_node_coord(_tsinuu, idx_l1+0x01, idx_n2-0x00));
-                c_sum+=_tsinuu->__lines[ln_ctx]->__ln_kemu->__weight*c_node2->__n_kemu->__bias_nabla;
+            for(unsigned int idx_n_to=layer_size_from_layer_stack_index(_tsinuu, idx_l_from+0x01)-0x01;idx_n_to>=0x00;idx_n_to--){
+                c_line=_tsinuu->__lines[_tsinuu->__attributes->__backward_ln_index_list[ln_ctx]];
+                c_node_to = node(_tsinuu, node_index_to_node_coord(_tsinuu, idx_l_from+0x01, idx_n_to));
+                c_sum+=nat_signedsigmoid_direct(c_line->__ln_kemu->__weight*c_node_to->__n_kemu->__nabla); // #FIXME here is a problem, vanishing gradient
+                #ifdef TSINUU_VERBOSE_2
+                    fprintf(stdout,"\033[0;35m\t");
+                    print_line_by_coord(_tsinuu, line_index_to_line_coord(_tsinuu,_tsinuu->__attributes->__backward_ln_index_list[ln_ctx]));
+                    fprintf(stdout,"\t c_sum:%f\n",c_sum);
+                    fprintf(stdout,"\033[0m");
+                #endif
+                if(n_coord_to_l_index(c_line->__ln_coord->__to_node)==idx_l_from+0x01 && n_coord_to_n_index(c_line->__ln_coord->__to_node)==idx_n_to){
+                    if(n_coord_to_l_index(c_line->__ln_coord->__from_node)==idx_l_from && n_coord_to_n_index(c_line->__ln_coord->__from_node)==idx_n_from){
+                        allin_flag=0x01;
+                    }
+                }
+                if(!allin_flag){
+                    fprintf(stderr, ">>>> ERROR: -p- huge problem, line index are not listed as expected.");
+                    assert(0x00);
+                }
+                allin_flag=0x00;
                 ln_ctx--;
-                if(idx_n2==0){
-                    break;
-                }
+                if(idx_n_to==0){break;}
             }
-            c_node1->__n_kemu->__bias_nabla=c_sum*c_node1->__n_kemu->__bias_grad;
-            fprintf(stdout,"node:[%d][%d]:\t__bias_nabla:%9.3f\t__bias_grad:%9.3f\tc_sum:%9.3f\n",idx_l1,idx_n1,c_node1->__n_kemu->__bias_nabla,c_node1->__n_kemu->__bias_grad,c_sum);
+            c_node_from->__n_kemu->__nabla=c_sum*c_node_from->__n_kemu->__nodeactivation_grad;
+            #ifdef TSINUU_VERBOSE_2
+                fprintf(stdout,"\033[0;35m");
+                fprintf(stdout,"NODE :(from):[%d][%d]: <<Nabla = c_sum*biasGrad.>>\t\t\t\tNabla:%2.5f   biasGrad:%2.3f   c_sum:%2.3f\n",idx_l_from,idx_n_from,c_node_from->__n_kemu->__nabla,c_node_from->__n_kemu->__nodeactivation_grad,c_sum);
+                fprintf(stdout,"\033[0m");
+            #endif
             c_sum = 0x00;
+            if(idx_n_from==0){break;}
         }
-        if(idx_l1==0){
-            break;
-        }
+        if(idx_l_from==0){break;}
     }
-    __line_tsinuu_t *c_line;
+    free(c_wapaajco_vector);
+    /*
+        __DELTA (or forward pass during training)
+    */
     ln_ctx = 0x00;
-    // #FIXME lack input line
-    for(unsigned int idx_l1=0x01;idx_l1<total_layers(_tsinuu);idx_l1++){
-        for(unsigned int idx_n1=0x00;idx_n1<layer_size_from_layer_stack_index(_tsinuu, idx_l1);idx_n1++){
-            c_node1 = node(_tsinuu, node_index_to_node_coord(_tsinuu, idx_l1, idx_n1));
-            if(!c_node1->__nbp->__pardon_grad){
-                c_node1->__n_kemu->__bias_delta=_tsinuu->__attributes->__eta*c_node1->__n_kemu->__bias_nabla+_tsinuu->__attributes->__alpha*c_node1->__n_kemu->__bias_delta;
-                fprintf(stdout,"NODE DELTA:[%d][%d]:\t__eta:%9.3f * __bias_nabla:%9.3f + __alpha:%9.3f * __bias_delta:%9.3f\n",idx_l1,idx_n1,_tsinuu->__attributes->__eta,c_node1->__n_kemu->__bias_nabla,_tsinuu->__attributes->__alpha,c_node1->__n_kemu->__bias_delta);
-                c_node1->__n_kemu->__bias+=c_node1->__n_kemu->__bias_delta;
-                fprintf(stdout,"NODE DELTA:[%d][%d]:\t__bias_delta:%9.3f\n",idx_l1,idx_n1,c_node1->__n_kemu->__bias_delta);
+    for(unsigned int idx_l_to=0x00;idx_l_to<total_layers(_tsinuu);idx_l_to++){
+        for(unsigned int idx_n_to=0x00;idx_n_to<layer_size_from_layer_stack_index(_tsinuu, idx_l_to);idx_n_to++){
+            c_node_to = node(_tsinuu, node_index_to_node_coord(_tsinuu, idx_l_to, idx_n_to));
+            if(c_node_to->__nbp->__pardon_grad){
+                fprintf(stderr,"ERROR! node pardon grad is unexpected: NODE[%d][%d]\n",idx_l_to,idx_n_to);
+                assert(0x00);
             }
-            for(unsigned int idx_n2=0x00;idx_n2<layer_size_from_layer_stack_index(_tsinuu, idx_l1-0x01);idx_n2++){
-                c_line=_tsinuu->__lines[ln_ctx];
-                if(!c_line->__lnbp->__pardon_grad){
-                    c_node2 = node(_tsinuu, node_index_to_node_coord(_tsinuu, idx_l1-0x01, idx_n2));
-                    c_line->__ln_kemu->__weight_delta=_tsinuu->__attributes->__eta*c_node2->__n_kemu->__value*c_node1->__n_kemu->__bias_nabla+_tsinuu->__attributes->__alpha*c_line->__ln_kemu->__weight_delta;
-                    fprintf(stdout,"LINE DELTA:[%d]:\t__eta:%9.3f * __value: %9.3f * __weight_nabla:%9.3f + __alpha:%9.3f * __weight_delta:%9.3f\n",ln_ctx,_tsinuu->__attributes->__eta,c_node2->__n_kemu->__value,c_node1->__n_kemu->__bias_nabla,_tsinuu->__attributes->__alpha,c_line->__ln_kemu->__weight_delta);
-                    c_line->__ln_kemu->__weight+=c_line->__ln_kemu->__weight_delta;
-                    fprintf(stdout,"LINE DELTA:[%d]:\t__weight_delta:%9.3f\n",ln_ctx,c_line->__ln_kemu->__weight_delta);
+            if(c_node_to->__nbp->__is_input){
+                // #FIXME lack input layer
+            } else {
+                if(!c_node_to->__nbp->__pardon_bias){ // Update bias
+                    c_node_to->__n_kemu->__bias_delta=nat_signedsigmoid_direct(_tsinuu->__attributes->__eta*c_node_to->__n_kemu->__nabla)+nat_signedsigmoid_direct(_tsinuu->__attributes->__alpha*c_node_to->__n_kemu->__bias_delta);
+                    // c_node_to->__n_kemu->__bias_delta=_tsinuu->__attributes->__omega*nat_signedsigmoid_direct(_tsinuu->__attributes->__omega_stiffess*c_node_to->__n_kemu->__bias_delta);
+                    c_node_to->__n_kemu->__bias_delta = _tsinuu->__attributes->__omega*c_node_to->__n_kemu->__bias_delta;
+                    c_node_to->__n_kemu->__bias+=c_node_to->__n_kemu->__bias_delta;
+                    clamp_bias(_tsinuu, c_node_to->__n_kemu);
+                    #ifdef TSINUU_VERBOSE_2
+                        fprintf(stdout,"\033[0;34m");
+                        // fprintf(stdout,"NODE:[%d][%d]:<<biasDelta[k] = __eta * Nabla + alpha * biasDelta[k-1].>>\n\t\t\t__eta:%2.3f * Nabla:%9.3f + __alpha:%2.3f * biasDelta:%2.3f\n",idx_l_to,idx_n_to,_tsinuu->__attributes->__eta,c_node_to->__n_kemu->__nabla,_tsinuu->__attributes->__alpha,c_node_to->__n_kemu->__bias_delta);
+                        fprintf(stdout,"NODE:[%d][%d]:<<biasDelta[k] = omega * phi(omgStiff * (__eta * Nabla + alpha * biasDelta[k-1])).>>\n\t\t\t__omega: %2.3f __eta:%2.3f  Nabla:%9.3f  __alpha:%2.3f biasDelta:%2.3f\n",idx_l_to,idx_n_to,_tsinuu->__attributes->__omega, _tsinuu->__attributes->__eta,c_node_to->__n_kemu->__nabla,_tsinuu->__attributes->__alpha,c_node_to->__n_kemu->__bias_delta);
+                    #endif
+                    #ifdef TSINUU_VERBOSE_1
+                        fprintf(stdout,"\033[0;34m");
+                        fprintf(stdout,"\tBIAS:[%d][%d]:\tbias:%2.3f\t biasDelta[k]:%2.3f\n",idx_l_to,idx_n_to,c_node_to->__n_kemu->__bias,c_node_to->__n_kemu->__bias_delta);
+                        fprintf(stdout,"\033[0m");
+                    #endif
+                } else {
+                    #ifdef TSINUU_DEBUG
+                        fprintf(stdout,"NODE:[%d][%d]: (bias desactivated for node)\n",idx_l_to,idx_n_to);
+                    #endif
                 }
-                ln_ctx++;
+                /* LINES */
+                for(unsigned int idx_n_from=0x00;idx_n_from<layer_size_from_layer_stack_index(_tsinuu, idx_l_to-0x01);idx_n_from++){
+                    c_line=_tsinuu->__lines[_tsinuu->__attributes->__forward_ln_index_list[ln_ctx]]; // #FIXME assert!
+                    if(n_coord_to_l_index(c_line->__ln_coord->__to_node)==idx_l_to && n_coord_to_n_index(c_line->__ln_coord->__to_node)==idx_n_to){
+                        if(n_coord_to_l_index(c_line->__ln_coord->__from_node)==idx_l_to-0x01 && n_coord_to_n_index(c_line->__ln_coord->__from_node)==idx_n_from){
+                            allin_flag=0x01;
+                        }
+                    }
+                    // fprintf(stdout," %d==%d \t %d==%d \t %d==%d \t %d==%d\n",n_coord_to_l_index(c_line->__ln_coord->__to_node),idx_l_to, n_coord_to_n_index(c_line->__ln_coord->__to_node),idx_n_to, n_coord_to_l_index(c_line->__ln_coord->__from_node),idx_l_to-0x01, n_coord_to_n_index(c_line->__ln_coord->__from_node),idx_n_from);
+                    if(!allin_flag){
+                        fprintf(stderr, ">>>> ERROR: -v- huge problem, line index are not listed as expected.");
+                        assert(0x00);
+                    }
+                    allin_flag=0x00;
+                    if(!c_line->__lnbp->__pardon_grad){
+                        c_node_from = node(_tsinuu, node_index_to_node_coord(_tsinuu, idx_l_to-0x01, idx_n_from));
+                        c_line->__ln_kemu->__weight_delta=nat_signedsigmoid_direct(_tsinuu->__attributes->__eta*c_node_from->__n_kemu->__value*c_node_to->__n_kemu->__nabla)+nat_signedsigmoid_direct(_tsinuu->__attributes->__alpha*c_line->__ln_kemu->__weight_delta);
+                        #ifdef TSINUU_VERBOSE_2
+                            fprintf(stdout,"\033[0;32m");
+                            fprintf(stdout,"\tLINE:[%d]:<<weightDelta[k] = __eta * nodeValue[%d][%d] * Nabla[%d][%d] + __alpha * weightDelta[k-1]>>\n\t\t\t__eta:%2.3f * __value: %2.3f * __weight_nabla:%2.3f + __alpha:%2.3f * __weight_delta:%2.3f\n\t",ln_ctx,idx_l_to-0x01, idx_n_from, idx_l_to, idx_n_to,_tsinuu->__attributes->__eta,c_node_from->__n_kemu->__value,c_node_to->__n_kemu->__nabla,_tsinuu->__attributes->__alpha,c_line->__ln_kemu->__weight_delta);
+                            print_line_by_coord(_tsinuu, line_index_to_line_coord(_tsinuu, ln_ctx));
+                        #endif
+                        // c_line->__ln_kemu->__weight_delta = _tsinuu->__attributes->__omega*nat_signedsigmoid_direct(_tsinuu->__attributes->__omega_stiffess*c_line->__ln_kemu->__weight_delta);
+                        c_line->__ln_kemu->__weight_delta = _tsinuu->__attributes->__omega*c_line->__ln_kemu->__weight_delta;
+                        c_line->__ln_kemu->__weight+=c_line->__ln_kemu->__weight_delta;
+                        clamp_weight(_tsinuu, c_line->__ln_kemu);
+                        #ifdef TSINUU_VERBOSE_1
+                            fprintf(stdout,"\033[0;32m");
+                            fprintf(stdout,"\tWEIGHT:[%d]:\tweight:%2.3f\tweightDelta[k]:%2.3f\n",ln_ctx,c_line->__ln_kemu->__weight,c_line->__ln_kemu->__weight_delta);
+                            fprintf(stdout,"\033[0m");
+                        #endif
+                    } else {
+                        fprintf(stderr, ">>>> ERROR: unexpected pardon gran appeared, for line [%d]...\n",_tsinuu->__attributes->__forward_ln_index_list[ln_ctx]);
+                        assert(0x00);
+                    }
+                    ln_ctx++;
+                }
             }
         }
     }
+    clamp_all_weights(_tsinuu);
+    clamp_all_bias(_tsinuu);
     #ifdef TSINUU_DEBUG
         fprintf(stderr, ">>>> request <jkimyei_bydirectNABLA>\n");
         fprintf(stderr, ">>>> suspect element value first output:\t %f\n",node(_tsinuu, node_index_to_node_coord(_tsinuu, output_layer_index(_tsinuu), 0x00))->__n_kemu->__value);
@@ -329,19 +426,18 @@ void jkimyei_bydirectNABLA(__tsinuu_t *_tsinuu, __cwcn_type_t *_output_wapaajco)
 /*
 
 */
-__cwcn_type_t *wapaajco_bydifference(__tsinuu_t *_tsinuu, __cwcn_type_t *_correct_output){
-    __cwcn_type_t *_wapaajco=malloc(layer_size_from_layer_stack_index(_tsinuu,output_layer_index(_tsinuu))*sizeof(__cwcn_type_t));
+void wapaajco_bydifference(__tsinuu_t *_tsinuu, __cwcn_type_t *_correct_output){
     __cwcn_type_t *_c_output=malloc(layer_size_from_layer_stack_index(_tsinuu,output_layer_index(_tsinuu))*sizeof(__cwcn_type_t));
     read_output(_tsinuu,_c_output);
     for(unsigned int idx_n=0x00;idx_n<layer_size_from_layer_stack_index(_tsinuu,output_layer_index(_tsinuu));idx_n++){
-        _wapaajco[idx_n]=_correct_output[idx_n]-_c_output[idx_n];
+        _tsinuu->__wapaajco->__w_vector[idx_n]=_tsinuu->__attributes->__wapaajco_potency*(_correct_output[idx_n]-_c_output[idx_n]);
+        _tsinuu->__wapaajco->__total_wapaajco+=fabs(_tsinuu->__wapaajco->__w_vector[idx_n]);
     }
     #ifdef TSINUU_DEBUG
         fprintf(stdout,">>>> request <wapaajco_bydifference>\n");
         fprintf(stdout,">>>> WARINING: wapaajco returned variable must be free after usage\n");
     #endif
     free(_c_output);
-    return _wapaajco;
 }
 /*
 
