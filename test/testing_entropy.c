@@ -3,74 +3,63 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
-#include "entropy_test.config.h"
 #include "cwcn_entropy_nebajke.h"
-int main(){
-    srand(time(NULL)); // set guarded seed
-    float l_ctx=0; 
-    float e_ctx=0;
-    struct beta_pdf * c_beta_pdf = _ipivye_beta_pdf();
+
+void test_beta(){
+    __beta_pdf_t *c_beta_pdf = _ipivye_beta_pdf(DIRECT_RESOLUTION, NUM_TSANE);
+    __cwcn_type_t l_ctx=0;
+    __cwcn_type_t e_ctx=0;
     while(1){
-        printf("\n**************");
-        if((_Bool) 0x00){
-            // printf("\n>> LAMBDA:\t");
-            // scanf("%f", & c_beta_pdf->__lambda);
-            // printf("\n>> ETA:\t\t");
-            // scanf("%f", & c_beta_pdf->__eta);
-            // printf("\n");
-        } else {
-            c_beta_pdf->__lambda=(float) l_ctx*c_beta_pdf->__max_lambda;
-            c_beta_pdf->__eta=(float) e_ctx*c_beta_pdf->__max_eta;
-            l_ctx+=0.1;
-            if(c_beta_pdf->__lambda>=c_beta_pdf->__max_lambda){
-                l_ctx=0;
-                e_ctx+=0.1;
-            }
-            if(c_beta_pdf->__eta>=c_beta_pdf->__max_eta){
-                e_ctx=0;
-            }
-        }
-        beta_GAMMA_RESOLUTION(c_beta_pdf);
+        printf("\n*******BETA*******");
+        set_beta_lambda(c_beta_pdf, l_ctx);
+        set_beta_eta(c_beta_pdf, e_ctx);
+        l_ctx+=0.1;
+        if(c_beta_pdf->__lambda>=c_beta_pdf->__max_lambda){l_ctx=0;e_ctx+=0.1;}
+        if(c_beta_pdf->__eta>=c_beta_pdf->__max_eta){e_ctx=0;}
+        clock_t begin = clock();
+        beta_forward(c_beta_pdf);
+        printf("forward method execution time : %f\n",(double)(clock()-begin)/CLOCKS_PER_SEC);
+        clrscr();
+        // getchar();
+        // Plotting histogram
+        beta_plot_direct_resolution(c_beta_pdf);
+        beta_plot_tsane(c_beta_pdf);
+        beta_plot_statistics(c_beta_pdf);
+        printf(">> hay que resolver GAMMA_RESOLUTION...");
+        delay(0.025);
+    }
+}
+void test_cauchy(){
+    __cauchy_pdf_t *c_cauchy_pdf = _ipivye_cauchy_pdf(DIRECT_RESOLUTION, NUM_TSANE);
+    __cwcn_type_t a_ctx=0.0; 
+    __cwcn_type_t b_ctx=0.0;
+    while(1){
+        printf("\n******CAUCHY********");
+        // for exibition porpouses
+    printf("\ta:%f \tb:%f\n",c_cauchy_pdf->__cauchy_a, c_cauchy_pdf->__cauchy_b);
+        set_cauchy_a(c_cauchy_pdf, a_ctx);
+        set_cauchy_b(c_cauchy_pdf, b_ctx);
+        a_ctx+=0.05;
+        if(c_cauchy_pdf->__cauchy_a>=c_cauchy_pdf->__cauchy_a_max){a_ctx=0x00;b_ctx+=0.05;}
+        if(c_cauchy_pdf->__cauchy_b>=c_cauchy_pdf->__cauchy_b_max){b_ctx=0x00;}
+        printf("\ta:%f/%f \tb:%f/%f\n",c_cauchy_pdf->__cauchy_a, a_ctx, c_cauchy_pdf->__cauchy_b, b_ctx);
         // direct
         clock_t begin = clock();
-        direct_density_beta(c_beta_pdf);
-        // differential_entropy_beta(c_beta_pdf, true);
-        difference_entropy_beta(c_beta_pdf, 0xFF);
-        beta_map_tsane(c_beta_pdf);
-        clrscr();
-        printf("exe_t : %f\n",(double)(clock()-begin)/CLOCKS_PER_SEC);
+        cauchy_forward(c_cauchy_pdf);
+        printf("forward method execution time : %f\n",(double)(clock()-begin)/CLOCKS_PER_SEC);
+        // clrscr();
+        // getchar();
         // Plotting histogram
-        printf("DIRECT:\n");
-        for (int idx = 0; idx < DIRECT_RESOLUTION; idx++){
-            printf("x=%0.2f |", (float)idx/(float)DIRECT_RESOLUTION);
-            printf("y=%0.2f |", c_beta_pdf->__direct_map[idx]);
-            if(c_beta_pdf->__direct_map[idx]<10000){
-                for (int jdx = 0; jdx < c_beta_pdf->__direct_map[idx]*2500/DIRECT_RESOLUTION; jdx++){
-                    printf("%c", (char)254u);
-                }
-            }
-            if(idx==12){
-                printf("\t\tENTROPY: %f", c_beta_pdf->__entropy);
-            } else if(idx==15){
-                printf("\t\t_lambda_: %3.2f", c_beta_pdf->__lambda);
-            } else if(idx==16){
-                printf("\t\t_eta_: %3.2f", c_beta_pdf->__eta);
-            }
-            printf("\n");
-        }
-        printf("--> TSANE:\n");
-        for (int idx = 0; idx < NUM_TSANE; idx++){
-            printf("x=%0.2f |", (float)idx/(float)NUM_TSANE);
-            printf("y=%0.2f |", c_beta_pdf->__tsane_map[idx]);
-            if(c_beta_pdf->__tsane_map[idx]<10000){
-                for (int jdx = 0; jdx < c_beta_pdf->__tsane_map[idx]*50/NUM_TSANE; jdx++){
-                    printf("%c", (char)254u);
-                }
-            }
-            printf("\n");
-        }
-        printf(">> _ENTROPY_: %f \t _MAX_KNOWN_ENTROPY_: %f \t _lambda_: %3.2f \t _eta_: %3.2f _\n", c_beta_pdf->__entropy, c_beta_pdf->__max_known_entropy, c_beta_pdf->__lambda, c_beta_pdf->__eta);
-        printf(">> hay que resolver GAMMA_RESOLUTION...");
-        delay(0.25);
+        cauchy_plot_direct_resolution(c_cauchy_pdf);
+        cauchy_plot_tsane(c_cauchy_pdf);
+        cauchy_plot_statistics(c_cauchy_pdf);
+        delay(0.025);
     }
+}
+int main(){
+    set_seed();
+    printf("\033[1;32mwaka dao\033[0m\n");
+    test_beta();
+    printf("\033[1;32mwaka din\033[0m\n");
+    printf("\033[1;32mwaka tao\033[0m\n");
 }

@@ -21,44 +21,6 @@ void *array_concat(const void *a, size_t an,const void *b, size_t bn, size_t s){
     return p;
 }
 
-
-void enqueue_trayectory(queue_t **head_t, trayectory_t *new_trayectory) {
-    printf(">> enqueue_trayectory\n");
-    queue_t *new_node = malloc(sizeof(queue_t));
-    if (!new_node) return;
-    new_node->__trayectory = new_trayectory;
-    new_node->next = *head_t;
-    *head_t = new_node;
-}
-
-trayectory_t * dequeue_trayectory(queue_t **head_t) {
-    printf(">> dequeue_trayectory\n");
-    queue_t *current, *prev = NULL;
-    int retval = -1;
-    if (*head_t == NULL) return -1;
-    current = *head_t;
-    while (current->next != NULL) {
-        prev = current;
-        current = current->next;
-    }
-    retval = current->__trayectory->val;
-    free(current);
-    if (prev)
-        prev->next = NULL;
-    else
-        *head_t = NULL;
-    return retval;
-}
-
-void print_trayectory_queue(queue_t *head_t) {
-    printf(">> print_trayectory_queue\n");
-    queue_t *current = head_t;
-    while (current != NULL) {
-        printf("FIRST_STATE: %9.2f\n", current->__trayectory->states[0]);
-        current = current->next;
-    }
-}
-
 // int main() {
 //     queue_t *head_t = NULL;
 //     int ret;

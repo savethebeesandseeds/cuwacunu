@@ -5,9 +5,9 @@
 #import "wikimyei.config.h"
 // depends on fann
 
-trayectory_t * fill_trayectory(alliu_t * _alliu, duuruva_t *_duuruva, tsane_t *_tsane, uwaabo_t *_uwaabo, munaajpi_t *_munaajpi, entropy_t * _entropy){
+__trayectory_t *fill_trayectory(__alliu_t *_alliu, __duuruva_t *_duuruva, __tsane_t *_tsane, __uwaabo_t *_uwaabo, __munaajpi_t *_munaajpi, __entropy_t *_entropy){
     printf(">> fill_trayectory\n");
-    trayectory_t *new_trayectory = malloc(__sizeof(trayectory_t));
+    __trayectory_t *new_trayectory = malloc(__sizeof(__trayectory_t));
     new_trayectory->__duuruva_kemu=_duuruva->__duuruva_kemu;
     new_trayectory->__tsane_kemu=_tsane->__tsane_kemu;
     new_trayectory->__tsane_log_prob=_uwaabo->__uwaabo_kemu;
@@ -16,28 +16,25 @@ trayectory_t * fill_trayectory(alliu_t * _alliu, duuruva_t *_duuruva, tsane_t *_
     return new_trayectory;
 }
 
-
-
-
 void _ipivye_cajtucu(){}
 void _ipivye_jkimyei(){}
 
 
-alliu_t * _ipivye_alliu(){
+__alliu_t *_ipivye_alliu(){
     printf(">> _ipivye_alliu\n");
-	alliu_t * new_t = malloc(__sizeof(alliu_t));
+	__alliu_t *new_t = malloc(__sizeof(__alliu_t));
 	return new_t;
 }
 
-duuruva_t * _ipivye_duuruva(){
+__duuruva_t *_ipivye_duuruva(){
     printf(">> _ipivye_duuruva\n");
-	duuruva_t * new_t = malloc(__sizeof(duuruva_t));
+	__duuruva_t *new_t = malloc(__sizeof(__duuruva_t));
 	return new_t;
 }
 
-uwaabo_t * _ipivye_uwaabo(){
+__uwaabo_t *_ipivye_uwaabo(){
     printf(">> _ipivye_uwaabo\n");
-	uwaabo_t * new_t = malloc(__sizeof(uwaabo_t));
+	__uwaabo_t *new_t = malloc(__sizeof(__uwaabo_t));
 	struct fann *_uwaabo_ann = fann_create_standard(
         NUM_UWAABO_LAYERS,
 		NUM_DUURUVA,
@@ -49,9 +46,9 @@ uwaabo_t * _ipivye_uwaabo(){
 	return new_t;
 }
 
-munaajpi_t * _ipivye_munaajpi(){
+__munaajpi_t *_ipivye_munaajpi(){
      printf(">> _ipivye_ipivye\n");
-	munaajpi_t * new_t = malloc(__sizeof(munaajpi_t));
+	__munaajpi_t *new_t = malloc(__sizeof(__munaajpi_t));
 	struct fann *_munaajpi_ann = fann_create_standard(
         NUM_MUNAAJPI_LAYERS,
 		NUM_DUURUVA,
@@ -63,17 +60,17 @@ munaajpi_t * _ipivye_munaajpi(){
 	return new_t;
 }
 
-entropy_t * _ipivye_entropy(){
+__entropy_t *_ipivye_entropy(){
     printf(">> _ipivye_entropy\n");
-	entropy_t * new_t = malloc(__sizeof(entropy_t));
-	struct beta_pdf * new_beta_pdf = malloc(__sizeof(struct beta_pdf);
+	__entropy_t *new_t = malloc(__sizeof(__entropy_t));
+	struct beta_pdf *new_beta_pdf = malloc(__sizeof(struct beta_pdf);
 	new_t->__beta_pdf = new_beta_pdf;
 	return new_t;
 }
 
-tsane_t * _ipivye_tsane(){
+__tsane_t *_ipivye_tsane(){
     printf(">> _ipivye_tsane\n");
-	tsane_t * new_t = malloc(__sizeof(tsane_t));
+	__tsane_t *new_t = malloc(__sizeof(__tsane_t));
 	new_t->__tsane_kemu = _tsane;
 	for(unsigned int idx=0;idx<NUM_TSANE;idx++){
 		new_t->__tsane_log_prob_kemu[idx] = log(_tsane[idx]);
@@ -81,9 +78,9 @@ tsane_t * _ipivye_tsane(){
 	return new_t;
 }
 
-dehash_tsane_t * _ipivye_dtsane(){
+__dehash_tsane_t *_ipivye_dtsane(){
 	//READCONFIG//CONSTRUCSCPECIFICTORDER//
-	dehash_tsane_t * new_t = malloc(__sizeof(dehash_tsane_t));
+	__dehash_tsane_t *new_t = malloc(__sizeof(__dehash_tsane_t));
 	return new_t;
 }
 

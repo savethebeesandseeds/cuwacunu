@@ -7,20 +7,20 @@ int main() {
 	// ¿what about paralelism?
 	// --> 
 	// define the model 
-	/* 
+	/*
 		DEFINITONS
 	*/
-	alliu_t * c_alliu = _ipivye_alliu();
-	duuruva_t * c_duuruva = _ipivye_duuruva();
-	uwaabo_t * c_uwaabo = _ipivye_uwaabo();
-	entropy_t * c_entropy = _ipivye_entropy();
-	munaajpi_t * c_munaajpi = _ipivye_munaajpi();
-	tsane_t * c_tsane = _ipivye_tsane();
-	dehasj_tsane_t * c_dehash_tsane = _ipivye_dtsane();
+	__alliu_t *c_alliu = _ipivye_alliu();
+	__duuruva_t *c_duuruva = _ipivye_duuruva();
+	__uwaabo_t *c_uwaabo = _ipivye_uwaabo();
+	__entropy_t *c_entropy = _ipivye_entropy();
+	__munaajpi_t *c_munaajpi = _ipivye_munaajpi();
+	__tsane_t *c_tsane = _ipivye_tsane();
+	__dehasj_tsane_t *c_dehash_tsane = _ipivye_dtsane();
 	_ipivye_jkimyei();
 	// how to define optimizer in fann?
 	// 
-	queue_t *head = NULL;
+	__queue_t *head = NULL;
 	unsigned int step_count = 0;
 	unsigned int jikimyei_count = 0;
 	while(cwcn_dehash_step()){

@@ -4,134 +4,200 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <stdbool.h>
-#include "entropy_test.config.h"
-#ifdef IS_ENTROPY_TEST
+
+#define DIRECT_RESOLUTION (int) 25
+#define NUM_TSANE (int) 2
+
+#define GAMMA_SCALE (__cwcn_type_t) 1
+
+#ifndef ENTROPY_DEBUG
+// #define ENTROPY_DEBUG
 #endif
 #ifndef ENTROPY_NEBAJKE_INCLUDED
 #define ENTROPY_NEBAJKE_INCLUDED
 #define clrscr() printf("\e[1;1H\e[2J")
+
+typedef _Bool ___cwcn_bool_t;
+#define ___CWCN_TRUE (___cwcn_bool_t) 0b1
+#define ___CWCN_FALSE (___cwcn_bool_t) 0b0
+typedef float (__cwcn_type_t);
+#define __cwcn_infinite (__cwcn_type_t) 0xFFFFFFFF
+typedef __cwcn_type_t (*__function_pointer_t)(__cwcn_type_t);
+#define __cwcn_type_size sizeof(__cwcn_type_t) // #FIXME not in use
+#define __function_pointer_t_size sizeof(__function_pointer_t)
+#define max(a,b)({__typeof__(a) _a=(a);__typeof__(b) _b=(b);_a > _b ? _a : _b;})
+#define min(a,b)({__typeof__(a) _a=(a);__typeof__(b) _b=(b);_a < _b ? _a : _b;})
+
 /*
     UTILS
 */
-float GAMMA(float input, float gamma_res);
-float DIGAMMA(float input);
-float B_fun(float alpha, float beta, float gamma_res, _Bool allow_div);
+void set_seed();
+void delay(double dly);
+__cwcn_type_t GAMMA(__cwcn_type_t input, __cwcn_type_t gamma_res);
+__cwcn_type_t DIGAMMA(__cwcn_type_t input);
+__cwcn_type_t B_fun(__cwcn_type_t alpha, __cwcn_type_t beta, __cwcn_type_t gamma_res, _Bool allow_div);
 /*
     BETA distribution
 */
-struct beta_pdf{
+typedef struct beta_pdf{
     int __eta_index;
     int __lambda_index;
-    float __eta;
-    float __lambda;
-    float __max_eta;
-    float __max_lambda;
-    float __gamma_res;
+    __cwcn_type_t __eta;
+    __cwcn_type_t __lambda;
+    __cwcn_type_t __max_eta;
+    __cwcn_type_t __max_lambda;
+    __cwcn_type_t __gamma_res;
     double __entropy;
     double __max_known_entropy;
-    float __kemu_beta;
-    float __direct_map[DIRECT_RESOLUTION];
-    float __tsane_map[NUM_TSANE];
-};
-struct beta_pdf * _ipivye_beta_pdf();
+    __cwcn_type_t __beta_kemu;
+    __cwcn_type_t __beta_input;
+    __cwcn_type_t *__direct_map;
+    __cwcn_type_t *__tsane_map;
+    unsigned int __beta_lambda_tsinuu_index;
+    unsigned int __beta_eta_tsinuu_index;
+    unsigned int __num_tsane;
+    unsigned int __direct_resolution;
+} __beta_pdf_t;
+__beta_pdf_t *_ipivye_beta_pdf(unsigned int _d_res, unsigned int _n_tsane);
+
+typedef struct cauchy_pdf{
+    __cwcn_type_t *__direct_map;
+	__cwcn_type_t *__tsane_map;
+    __cwcn_type_t __entropy;
+    __cwcn_type_t __max_known_entropy;
+    __cwcn_type_t __cauchy_kemu;
+    __cwcn_type_t __cauchy_input;
+    __cwcn_type_t __cauchy_a;
+    __cwcn_type_t __cauchy_b;
+    __cwcn_type_t __cauchy_a_max;
+    __cwcn_type_t __cauchy_b_max;
+    __cwcn_type_t __cauchy_a_min;
+    __cwcn_type_t __cauchy_input_max;
+    __cwcn_type_t __cauchy_input_min;
+    unsigned int __cauchy_a_tsinuu_index;
+    unsigned int __cauchy_b_tsinuu_index;
+    unsigned int __num_tsane;
+    unsigned int __direct_resolution;
+} __cauchy_pdf_t;
+__cauchy_pdf_t *_ipivye_cauchy_pdf(unsigned int _d_res, unsigned int _n_tsane);
 /*
     MAIN ENTROPY FUNCS
 */
-void difference_entropy_beta(struct beta_pdf * _beta_pdf, _Bool _in_nats);
-void beta_map_tsane(struct beta_pdf * _beta_pdf);
-void beta_GAMMA_RESOLUTION(struct beta_pdf * _beta_pdf);
-void beta_probability_density(float input, struct beta_pdf * _beta_pdf);
-void inverse_density_beta(struct beta_pdf * _beta_pdf);
-void direct_density_beta(struct beta_pdf * _beta_pdf);
-void differential_entropy_beta(struct beta_pdf * _beta_pdf, _Bool _in_nats);
 
-
+// // BETA
+void beta_plot_direct_resolution(__beta_pdf_t *_beta_pdf);
+void beta_plot_tsane(__beta_pdf_t *_beta_pdf);
+void beta_plot_statistics(__beta_pdf_t *_beta_pdf);
+void beta_forward(__beta_pdf_t *_beta_pdf);
+void beta_difference_entropy(__beta_pdf_t *_beta_pdf, _Bool _in_nats);
+void beta_map_tsane(__beta_pdf_t *_beta_pdf);
+void beta_GAMMA_RESOLUTION(__beta_pdf_t *_beta_pdf);
+void beta_probability_density(__beta_pdf_t *_beta_pdf);
+void beta_inverse_density(__beta_pdf_t *_beta_pdf);
+void beta_direct_density(__beta_pdf_t *_beta_pdf);
+void beta_differential_entropy(__beta_pdf_t *_beta_pdf, _Bool _in_nats);
+void set_beta_lambda(__beta_pdf_t *_beta_pdf, __cwcn_type_t _lambda);
+void set_beta_eta(__beta_pdf_t *_beta_pdf, __cwcn_type_t _eta);
+void set_beta_input(__beta_pdf_t *_beta_pdf, __cwcn_type_t _input);
+void set_beta_num_tsane(__beta_pdf_t *_beta_pdf, unsigned int _n_tsane);
+void set_beta_direct_resolution(__beta_pdf_t *_beta_pdf, unsigned int _d_res);
 // // CAUCHY 
-// float probability_density_cauchy(float input);
-// float differential_entropy_cauchy(float input);
+void set_cauchy_a(__cauchy_pdf_t *_cauchy_pdf, __cwcn_type_t _cauchy_a);
+void set_cauchy_b(__cauchy_pdf_t *_cauchy_pdf, __cwcn_type_t _cauchy_b);
+void set_cauchy_input(__cauchy_pdf_t *_cauchy_pdf, __cwcn_type_t _input);
+void set_cauchy_num_tsane(__cauchy_pdf_t *_cauchy_pdf, unsigned int _n_tsane);
+void set_cauchy_direct_resolution(__cauchy_pdf_t *_cauchy_pdf, unsigned int _d_res);
+void cauchy_probability_density(__cauchy_pdf_t *_cauchy_pdf);
+void cauchy_direct_density(__cauchy_pdf_t *_cauchy_pdf);
+void cauchy_difference_entropy(__cauchy_pdf_t *_cauchy_pdf, _Bool _in_nats);
+void cauchy_map_tsane(__cauchy_pdf_t *_cauchy_pdf);
+void cauchy_plot_direct_resolution(__cauchy_pdf_t *_cauchy_pdf);
+void cauchy_plot_tsane(__cauchy_pdf_t *_cauchy_pdf);
+void cauchy_plot_statistics(__cauchy_pdf_t *_cauchy_pdf);
+void cauchy_forward(__cauchy_pdf_t *_cauchy_pdf);
 
 // // CHI
-// float chi_n(float input);
-// float chi_sigma(float input);
-// float probability_density_chi(float input);
-// float differential_entropy_chi(float input);
+// __cwcn_type_t chi_n(__cwcn_type_t input);
+// __cwcn_type_t chi_sigma(__cwcn_type_t input);
+// __cwcn_type_t probability_density_chi(__cwcn_type_t input);
+// __cwcn_type_t differential_entropy_chi(__cwcn_type_t input);
 
-// float chi2_n(float input);
-// float chi2_GAMMA(float input);
-// float chi2_sigma(float input);
-// float probability_density_chi2(float input);
-// float differential_entropy_chi2(float input);
+// __cwcn_type_t chi2_n(__cwcn_type_t input);
+// __cwcn_type_t chi2_GAMMA(__cwcn_type_t input);
+// __cwcn_type_t chi2_sigma(__cwcn_type_t input);
+// __cwcn_type_t probability_density_chi2(__cwcn_type_t input);
+// __cwcn_type_t differential_entropy_chi2(__cwcn_type_t input);
 
 // // DIRAC DELTA
-// float probability_density_dirac_delta(float input);
-// float differential_entropy_dirac_delta(float input);
+// __cwcn_type_t probability_density_dirac_delta(__cwcn_type_t input);
+// __cwcn_type_t differential_entropy_dirac_delta(__cwcn_type_t input);
 
 // // Exponential
-// float probability_density_exponential(float input);
+// __cwcn_type_t probability_density_exponential(__cwcn_type_t input);
 
 // // F
-// float f_nu(float input);
-// float f_omega(float input);
-// float f_B(float input_nu, float input_omega);
-// float probability_density_f(float input);
-// float differential_entropy_f(float input);
+// __cwcn_type_t f_nu(__cwcn_type_t input);
+// __cwcn_type_t f_omega(__cwcn_type_t input);
+// __cwcn_type_t f_B(__cwcn_type_t input_nu, __cwcn_type_t input_omega);
+// __cwcn_type_t probability_density_f(__cwcn_type_t input);
+// __cwcn_type_t differential_entropy_f(__cwcn_type_t input);
 
 // // GAMMA
-// float gamma_eta(float input);
-// float gamma_lambda(float input);
-// float gamma_GAMMA(float input);
-// float probability_density_gamma(float input);
-// float differential_entropy_gamma(float input);
+// __cwcn_type_t gamma_eta(__cwcn_type_t input);
+// __cwcn_type_t gamma_lambda(__cwcn_type_t input);
+// __cwcn_type_t gamma_GAMMA(__cwcn_type_t input);
+// __cwcn_type_t probability_density_gamma(__cwcn_type_t input);
+// __cwcn_type_t differential_entropy_gamma(__cwcn_type_t input);
 
 // // Generalized Beta
-// float betaG_a(float input);
-// float betaG_b(float input);
-// float betaG_eta(float input);
-// float betaG_lambda(float input);
-// float betaG_GAMMA(float input);
-// float probability_density_betaG(float input);
-// float differential_entropy_betaG(float input);
+// __cwcn_type_t betaG_a(__cwcn_type_t input);
+// __cwcn_type_t betaG_b(__cwcn_type_t input);
+// __cwcn_type_t betaG_eta(__cwcn_type_t input);
+// __cwcn_type_t betaG_lambda(__cwcn_type_t input);
+// __cwcn_type_t betaG_GAMMA(__cwcn_type_t input);
+// __cwcn_type_t probability_density_betaG(__cwcn_type_t input);
+// __cwcn_type_t differential_entropy_betaG(__cwcn_type_t input);
 
 // // Generalized Normal
-// float Gnormal_alpha(float input);
-// float Gnormal_beta(float input);
-// float Gnormal_mu(float input);
-// float Gnormal_GAMMA(float input);
-// float probability_density_Gnormal(float input);
-// float differential_entropy_(float input);
+// __cwcn_type_t Gnormal_alpha(__cwcn_type_t input);
+// __cwcn_type_t Gnormal_beta(__cwcn_type_t input);
+// __cwcn_type_t Gnormal_mu(__cwcn_type_t input);
+// __cwcn_type_t Gnormal_GAMMA(__cwcn_type_t input);
+// __cwcn_type_t probability_density_Gnormal(__cwcn_type_t input);
+// __cwcn_type_t differential_entropy_(__cwcn_type_t input);
 
 // // Kumaraswamy
-// float kumaraswamy_a(float input);
-// float kumaraswamy_b(float input);
-// float probability_density_kumaraswamy(float input);
-// float differential_entropy_kumaraswamy(float input);
+// __cwcn_type_t kumaraswamy_a(__cwcn_type_t input);
+// __cwcn_type_t kumaraswamy_b(__cwcn_type_t input);
+// __cwcn_type_t probability_density_kumaraswamy(__cwcn_type_t input);
+// __cwcn_type_t differential_entropy_kumaraswamy(__cwcn_type_t input);
 
 
-// float (float input);
-// float (float input);
-// float (float input);
-// float (float input);
-// float probability_density_(float input);
-// float differential_entropy_(float input);
-// float differential_entropy_(float input);
-// float (float input);
-// float (float input);
-// float (float input);
-// float (float input);
-// float probability_density_(float input);
-// float differential_entropy_(float input);
-// float differential_entropy_(float input);
-// float (float input);
-// float (float input);
-// float (float input);
-// float (float input);
-// float probability_density_(float input);
-// float differential_entropy_(float input);
-// float differential_entropy_(float input);
-// float (float input);
-// float (float input);
-// float (float input);
-// float (float input);
-// float probability_density_(float input);
-// float differential_entropy_(float input);
+// __cwcn_type_t (__cwcn_type_t input);
+// __cwcn_type_t (__cwcn_type_t input);
+// __cwcn_type_t (__cwcn_type_t input);
+// __cwcn_type_t (__cwcn_type_t input);
+// __cwcn_type_t probability_density_(__cwcn_type_t input);
+// __cwcn_type_t differential_entropy_(__cwcn_type_t input);
+// __cwcn_type_t differential_entropy_(__cwcn_type_t input);
+// __cwcn_type_t (__cwcn_type_t input);
+// __cwcn_type_t (__cwcn_type_t input);
+// __cwcn_type_t (__cwcn_type_t input);
+// __cwcn_type_t (__cwcn_type_t input);
+// __cwcn_type_t probability_density_(__cwcn_type_t input);
+// __cwcn_type_t differential_entropy_(__cwcn_type_t input);
+// __cwcn_type_t differential_entropy_(__cwcn_type_t input);
+// __cwcn_type_t (__cwcn_type_t input);
+// __cwcn_type_t (__cwcn_type_t input);
+// __cwcn_type_t (__cwcn_type_t input);
+// __cwcn_type_t (__cwcn_type_t input);
+// __cwcn_type_t probability_density_(__cwcn_type_t input);
+// __cwcn_type_t differential_entropy_(__cwcn_type_t input);
+// __cwcn_type_t differential_entropy_(__cwcn_type_t input);
+// __cwcn_type_t (__cwcn_type_t input);
+// __cwcn_type_t (__cwcn_type_t input);
+// __cwcn_type_t (__cwcn_type_t input);
+// __cwcn_type_t (__cwcn_type_t input);
+// __cwcn_type_t probability_density_(__cwcn_type_t input);
+// __cwcn_type_t differential_entropy_(__cwcn_type_t input);
 #endif

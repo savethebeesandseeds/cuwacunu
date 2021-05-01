@@ -8,20 +8,20 @@
     HASH
 */
 
-void _wikimyei_alliu_source(alliu_t * _alliu){
+void _wikimyei_alliu_source(__alliu_t * _alliu){
     printf(">> _wikimyei_alliu_source\n");
     // #FIXME get alliu
     for(unsigned int idx=0;idx<NUM_ALLIU;idx++){
         _alliu->__alliu_kemu[idx] = (float)(randn() % 2 -1);
     }
 }
-void _wikimyei_ujcamei_hash(alliu_t * _alliu, duuruva_t * _duuruva){
+void _wikimyei_ujcamei_hash(__alliu_t * _alliu, __duuruva_t * _duuruva){
     printf(">> _wikimyei_ujcamei_hash\n");
     for(unsigned int idx=0; idx<NUM_DUURUVA;idxs++){
         _duuruva->__duuruva_kemu[idx] = _alliu->__alliu_kemu[idx];
     }
 }
-void _wikimyei_uwaabo_hash(duuruva_t * _duuruva, uwaabo_t _uwaabo){
+void _wikimyei_uwaabo_hash(__duuruva_t * _duuruva, __uwaabo_t _uwaabo){
     printf(">> _wikimyei_uwaabo_hash\n");
     printf(">>> ujcamei:");
     for(unsigned int idx=0;idx<NUM_DUURUVA;idx++){printf("\t%f",_duuruva->__duuruva_kemu[idx]);}
@@ -70,13 +70,13 @@ void _wikimyei_entropy_dehash(c_uwaabo, c_entropy){
 
 
 
-void _wikimyei_cajtucu_hash(uwaabo_t * _uwaabo, entropy_t *_entropy, tsane_t * _tsane){
+void _wikimyei_cajtucu_hash(__uwaabo_t * _uwaabo, __entropy_t *_entropy, tsane_t * _tsane){
     printf(">> _wikimyei_cajtucu_hash\n");
     for(unsigned int idx=0; idx<NUM_ENTROPY;idxs++){
         _entropy->__entropy_kemu[idx] = _uwaabo->__uwaabo_kemu[idx];
     }
 }
-void _wikimyei_munaajpi_hash(duuruva_t * _duuruva, uwaabo_t * _uwaabo, munaajpi_t * _munaajpi){
+void _wikimyei_munaajpi_hash(__duuruva_t * _duuruva, __uwaabo_t * _uwaabo, munaajpi_t * _munaajpi){
     printf(">> _wikimyei_munaajpi_hash\n");
     float *_aux = _ARRAY_CONCAT(float, (float) _duuruva->__duuruva_kemu, NUM_DUURUVA, (float) _uwaabo->__uwaabo_kemu, NUM_UWAABO);
     printf(">>> ujcamei:");
@@ -85,7 +85,7 @@ void _wikimyei_munaajpi_hash(duuruva_t * _duuruva, uwaabo_t * _uwaabo, munaajpi_
     printf(">>> cajtucu:");
     for(unsigned int idx=0;idx<NUM_MUNAAJPI;idx++){printf("\t%f",_munaajpi->__munaajpi_kemu [idx]);}
 }
-void _wikimyei_tsane_dehash(alliu_t * _alliu, uwaabo_t * _uwaabo, entropy_t * _entropy, munaajpi_t * _munaajpi){
+void _wikimyei_tsane_dehash(__alliu_t * _alliu, __uwaabo_t * _uwaabo, __entropy_t * _entropy, munaajpi_t * _munaajpi){
     printf(">> _wikimyei_tsane_dehash\n");
     for(unsigned int idx=0; idx<NUM_TSANE;idxs++){
         _tsane->__tsane_kemu[idx] = _entropy->__entropy_kemu[idx];

@@ -1008,6 +1008,10 @@ void tsinuu_destroy(__tsinuu_t *_tsinuu){
     free(_tsinuu->__lines); //
     free(_tsinuu->__attributes->__layers_sizes); //
     free(_tsinuu->__attributes->__layers_activation); //
+    free(_tsinuu->__attributes->__forward_ln_index_list); //
+    free(_tsinuu->__attributes->__backward_ln_index_list); //
+    free(_tsinuu->__attributes->__layerweight_density); //
+    free(_tsinuu->__attributes->__layerbias_density); //
     free(_tsinuu->__attributes); //
     free(_tsinuu); //
     #ifdef TSINUU_DEBUG

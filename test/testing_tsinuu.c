@@ -4,30 +4,31 @@
 #include "cwcn_tsinuu_nebajke.h"
 #define INPUT_SIZE (unsigned int) 1
 #define OUTPUT_SIZE (unsigned int) 1
-#define TOTAL_LAYERS (unsigned int) 9
-#define NUM_EPOCHS (unsigned int) 100
+#define TOTAL_LAYERS (unsigned int) 4
+#define NUM_EPOCHS (unsigned int) 1000
 #define DATA_COUNT (unsigned int) 100
 /*
     LINEAR: (alpha=0.1, eta=0.1, omega=1.0, w_potency=2)
     {INPUT_SIZE,5,10,25,50,25,10,5,OUTPUT_SIZE}: {LINEAR, RELU, RELU, RELU ,RELU ,RELU ,RELU , RELU , LINEAR }: (alpha=0.1, eta=0.9, omega=1.0, w_potency=0.019)
+    {INPUT_SIZE,5,5,OUTPUT_SIZE}: {LINEAR, LINEAR, LINEAR, LINEAR}: (alpha=0.0, eta=1.0, omega=0.1, w_potency=1.0)
 */
 int main(void){
     //
     printf("\n------->------\n");
     set_seed();
     // Configure tsinuu
-    unsigned int c_layers_sizes[TOTAL_LAYERS] = {INPUT_SIZE,5,10,25,50,25,10,5,OUTPUT_SIZE};
-    __list_activations_t c_activations_iho[TOTAL_LAYERS] = {LINEAR, RELU, RELU, RELU ,RELU ,RELU ,RELU , RELU , LINEAR };
+    unsigned int c_layers_sizes[TOTAL_LAYERS] = {INPUT_SIZE,5,5,OUTPUT_SIZE};
+    __list_activations_t c_activations_iho[TOTAL_LAYERS] = {LINEAR, LINEAR, LINEAR, LINEAR};
     // Fabric tsinuu
     __attribute_tsinuu_t *c_attribute_tsinuu = malloc(sizeof(__attribute_tsinuu_t));
     c_attribute_tsinuu->__NUM_TOTAL_LAYERS=TOTAL_LAYERS;
     c_attribute_tsinuu->__layers_sizes=c_layers_sizes;
     c_attribute_tsinuu->__layers_activation=c_activations_iho;
     c_attribute_tsinuu->__is_symetric=___CWCN_TRUE;
-    c_attribute_tsinuu->__alpha=0.1; // alpha assert negative, is a mesure for resisting change; is if you kguht the friction of the learning; required to create new tsinuu
-    c_attribute_tsinuu->__eta=0.9; // eta is the error impulse, required to create new tsinuu
-    c_attribute_tsinuu->__omega=1.0; // required to create new tsinuu
-    c_attribute_tsinuu->__wapaajco_potency=0.0190; // the potency of the wapaajco
+    c_attribute_tsinuu->__alpha=0.0; // alpha assert negative, is a mesure for resisting change; is if you kguht the friction of the learning; required to create new tsinuu
+    c_attribute_tsinuu->__eta=1; // eta is the error impulse, required to create new tsinuu
+    c_attribute_tsinuu->__omega=0.1; // required to create new tsinuu
+    c_attribute_tsinuu->__wapaajco_potency=1.0; // the potency of the wapaajco
     c_attribute_tsinuu->__omega_stiffess=1.0; // #FIXME not in use
     c_attribute_tsinuu->__weight_limits=malloc(sizeof(__limits_t));
     c_attribute_tsinuu->__weight_limits->__max=5.0;
@@ -105,24 +106,27 @@ int main(void){
     __cwcn_type_t c_correct_output[DATA_COUNT][OUTPUT_SIZE];
     for(unsigned int ctx_p=0x00;ctx_p<DATA_COUNT;ctx_p++){
         for(unsigned int idx_v=0x00;idx_v<INPUT_SIZE;idx_v++){
-            c_correct_output[ctx_p][idx_v]=sin(sin(2*3.141592*c_input_vector[ctx_p][idx_v]));
+            c_correct_output[ctx_p][idx_v]=0.5*sin(2*3.141592*c_input_vector[ctx_p][idx_v])+1;
+            fprintf(stdout, "%f -> %f\n",c_input_vector[ctx_p][idx_v],c_correct_output[ctx_p][idx_v]);
         }
     }
     unsigned int rand_idx;
     for(unsigned int ctx_epoch=0x00;ctx_epoch<NUM_EPOCHS;ctx_epoch++){
         for(unsigned int ctx_p=0x00;ctx_p<DATA_COUNT;ctx_p++){
-            rand_idx = rand() % DATA_COUNT;    
+            rand_idx = rand() % DATA_COUNT;
+            // rand_idx = ctx_p;
             // fprintf(stdout, " --- --- ---epoch:[ %d ] data:[ %d ] --- --- --- --- --- START ---\t",ctx_epoch,ctx_p);
             // uwaabo
+            // fprintf(stdout, "%f -> %f\n",c_input_vector[rand_idx][0x00],c_correct_output[rand_idx][0x00]);
             set_input(c_tsinuu, c_input_vector[rand_idx]);
             tsinuu_direct_uwaabo_full_parametric(c_tsinuu);
             wapaajco_bydifference(c_tsinuu, c_correct_output[rand_idx]);
             // fprintf(stdout, "--------->(RESULTS) epoch:[ %d ] data:[ %d ]<---------\n",ctx_epoch,ctx_p);
             // fprintf(stdout, "--------->(JIKIMYEI) epoch:[ %d ] data:[ %d ]<---------\n",ctx_epoch,ctx_p);
             jkimyei_tsinuu_bydirectNABLA(c_tsinuu);
-            // getchar();
             print_results(c_tsinuu);
-            fprintf(stdout,"\n");
+            // fprintf(stdout,"\n");
+            // getchar();
         }
         // fprintf(stdout, "--------->END OF EPOCH<---------\n");
     }
