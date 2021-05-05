@@ -47,7 +47,7 @@ typedef _Bool ___cwcn_bool_t;
         __cwcn_type_t __coord_z;
     } __cartecian_tensor_t;
     typedef struct __dist_coord {
-        __cwcn_type_t __count;
+        __cwcn_type_t __count; // is not so much count as is the back span of the load
         __cwcn_type_t __max;
         __cwcn_type_t __min;
         __cwcn_type_t __std;

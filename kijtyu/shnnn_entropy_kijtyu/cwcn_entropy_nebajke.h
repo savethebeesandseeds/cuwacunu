@@ -4,6 +4,8 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <stdbool.h>
+// #FIXME fix dependencies
+#define BUGGER_ENTROPYCOSA_SIZE (unsgined int 2) // cauchy + beta=2
 
 #define DIRECT_RESOLUTION (int) 25
 #define NUM_TSANE (int) 2
@@ -39,9 +41,10 @@ __cwcn_type_t B_fun(__cwcn_type_t alpha, __cwcn_type_t beta, __cwcn_type_t gamma
 /*
     BETA distribution
 */
+typedef void (*__beta_forward_pointer_t)(void *_beta_pdf, __cwcn_type_t _beta_lambda, __cwcn_type_t _beta_eta);
 typedef struct beta_pdf{
-    int __eta_index;
-    int __lambda_index;
+    int __eta_index; // #FIXME
+    int __lambda_index; // #FIXME
     __cwcn_type_t __eta;
     __cwcn_type_t __lambda;
     __cwcn_type_t __max_eta;
@@ -57,9 +60,12 @@ typedef struct beta_pdf{
     unsigned int __beta_eta_tsinuu_index;
     unsigned int __num_tsane;
     unsigned int __direct_resolution;
+    unsigned int __num_params; // lambda + eta = 2
+    __beta_forward_pointer_t __forward;
 } __beta_pdf_t;
 __beta_pdf_t *_ipivye_beta_pdf(unsigned int _d_res, unsigned int _n_tsane);
 
+typedef void (*__cauchy_forward_pointer_t)(void *_cauchy_pdf, __cwcn_type_t _cauchy_a, __cwcn_type_t _cauchy_b);
 typedef struct cauchy_pdf{
     __cwcn_type_t *__direct_map;
 	__cwcn_type_t *__tsane_map;
@@ -78,8 +84,21 @@ typedef struct cauchy_pdf{
     unsigned int __cauchy_b_tsinuu_index;
     unsigned int __num_tsane;
     unsigned int __direct_resolution;
+    __cauchy_forward_pointer_t __forward;
+    unsigned int __num_params;
 } __cauchy_pdf_t;
 __cauchy_pdf_t *_ipivye_cauchy_pdf(unsigned int _d_res, unsigned int _n_tsane);
+
+typedef void (*__entropycosa_forward_pointer_t)(void _ec, __cwcn_type_t *_param_vect);
+typedef struct __entropycosa{
+    void **__cosa;
+    unsigned int __total_cosa_params;
+    unsigned int __cosa_size;
+    __entropycosa_forward_pointer_t __forward;
+}__entropycosa_t;
+__entropycosa_t *entropycosa_fabric(unsigned int _d_res, unsigned int _n_tsane);
+void entropycosa_destroy(__entropycosa_t *_ec);
+
 /*
     MAIN ENTROPY FUNCS
 */
@@ -88,7 +107,6 @@ __cauchy_pdf_t *_ipivye_cauchy_pdf(unsigned int _d_res, unsigned int _n_tsane);
 void beta_plot_direct_resolution(__beta_pdf_t *_beta_pdf);
 void beta_plot_tsane(__beta_pdf_t *_beta_pdf);
 void beta_plot_statistics(__beta_pdf_t *_beta_pdf);
-void beta_forward(__beta_pdf_t *_beta_pdf);
 void beta_difference_entropy(__beta_pdf_t *_beta_pdf, _Bool _in_nats);
 void beta_map_tsane(__beta_pdf_t *_beta_pdf);
 void beta_GAMMA_RESOLUTION(__beta_pdf_t *_beta_pdf);
@@ -101,6 +119,7 @@ void set_beta_eta(__beta_pdf_t *_beta_pdf, __cwcn_type_t _eta);
 void set_beta_input(__beta_pdf_t *_beta_pdf, __cwcn_type_t _input);
 void set_beta_num_tsane(__beta_pdf_t *_beta_pdf, unsigned int _n_tsane);
 void set_beta_direct_resolution(__beta_pdf_t *_beta_pdf, unsigned int _d_res);
+void beta_forward(void *_beta_pdf, __cwcn_type_t _beta_lambda, __cwcn_type_t _beta_eta);
 // // CAUCHY 
 void set_cauchy_a(__cauchy_pdf_t *_cauchy_pdf, __cwcn_type_t _cauchy_a);
 void set_cauchy_b(__cauchy_pdf_t *_cauchy_pdf, __cwcn_type_t _cauchy_b);
@@ -114,7 +133,8 @@ void cauchy_map_tsane(__cauchy_pdf_t *_cauchy_pdf);
 void cauchy_plot_direct_resolution(__cauchy_pdf_t *_cauchy_pdf);
 void cauchy_plot_tsane(__cauchy_pdf_t *_cauchy_pdf);
 void cauchy_plot_statistics(__cauchy_pdf_t *_cauchy_pdf);
-void cauchy_forward(__cauchy_pdf_t *_cauchy_pdf);
+void cauchy_forward(void *_cauchy_pdf, __cwcn_type_t _cauchy_a, __cwcn_type_t _cauchy_b);
+
 
 // // CHI
 // __cwcn_type_t chi_n(__cwcn_type_t input);

@@ -11,13 +11,11 @@ void test_beta(){
     __cwcn_type_t e_ctx=0;
     while(1){
         printf("\n*******BETA*******");
-        set_beta_lambda(c_beta_pdf, l_ctx);
-        set_beta_eta(c_beta_pdf, e_ctx);
         l_ctx+=0.1;
+        clock_t begin = clock();
+        c_beta_pdf->__forward(c_beta_pdf, l_ctx, e_ctx);
         if(c_beta_pdf->__lambda>=c_beta_pdf->__max_lambda){l_ctx=0;e_ctx+=0.1;}
         if(c_beta_pdf->__eta>=c_beta_pdf->__max_eta){e_ctx=0;}
-        clock_t begin = clock();
-        beta_forward(c_beta_pdf);
         printf("forward method execution time : %f\n",(double)(clock()-begin)/CLOCKS_PER_SEC);
         clrscr();
         // getchar();
@@ -37,15 +35,13 @@ void test_cauchy(){
         printf("\n******CAUCHY********");
         // for exibition porpouses
     printf("\ta:%f \tb:%f\n",c_cauchy_pdf->__cauchy_a, c_cauchy_pdf->__cauchy_b);
-        set_cauchy_a(c_cauchy_pdf, a_ctx);
-        set_cauchy_b(c_cauchy_pdf, b_ctx);
         a_ctx+=0.05;
         if(c_cauchy_pdf->__cauchy_a>=c_cauchy_pdf->__cauchy_a_max){a_ctx=0x00;b_ctx+=0.05;}
         if(c_cauchy_pdf->__cauchy_b>=c_cauchy_pdf->__cauchy_b_max){b_ctx=0x00;}
         printf("\ta:%f/%f \tb:%f/%f\n",c_cauchy_pdf->__cauchy_a, a_ctx, c_cauchy_pdf->__cauchy_b, b_ctx);
         // direct
         clock_t begin = clock();
-        cauchy_forward(c_cauchy_pdf);
+        c_cauchy_pdf->__forward(c_cauchy_pdf, a_ctx, b_ctx);
         printf("forward method execution time : %f\n",(double)(clock()-begin)/CLOCKS_PER_SEC);
         // clrscr();
         // getchar();
@@ -59,7 +55,7 @@ void test_cauchy(){
 int main(){
     set_seed();
     printf("\033[1;32mwaka dao\033[0m\n");
-    test_beta();
+    test_cauchy();
     printf("\033[1;32mwaka din\033[0m\n");
     printf("\033[1;32mwaka tao\033[0m\n");
 }

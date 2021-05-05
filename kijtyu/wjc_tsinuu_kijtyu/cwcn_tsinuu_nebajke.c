@@ -1,6 +1,5 @@
 #include "cwcn_tsinuu_nebajke.h"
 #include "cwcn_tsinuu_piaabo.h"
-
 // void tsinuu_inverse_uwaabo(__tsinuu_t *_tsinuu, __cwcn_type_t *_output);
 // void jkimyei_weight_byinversediff(__tsinuu_t *_tsinuu);
 // void jkimyei_bias_byinversediff(__tsinuu_t _tsinuu);
@@ -435,9 +434,16 @@ void wapaajco_bydifference(__tsinuu_t *_tsinuu, __cwcn_type_t *_correct_output){
     }
     #ifdef TSINUU_DEBUG
         fprintf(stdout,">>>> request <wapaajco_bydifference>\n");
-        fprintf(stdout,">>>> WARINING: wapaajco returned variable must be free after usage\n");
     #endif
     free(_c_output);
+}
+void set_wapaajco(__tsinuu_t *_tsinuu, __cwcn_type_t *_set_wapaajco){
+    for(unsigned int idx_n=0x00;idx_n<layer_size_from_layer_stack_index(_tsinuu,output_layer_index(_tsinuu));idx_n++){
+        _tsinuu->__wapaajco->__w_vector[idx_n]=_tsinuu->__attributes->__wapaajco_potency*_set_wapaajco[idx_n];
+    }
+    #ifdef TSINUU_DEBUG
+        fprintf(stdout,">>>> request <set_wapaajco>\n");
+    #endif
 }
 /*
 

@@ -42,31 +42,6 @@ __cwcn_type_t B_fun(__cwcn_type_t A, __cwcn_type_t Z, __cwcn_type_t gamma_res, _
 /*
     BETA distribution
 */
-__beta_pdf_t *_ipivye_beta_pdf(unsigned int _d_res, unsigned int _n_tsane){
-    printf(">> _ipivye_beta_pdf\n");
-	__beta_pdf_t * new_beta_pdf = malloc(sizeof(__beta_pdf_t));
-    new_beta_pdf->__beta_lambda_tsinuu_index=0x00;
-    new_beta_pdf->__beta_eta_tsinuu_index=0x00;
-    new_beta_pdf->__lambda=0x00;
-    new_beta_pdf->__eta=0x00;
-    new_beta_pdf->__max_lambda=5.0;
-    new_beta_pdf->__max_eta=5.0;
-	new_beta_pdf->__direct_map = malloc(_d_res*sizeof(__cwcn_type_t));
-	new_beta_pdf->__tsane_map = malloc(_n_tsane*sizeof(__cwcn_type_t));
-    new_beta_pdf->__direct_resolution=_d_res;
-    new_beta_pdf->__num_tsane=_n_tsane;
-    new_beta_pdf->__beta_input=0x00;
-    for(unsigned int idx=0x00;idx<_d_res;idx++){
-        new_beta_pdf->__direct_map[idx]=0x00;
-    }
-    for(unsigned int idx=0x00;idx<_n_tsane;idx++){
-        new_beta_pdf->__tsane_map[idx]=0x00;
-    }
-    new_beta_pdf->__entropy=0x00;
-    new_beta_pdf->__max_known_entropy = -__cwcn_infinite;
-    new_beta_pdf->__beta_kemu = 0x00;
-	return new_beta_pdf;
-}
 void beta_difference_entropy(__beta_pdf_t *_beta_pdf, _Bool _in_nats){
     if(_in_nats){ // in nats!
         _beta_pdf->__entropy = 0;
@@ -174,15 +149,6 @@ void set_direct_resolution(__beta_pdf_t *_beta_pdf, unsigned int _d_res){
     _beta_pdf->__direct_resolution=_d_res;
 }
 
-void beta_forward(__beta_pdf_t *_beta_pdf){
-    beta_GAMMA_RESOLUTION(_beta_pdf);
-    // direct
-    beta_direct_density(_beta_pdf);
-    // beta_differential_entropy(_beta_pdf, true);
-    beta_difference_entropy(_beta_pdf, 0xFF);
-    beta_map_tsane(_beta_pdf);
-        
-}
 void beta_plot_direct_resolution(__beta_pdf_t *_beta_pdf){
     printf("DIRECT:\n");
     for (int idx = 0; idx < _beta_pdf->__direct_resolution; idx++){
@@ -219,6 +185,45 @@ void beta_plot_tsane(__beta_pdf_t *_beta_pdf){
 void beta_plot_statistics(__beta_pdf_t *_beta_pdf){
     printf(">> _ENTROPY_: %f \t _MAX_KNOWN_ENTROPY_: %f \t _lambda_: %3.2f \t _eta_: %3.2f _\n", _beta_pdf->__entropy, _beta_pdf->__max_known_entropy, _beta_pdf->__lambda, _beta_pdf->__eta);
 }
+void beta_forward(void *_beta_pdf, __cwcn_type_t _beta_lambda, __cwcn_type_t _beta_eta){
+    set_beta_lambda(_beta_pdf, _beta_lambda);
+    set_beta_eta(_beta_pdf, _beta_eta);
+    beta_GAMMA_RESOLUTION(_beta_pdf);
+    // direct
+    beta_direct_density(_beta_pdf);
+    // beta_differential_entropy(_beta_pdf, true);
+    beta_difference_entropy(_beta_pdf, 0xFF);
+    beta_map_tsane(_beta_pdf);
+        
+}
+__beta_pdf_t *_ipivye_beta_pdf(unsigned int _d_res, unsigned int _n_tsane){
+    printf(">> _ipivye_beta_pdf\n");
+	__beta_pdf_t * new_beta_pdf = malloc(sizeof(__beta_pdf_t));
+    new_beta_pdf->__beta_lambda_tsinuu_index=0x00;
+    new_beta_pdf->__beta_eta_tsinuu_index=0x00;
+    new_beta_pdf->__lambda=0x00;
+    new_beta_pdf->__eta=0x00;
+    new_beta_pdf->__max_lambda=5.0;
+    new_beta_pdf->__max_eta=5.0;
+	new_beta_pdf->__direct_map = malloc(_d_res*sizeof(__cwcn_type_t));
+	new_beta_pdf->__tsane_map = malloc(_n_tsane*sizeof(__cwcn_type_t));
+    new_beta_pdf->__direct_resolution=_d_res;
+    new_beta_pdf->__num_tsane=_n_tsane;
+    new_beta_pdf->__beta_input=0x00;
+    for(unsigned int idx=0x00;idx<_d_res;idx++){
+        new_beta_pdf->__direct_map[idx]=0x00;
+    }
+    for(unsigned int idx=0x00;idx<_n_tsane;idx++){
+        new_beta_pdf->__tsane_map[idx]=0x00;
+    }
+    new_beta_pdf->__entropy=0x00;
+    new_beta_pdf->__max_known_entropy = -__cwcn_infinite;
+    new_beta_pdf->__beta_kemu = 0x00;
+	new_beta_pdf->__forward= &beta_forward;
+    new_beta_pdf->__num_params=0x02;
+
+	return new_beta_pdf;
+}
 
 
 
@@ -226,34 +231,6 @@ void beta_plot_statistics(__beta_pdf_t *_beta_pdf){
 /*
     CAUCHY
 */
-__cauchy_pdf_t *_ipivye_cauchy_pdf(unsigned int _d_res, unsigned int _n_tsane){
-    printf(">> _ipivye_cauchy_pdf\n");
-	__cauchy_pdf_t * new_cauchy_pdf = malloc(sizeof(__cauchy_pdf_t));
-    new_cauchy_pdf->__direct_map = malloc(_d_res*sizeof(__cwcn_type_t));
-	new_cauchy_pdf->__tsane_map = malloc(_n_tsane*sizeof(__cwcn_type_t));
-    for(unsigned int idx=0x00;idx<_d_res;idx++){
-        new_cauchy_pdf->__direct_map[idx]=0x00;
-    }
-    for(unsigned int idx=0x00;idx<_n_tsane;idx++){
-        new_cauchy_pdf->__tsane_map[idx]=0x00;
-    }
-    new_cauchy_pdf->__direct_resolution=_d_res;
-    new_cauchy_pdf->__num_tsane=_n_tsane;
-    new_cauchy_pdf->__entropy=0x00;
-    new_cauchy_pdf->__max_known_entropy = -__cwcn_infinite;
-    new_cauchy_pdf->__cauchy_kemu = 0x00;
-    new_cauchy_pdf->__cauchy_input = 0x00;
-    new_cauchy_pdf->__cauchy_a = 0x00;
-    new_cauchy_pdf->__cauchy_b = 0x00;
-    new_cauchy_pdf->__cauchy_a_max = 100.0;
-    new_cauchy_pdf->__cauchy_b_max = 150.0;
-    new_cauchy_pdf->__cauchy_a_min = -100.0;
-    new_cauchy_pdf->__cauchy_input_min = -100;
-    new_cauchy_pdf->__cauchy_input_max = 100;
-    new_cauchy_pdf->__cauchy_a_tsinuu_index=0x00;
-    new_cauchy_pdf->__cauchy_b_tsinuu_index=0x00;
-	return new_cauchy_pdf;
-}
 void set_cauchy_a(__cauchy_pdf_t *_cauchy_pdf, __cwcn_type_t _cauchy_a){
     fprintf(stdout, "a:::: %f\n",_cauchy_a);
     assert(_cauchy_a>=0-0.01);
@@ -381,11 +358,43 @@ void cauchy_plot_statistics(__cauchy_pdf_t *_cauchy_pdf){
     printf(">> _ENTROPY_: %f \t _MAX_KNOWN_ENTROPY_: %f \t _lambda_: %3.2f \t _eta_: %3.2f _\n", _cauchy_pdf->__entropy, _cauchy_pdf->__max_known_entropy, _cauchy_pdf->__cauchy_a, _cauchy_pdf->__cauchy_b);
 }
 
-void cauchy_forward(__cauchy_pdf_t *_cauchy_pdf){
+void cauchy_forward(void *_cauchy_pdf, __cwcn_type_t _cauchy_a, __cwcn_type_t _cauchy_b){
+    set_cauchy_a(_cauchy_pdf, _cauchy_a);
+    set_cauchy_b(_cauchy_pdf, _cauchy_b);
     cauchy_direct_density(_cauchy_pdf);
     // cauchy_differential_entropy(_cauchy_pdf, true);
     cauchy_difference_entropy(_cauchy_pdf, 0xFF);
     cauchy_map_tsane(_cauchy_pdf);
+}
+__cauchy_pdf_t *_ipivye_cauchy_pdf(unsigned int _d_res, unsigned int _n_tsane){
+    printf(">> _ipivye_cauchy_pdf\n");
+	__cauchy_pdf_t * new_cauchy_pdf = malloc(sizeof(__cauchy_pdf_t));
+    new_cauchy_pdf->__direct_map = malloc(_d_res*sizeof(__cwcn_type_t));
+	new_cauchy_pdf->__tsane_map = malloc(_n_tsane*sizeof(__cwcn_type_t));
+    for(unsigned int idx=0x00;idx<_d_res;idx++){
+        new_cauchy_pdf->__direct_map[idx]=0x00;
+    }
+    for(unsigned int idx=0x00;idx<_n_tsane;idx++){
+        new_cauchy_pdf->__tsane_map[idx]=0x00;
+    }
+    new_cauchy_pdf->__direct_resolution=_d_res;
+    new_cauchy_pdf->__num_tsane=_n_tsane;
+    new_cauchy_pdf->__entropy=0x00;
+    new_cauchy_pdf->__max_known_entropy = -__cwcn_infinite;
+    new_cauchy_pdf->__cauchy_kemu = 0x00;
+    new_cauchy_pdf->__cauchy_input = 0x00;
+    new_cauchy_pdf->__cauchy_a = 0x00;
+    new_cauchy_pdf->__cauchy_b = 0x00;
+    new_cauchy_pdf->__cauchy_a_max = 100.0;
+    new_cauchy_pdf->__cauchy_b_max = 150.0;
+    new_cauchy_pdf->__cauchy_a_min = -100.0;
+    new_cauchy_pdf->__cauchy_input_min = -100;
+    new_cauchy_pdf->__cauchy_input_max = 100;
+    new_cauchy_pdf->__cauchy_a_tsinuu_index=0x00;
+    new_cauchy_pdf->__cauchy_b_tsinuu_index=0x00;
+    new_cauchy_pdf->__forward=&cauchy_forward;
+    new_cauchy_pdf->__num_params=0x02;
+	return new_cauchy_pdf;
 }
 
 // void inverse_probability_density_cauchy(__cwcn_type_t cauchy_a)
@@ -517,3 +526,30 @@ void cauchy_forward(__cauchy_pdf_t *_cauchy_pdf){
 // //     if(inpur < 0){return 0;}
 // // }
 // // __cwcn_type_t differential_entropy_(__cwcn_type_t input){return 0;}
+
+
+/*
+*/
+void entropycosa_forward(void _ec, __cwcn_type_t *_param_vect){
+    _jkimyei->__ec->__cosa[0]->__forward(_jkimyei->__ec->__cosa[0], _param_vect[0], _param_vect[1]);
+	_jkimyei->__ec->__cosa[1]->__forward(_jkimyei->__ec->__cosa[1], _param_vect[2], _param_vect[3]);
+}
+__entropycosa_t *entropycosa_fabric(unsigned int _d_res, unsigned int _n_tsane){
+    __entropycosa_t *new_ec = malloc(sizeof(__entropycosa_t));
+    new_ec->__cosa_size=BUGGER_ENTROPYCOSA_SIZE;
+    new_ec->__cosa[0]=_ipivye_beta_pdf(_d_res,_n_tsane);
+    new_ec->__cosa[1]=_ipivye_cauchy_pdf(_d_res,_n_tsane);
+    new_ec->__total_cosa_params=0x00;
+    new_ec->__total_cosa_params+=new_ec->__cosa[0]->__num_params;
+    new_ec->__total_cosa_params+=new_ec->__cosa[1]->__num_params;
+    new_ec->__forward=&entropycosa_forward;
+    return new_ec;
+}
+void entropycosa_destroy(__entropycosa_t *_ec){
+    free(_ec[1]->__direct_map);
+    free(_ec[1]->__tsane_map);
+    free(_ec[1]);
+    free(_ec[0]->__direct_map);
+    free(_ec[0]->__tsane_map);
+    free(_ec[0]);
+}

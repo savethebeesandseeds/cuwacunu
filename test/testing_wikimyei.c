@@ -3,20 +3,14 @@
 int main()
     unsigned int _load_size=0x01;
     unsigned int _jk_size=0x01;
-    unsigned int _uwaabo_size=0x01;
     unsigned int _duuruva_size=0x01;
-    unsigned int _tsane_size=0x01;
-    unsigned int _d_res=0x100;
-    unsigned int _munaajpi_base_size=_tsane_size+0x01; // #FIXME 0x01 is the number for earnings 
+    unsigned int _uwaabo_size=_duuruva_size*BUGGER_SIZE_DUURUVA;
+    unsigned int _entropycosa_size=BUGGER_ENTROPYCOSA_SIZE;
+    unsigned int _tsane_size=0x02;
+    unsigned int _direct_resolution=0x100;
+    unsigned int _munaajpi_base_size=_tsane_size+_uwaabo_size; // #FIXME 0x01 is the number for earnings 
     unsigned int _munaajpi_returns_size=_uwaabo_size; // this is fine
-    __jkimyei_t *c_jkimyei = jkimyei_fabric(
-        _load_size, // the size of the queue
-        _jk_size, // the size of the jkimyei batch
-        _uwaabo_size, // the size of the uwaabo output
-        _duuruva_size,
-        _num_tsane,
-        _munaajpi_base_size,
-        _num_munaajpi_returns);
+    __wikimyei_t *c_wikimyei=wikimyei_fabric();
     // skwstr_jkimyei_wikimyei(c_jkimyei);
     ujcamei
             // wapaajco_bydifference(c_tsinuu, c_correct_output[ctx_p]);

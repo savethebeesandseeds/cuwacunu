@@ -5,43 +5,34 @@
 #include "cwcn_net_nebajke.h"
 #include "cwcn_wikimyei_nebajke.h"
 // remmemer PMF[a_idx], from I, from the past ¿do we make it?.
-___uwaabo_hash(__jkimyei_t *_jkimyei){
-	_jkimyei->__uwaabo_tsinuu;
-    
-}
-___munaajpi_hash(){
-	_jkimyei->__munaajpi_tsinuu;
 
-}
+/*
 
-void jkimyei_iter(
-	__jkimyei_t *_jkimyei){
+*/
+void jk_iter(__jkimyei_t *_jkimyei){
 	// // __cwcn_type_t _states[BATCH_SIZE][NUM_STATES], 
 	// // __cwcn_type_t _actions[BATCH_SIZE][NUM_ACTIONS],
 	// // __cwcn_type_t _log_probs[BATCH_SIZE][NUM_ACTIONS], 
 	// // __cwcn_type_t _returns[BATCH_SIZE][NUM_RETURNS],
 	// // __cwcn_type_t _adventage[BATCH_SIZE][NUM_ACTIONS],
 	// __cwcn_type_t *_states_handler,
-	// __cwcn_type_t *_actions_handler,
-	// __cwcn_type_t *_log_probs_handler,
+	// __cwcn_type_t *jk_get_trayectory_item(__jkimyei)->__tsane,
+	// __cwcn_type_t *_jk_get_trayectory_item(_jkmiyei)->__tsane_log_prob,
 	// __cwcn_type_t *_returns_handler,
-	// __cwcn_type_t *_adventage_handler
-	printf(">> request jkimyei_iter\n");
+	// __cwcn_type_t *__jkimyei->__uwaabo_adventage
+	printf(">> request jk_iter\n");
 	int rand_idx;
+	jk_kill_queue(_jkimyei);
 	for(unsigned int idx=0x00;idx<_jkimyei->_jk_size;idx++){
-		rand_idx = rand() % (_jkimyei->_load_size - _jkimyei->_load_count) - rand() % (_jkimyei->_load_count);
+		rand_idx = rand() % (_jkimyei->_load_size - _jkimyei->__load_index) - rand() % (_jkimyei->__load_index);
 		for(unsigned int idx_2=0x00;idx_2<abs(rand_idx);idx_2++){
 			if(rand_idx<0){
 				load_go_down(_jkimyei);
-			}
-			 else {
+			} else {
 				load_go_up(_jkimyei);
 			}
 		}
-		_jk_batch[idx]=enqueue_trayectory(_jkimyei,_jkimyei->__load_batch_head);
-		_jk_batch = enqueue_trayectory();
-		retrival_down_load_trayectory(__jkimyei_t *_jkimyei);
-		retrival_up_load_trayectory(__jkimyei_t *_jkimyei);
+		jk_enqueue_trayectory(_jkimyei,load_get_trayectory_item(_jkimyei));
 		// for(unsigned int itm_x=0x00; itm_x < _jkimyei->__num_states; itm_x++){
 		// 	_states_handler[idx][itm_x] 	= _states[rand_idx][itm_x];
 		// }
@@ -49,12 +40,11 @@ void jkimyei_iter(
 		// 	_returns_handler[idx][itm_x] 	= _returns[rand_idx][itm_x];
 		// }
 		// for(unsigned int itm_x=0x00; itm_x < NUM_ACTIONS; itm_x++){
-		// 	_actions_handler[idx][itm_x] 	= _actions[rand_idx][itm_x];
-		// 	_log_probs_handler[idx][itm_x] 	= _log_probs[rand_idx][itm_x];
-		// 	_adventage_handler[idx][itm_x] 	= _adventage[rand_idx][itm_x];
+		// 	jk_get_trayectory_item(__jkimyei)->__tsane[idx][itm_x] 	= _actions[rand_idx][itm_x];
+		// 	_jk_get_trayectory_item(_jkmiyei)->__tsane_log_prob[idx][itm_x] 	= _log_probs[rand_idx][itm_x];
+		// 	__jkimyei->__uwaabo_adventage[idx][itm_x] 	= _adventage[rand_idx][itm_x];
 		// }
 	}
-	return _jk_batch;
 }
 // void jkimyei_wikimyei(
 // 	__cwcn_type_t _states[BATCH_SIZE][NUM_STATES], 
@@ -69,14 +59,14 @@ void jkimyei_iter(
 // 		__cwcn_type_t loss_handler[NUM_ACTIONS];
 // 		__cwcn_type_t actor_loss_handler[NUM_ACTIONS];
 // 		__cwcn_type_t munaajpi_loss_handler[NUM_ACTIONS];
-// 		__cwcn_type_t old_log_probs_handler[NUM_ACTIONS];
-// 		__cwcn_type_t new_log_probs_handler[NUM_ACTIONS];
+// 		__cwcn_type_t old_jk_get_trayectory_item(_jkmiyei)->__tsane_log_prob[NUM_ACTIONS];
+// 		__cwcn_type_t new_jk_get_trayectory_item(_jkmiyei)->__tsane_log_prob[NUM_ACTIONS];
 
 // 		__cwcn_type_t states_handler[MINI_BATCH_SIZE][NUM_STATES];
-// 		__cwcn_type_t actions_handler[MINI_BATCH_SIZE][NUM_ACTIONS];
-// 		__cwcn_type_t log_probs_handler[MINI_BATCH_SIZE][NUM_ACTIONS];
+// 		__cwcn_type_t jk_get_trayectory_item(_jkimyei)->__tsane[MINI_BATCH_SIZE][NUM_ACTIONS];
+// 		__cwcn_type_t jk_get_trayectory_item(_jkmiyei)->__tsane_log_prob[MINI_BATCH_SIZE][NUM_ACTIONS];
 // 		__cwcn_type_t returns_handler[MINI_BATCH_SIZE][NUM_RETURNS];
-// 		__cwcn_type_t adventage_handler[MINI_BATCH_SIZE][NUM_ACTIONS];
+// 		__cwcn_type_t _jkimyei->__uwaabo_adventage[MINI_BATCH_SIZE][NUM_ACTIONS];
 
 // 		__cwcn_type_t ujcamei_handler[NUM_UJCAMEI];
 // 		__cwcn_type_t cajtucu_handler[NUM_CAJTUCU];
@@ -89,20 +79,20 @@ void jkimyei_iter(
 // 				returns,
 // 				adventage,
 // 				states_handler,
-// 				actions_handler, 
-// 				log_probs_handler, 
+// 				jk_get_trayectory_item(_jkimyei)->__tsane, 
+// 				jk_get_trayectory_item(_jkmiyei)->__tsane_log_prob, 
 // 				returns_handler,
-// 				adventage_handler);
+// 				_jkimyei->__uwaabo_adventage);
 // 			// propagate trought network
 // 			for(int b_step=0; b_step<MINI_BATCH_SIZE; b_step++){
 // 				cwcn_hash_cognitive(states_handler[b_step], ujcamei_handler);
 // 				cwcn_net_uwaabo(ujcamei_handler, cajtucu_handler);
-// 				cwcn_dehash_cognitive(cajtucu_handler, actions_handler);
+// 				cwcn_dehash_cognitive(cajtucu_handler, jk_get_trayectory_item(_jkimyei)->__tsane);
 // 				for(int a_idx=0;a_idx<NUM_ACTIONS;a_idx++){
 // 					// new_action was old action in skwstr job, check this... #FIXME?
-// 					ratio_handler = exp(log(actions_handler[a_idx]) - log_probs_handler[a_idx]);
-// 					surr1_handler = ratio_handler * adventage_handler[b_step][a_idx];
-// 					surr2_handler = clamp(ratio_handler, 1.0 - PPO_EPSILON, 1.0 + adventage_handler[b_step][a_idx]);
+// 					ratio_handler = exp(log(jk_get_trayectory_item(_jkimyei)->__tsane[a_idx]) - jk_get_trayectory_item(_jkmiyei)->__tsane_log_prob[a_idx]);
+// 					surr1_handler = ratio_handler * _jkimyei->__uwaabo_adventage[b_step][a_idx];
+// 					surr2_handler = clamp(ratio_handler, 1.0 - PPO_EPSILON, 1.0 + _jkimyei->__uwaabo_adventage[b_step][a_idx]);
 // 					actor_loss_handler[a_idx] = - min(surr1_handler, surr2_handler);
 // 					// munaajpi_loss_handler[a_idx] = pow(return_ - value, 2);
 // 					// // train the network! aja!
@@ -123,14 +113,14 @@ void jkimyei_wikimyei(__jkimyei_t *_jkimyei){
 	// __cwcn_type_t *loss_handler=malloc(NUM_ACTIONS*sizeof(__cwcn_type_t));
 	// __cwcn_type_t *munaajpi_loss_handler=malloc(NUM_ACTIONS*sizeof(__cwcn_type_t));
 	// __cwcn_type_t *actor_loss_handler=malloc(NUM_ACTIONS*sizeof(__cwcn_type_t));
-	// __cwcn_type_t *old_log_probs_handler=malloc(NUM_ACTIONS*sizeof(__cwcn_type_t));
-	// __cwcn_type_t *new_log_probs_handler=malloc(NUM_ACTIONS*sizeof(__cwcn_type_t));
+	// __cwcn_type_t *old_jk_get_trayectory_item(_jkmiyei)->__tsane_log_prob=malloc(NUM_ACTIONS*sizeof(__cwcn_type_t));
+	// __cwcn_type_t *new_jk_get_trayectory_item(_jkmiyei)->__tsane_log_prob=malloc(NUM_ACTIONS*sizeof(__cwcn_type_t));
 
 	// __cwcn_type_t *states_handler=malloc(MINI_BATCH_SIZE*NUM_STATES*sizeof(__cwcn_type_t));
-	// __cwcn_type_t *actions_handler=malloc(MINI_BATCH_SIZE*NUM_ACTIONS*sizeof(__cwcn_type_t));
-	// __cwcn_type_t *log_probs_handler=malloc(MINI_BATCH_SIZE*NUM_ACTIONS*sizeof(__cwcn_type_t));
+	// __cwcn_type_t *jk_get_trayectory_item(_jkimyei)->__tsane=malloc(MINI_BATCH_SIZE*NUM_ACTIONS*sizeof(__cwcn_type_t));
+	// __cwcn_type_t *jk_get_trayectory_item(_jkmiyei)->__tsane_log_prob=malloc(MINI_BATCH_SIZE*NUM_ACTIONS*sizeof(__cwcn_type_t));
 	// __cwcn_type_t *returns_handler=malloc(MINI_BATCH_SIZE*NUM_RETURNS*sizeof(__cwcn_type_t));
-	// __cwcn_type_t *adventage_handler=malloc(MINI_BATCH_SIZE*NUM_ACTIONS*sizeof(__cwcn_type_t));
+	// __cwcn_type_t *_jkimyei->__uwaabo_adventage=malloc(MINI_BATCH_SIZE*NUM_ACTIONS*sizeof(__cwcn_type_t));
 
 	// __cwcn_type_t *ujcamei_handler=malloc(NUM_UJCAMEI*sizeof(__cwcn_type_t)); // #FIXME what?
 	// __cwcn_type_t *cajtucu_handler=malloc(NUM_CAJTUCU*sizeof(__cwcn_type_t)); // #FIXME what?
@@ -139,37 +129,41 @@ void jkimyei_wikimyei(__jkimyei_t *_jkimyei){
 
 	load_iter(_jkimyei);
 	for(unsigned int train_step=0; train_step<_jkimyei->__load_size/_jkimyei->__jk_size; train_step++){
-		jkimyei_iter(_jkimyei);
-		// propagate trought network
+		jk_iter(_jkimyei);
 		for(unsigned int idx_jk=0; idx_jk<_jkimyei->__jk_size; idx_jk++){
-			
-			// cwcn_hash_cognitive(states_handler[idx_jk], ujcamei_handler);
-			// cwcn_net_uwaabo(ujcamei_handler, cajtucu_handler);
-			// cwcn_dehash_cognitive(cajtucu_handler, actions_handler);
-			// _wikimyei_uwaabo_hash(c_duuruva, c_uwaabo);
-			// _wikimyei_munaajpi_hash(c_duuruva, c_uwaabo, c_munaajpi);
+			// propagate trought network
+			___alliu_hash(_jkimyei);
+			___duuruva_hash(_jkimyei);
 			___uwaabo_hash(_jkimyei);
+			___entropy_hash(_jkimyei);
 			___munaajpi_hash(_jkimyei);
-			for(unsigned int a_idx=0;a_idx<NUM_ACTIONS;a_idx++){
+			___tsane_dehash(_jkimyei, 0x00);
+			for(unsigned int a_idx=0;a_idx<_jkimyei->__tsane_size;a_idx++){
 				// new_action was old action in skwstr job, check this... #FIXME?
-				ratio_handler = exp(log(actions_handler[a_idx]) - log_probs_handler[a_idx]);
-				surr1_handler = ratio_handler * adventage_handler[idx_jk][a_idx];
-				surr2_handler = clamp(ratio_handler, 1.0 - PPO_EPSILON, 1.0 + adventage_handler[idx_jk][a_idx]);
-				_jkimyei->uwaabo_loss[a_idx] = - min(surr1_handler, surr2_handler);
-				_jkimyei->munaajpi_loss[a_idx] = pow(return_ - value, 2);
+				ratio_handler = exp(log(jk_get_trayectory_item(_jkimyei)->__tsane[a_idx]) - jk_get_trayectory_item(_jkmiyei)->__tsane_log_prob[a_idx]);
+				surr1_handler = ratio_handler * jk_get_trayectory_item(_jkimyei)->__uwaabo_adventage;
+				surr2_handler = clamp(ratio_handler, 1.0 - PPO_EPSILON, 1.0 + jk_get_trayectory_item(_jkimyei)->__uwaabo_adventage);
+				_jkimyei->__uwaabo_loss[a_idx] = - min(surr1_handler, surr2_handler);
+				_jkimyei->__munaajpi_loss[a_idx] = pow(return_ - value, 2);
 				// // train the network! aja!
 			}
+			set_wapaajco(_jkimyei->__uwaabo_tsinuu, _jkimyei->__uwaabo_loss);
+			set_wapaajco(_jkimyei->__munaajpi_tsinuu, _jkimyei->__munaajpi_loss);
+			jkimyei_tsinuu_bydirectNABLA(c_tsinuu);
+			print_results(c_tsinuu);
 		}
 	}
+	print_all_lines(c_tsinuu);
+    print_all_nodes(c_tsinuu);
 	// free(loss_handler);
 	// free(munaajpi_loss_handler);
-	// free(old_log_probs_handler);
-	// free(new_log_probs_handler);
+	// free(old_jk_get_trayectory_item(_jkmiyei)->__tsane_log_prob);
+	// free(new_jk_get_trayectory_item(_jkmiyei)->__tsane_log_prob);
 	// free(states_handler);
-	// free(actions_handler);
-	// free(log_probs_handler);
+	// free(jk_get_trayectory_item(_jkimyei)->__tsane);
+	// free(jk_get_trayectory_item(_jkmiyei)->__tsane_log_prob);
 	// free(returns_handler);
-	// free(adventage_handler);
+	// free(_jkimyei->__uwaabo_adventage);
 	// free(ujcamei_handler);
 	// free(cajtucu_handler);
 	// free(_load_batch);
@@ -179,3 +173,6 @@ void jkimyei_wikimyei(__jkimyei_t *_jkimyei){
 	// #FIXME free inmortal and mortal queues
 }
 
+void ...wikimyei_tsane(__jkmiyei_t *_jkimyei){
+
+}

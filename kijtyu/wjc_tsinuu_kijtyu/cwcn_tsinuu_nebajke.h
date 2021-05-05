@@ -53,7 +53,9 @@
     void jkimyei_tsinuu_bydirectNABLA(__tsinuu_t *_tsinuu);
     
     void wapaajco_bydifference(__tsinuu_t *_tsinuu, __cwcn_type_t *_correct_output);
+    void set_wapaajco(__tsinuu_t *_tsinuu, __cwcn_type_t *_set_wapaajco);
     void wapaajco_bynodeentropymax(__tsinuu_t *_tsinuu); // #FIXME inplement
     void set_seed();
+
 #endif
 #endif

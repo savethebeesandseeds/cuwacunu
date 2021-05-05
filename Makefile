@@ -15,6 +15,7 @@ ENTROPY_=$(KIJTYU)/shnnn_entropy_kijtyu
 ALLIU_=$(KIJTYU)/mrkt_alliu_kijtyu
 KEMU_=$(KIJTYU)/wjc_kemu_kijtyu
 TSINUU_=$(KIJTYU)/wjc_tsinuu_kijtyu
+DUURUVA_=$(KIJTYU)/wjc_duuruva_kijtyu
 
 CFLAGS=-I $(KEMU_)/ -I $(NET_)/ -I $(IPIVYE_)/ -I $(AVYETA_)/ -I $(ALLIU_)/ -I $(CONFIGURATIONS)/ -I $(COMMUNICATIONS)/ -I $(JIKIMYEI_)/
 LDFLAGS=-L $(FANN_)
@@ -24,6 +25,7 @@ REGULAR_TARGETS=$(KEMU_)/*.c $(NET_)/*.c $(COMMUNICATIONS)/cwcn_security.c $(IPI
 BTC_FUT_TARGETS=$(CONFIGURATIONS)/btc_fut.config.c $(ROOT)/wikimyei/cwcn_btc_fut_wikimyei.c
 ENTROPY_TEST_TARGETS=$(ENTROPY_)/*.c $(TEST_)/testing_entropy.c
 TSINUU_TEST_TARGETS=$(TSINUU_)/cwcn_tsinuu_piaabo.c $(TSINUU_)/cwcn_tsinuu_nebajke.c $(TEST_)/testing_tsinuu.c
+DUURUVA_TEST_TARGETS=$(DUURUVA_)/cwcn_duuruva_nebajke.c $(TEST_)/testing_duuruva.c
 _all_wikimyei: _wikimyei_btc_fut
 _wikimyei_btc_fut:
 	$(CC) $(REGULAR_TARGETS) $(BTC_FUT_TARGETS) $(CFLAGS) $(LDFLAGS) $(AUXFLAGS) -o _wikimyei_btc_fut 
@@ -31,7 +33,10 @@ _entropy_test:
 	$(CC) $(ENTROPY_TEST_TARGETS) -I $(ENTROPY_)/ -I $(CONFIGURATIONS)/ -lm -Wall -o $(ROOT)/_entropy_test
 	$(ROOT)/_entropy_test 
 _tsinuu_test:
-	$(CC) $(TSINUU_TEST_TARGETS) -I $(TSINUU_)/ -lm -o $(ROOT)/_tsinuu_test
-	$(ROOT)/_tsinuu_test
+	$(CC) $(TSINUU_TEST_TARGETS) -I $(TSINUU_)/ -lm -Wall -o $(ROOT)/_tsinuu_test
+	$(ROOT)/_tsinuu_test 
+_duuruva_test:
+	$(CC) $(DUURUVA_TEST_TARGETS) -I $(DUURUVA_)/ -lm -Wall -o $(ROOT)/_duuruva_test
+	$(ROOT)/_duuruva_test
 clean:
-	rm -f $(ROOT)/_wikimyei_btc_fut $(ROOT)/_entropy_test $(ROOT)/_tsinuu_test
+	rm -f $(ROOT)/_wikimyei_btc_fut $(ROOT)/_entropy_test $(ROOT)/_tsinuu_test $(ROOT)/_duuruva_test
