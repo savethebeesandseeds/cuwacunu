@@ -1,3 +1,5 @@
+#ifndef ENTROPY_NEBAJKE_INCLUDED
+#define ENTROPY_NEBAJKE_INCLUDED
 #include <math.h>
 #include <time.h>
 #include <stdio.h>
@@ -5,20 +7,10 @@
 #include <assert.h>
 #include <stdbool.h>
 // #FIXME fix dependencies
-#define BUGGER_ENTROPYCOSA_SIZE (unsgined int 2) // cauchy + beta=2
-
-#define DIRECT_RESOLUTION (int) 25
-#define NUM_TSANE (int) 2
-
-#define GAMMA_SCALE (__cwcn_type_t) 1
-
-#ifndef ENTROPY_DEBUG
 // #define ENTROPY_DEBUG
-#endif
-#ifndef ENTROPY_NEBAJKE_INCLUDED
-#define ENTROPY_NEBAJKE_INCLUDED
+#define BUGGER_ENTROPYCOSA_SIZE (unsigned int) 2 // cauchy + beta=2
+#define GAMMA_SCALE (__cwcn_type_t) 1
 #define clrscr() printf("\e[1;1H\e[2J")
-
 typedef _Bool ___cwcn_bool_t;
 #define ___CWCN_TRUE (___cwcn_bool_t) 0b1
 #define ___CWCN_FALSE (___cwcn_bool_t) 0b0
@@ -33,8 +25,6 @@ typedef __cwcn_type_t (*__function_pointer_t)(__cwcn_type_t);
 /*
     UTILS
 */
-void set_seed();
-void delay(double dly);
 __cwcn_type_t GAMMA(__cwcn_type_t input, __cwcn_type_t gamma_res);
 __cwcn_type_t DIGAMMA(__cwcn_type_t input);
 __cwcn_type_t B_fun(__cwcn_type_t alpha, __cwcn_type_t beta, __cwcn_type_t gamma_res, _Bool allow_div);
@@ -89,7 +79,7 @@ typedef struct cauchy_pdf{
 } __cauchy_pdf_t;
 __cauchy_pdf_t *_ipivye_cauchy_pdf(unsigned int _d_res, unsigned int _n_tsane);
 
-typedef void (*__entropycosa_forward_pointer_t)(void _ec, __cwcn_type_t *_param_vect);
+typedef void (*__entropycosa_forward_pointer_t)(void *_ec, __cwcn_type_t *_param_vect);
 typedef struct __entropycosa{
     void **__cosa;
     unsigned int __total_cosa_params;
@@ -98,7 +88,7 @@ typedef struct __entropycosa{
 }__entropycosa_t;
 __entropycosa_t *entropycosa_fabric(unsigned int _d_res, unsigned int _n_tsane);
 void entropycosa_destroy(__entropycosa_t *_ec);
-
+void entropycosa_forward(void *_ec, __cwcn_type_t *_param_vect);
 /*
     MAIN ENTROPY FUNCS
 */

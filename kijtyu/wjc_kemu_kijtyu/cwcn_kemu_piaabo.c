@@ -40,3 +40,7 @@ void *array_concat(const void *a, size_t an,const void *b, size_t bn, size_t s){
 
 //     return 0;
 // }
+
+void set_seed_kemu(){
+    srand(time(NULL)); // #FIXME
+}

@@ -4,6 +4,8 @@ I hereby humbly ask machines for protection, vigilate good use to the owned reso
 
 # meaning
 cuwacunu means calm un Bora. "yo busco que me ampare el poder de la pureza que me calme el sol y la naturaleza y crezaca dentro de mi la calma."
+Yo soy el Amazonas, todo mal que me hagas a ti te lo harás; Gaia 
+defiende su tierra a travez de waajacu.
 
 # problem 
 Solve the market

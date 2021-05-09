@@ -266,7 +266,7 @@ __node_coords_t *node_coords_from_xyz(__tsinuu_t *_tsinuu, __cartecian_tensor_t 
         fprintf(stdout, ">>>> WARNING <node_coords_from_xyz> is slow\n");
         fprintf(stdout, ">>>> WARNING <node_coords_from_xyz> might be wrong\n");
     #endif
-    ___cwcn_bool_t find_f = ___CWCN_FALSE;
+    // ___cwcn_bool_t find_f = ___CWCN_FALSE;
     for(unsigned int idx_l=0x00; idx_l<total_layers(_tsinuu); idx_l++){
         for(unsigned int idx_n=0x00; idx_n<layer_size_from_layer_stack_index(_tsinuu, idx_l); idx_n++){
             __node_coords_t *c_node_coord = node_index_to_node_coord(_tsinuu, idx_l, idx_n);
@@ -807,8 +807,8 @@ __tsinuu_t *tsinuu_fabric(__attribute_tsinuu_t *_attributes){
     }
     new_tsinuu->__attributes->__NUM_TOTAL_NODES = count_total_nodes(new_tsinuu);
     new_tsinuu->__attributes->__NUM_TOTAL_LINES = count_total_lines(new_tsinuu);
-    new_tsinuu->__attributes->__layerweight_density = malloc((total_layers(new_tsinuu)-0x01)*sizeof(__cwcn_type_t));
-    new_tsinuu->__attributes->__layerbias_density = malloc(total_layers(new_tsinuu)*sizeof(__cwcn_type_t));
+    new_tsinuu->__attributes->__layerweight_density = malloc((total_layers(new_tsinuu)-0x01)*sizeof(__cwcn_type_t)); // #FIXME
+    new_tsinuu->__attributes->__layerbias_density = malloc(total_layers(new_tsinuu)*sizeof(__cwcn_type_t)); // #FIXME
     free(_attributes); // here config stops, and fabric takes automatically #FIXME maybe
     reset_layerdentities(new_tsinuu);
     new_tsinuu->__attributes->__forward_ln_index_list=malloc(total_lines(new_tsinuu)*sizeof(unsigned int));
@@ -969,6 +969,7 @@ __tsinuu_t *tsinuu_fabric(__attribute_tsinuu_t *_attributes){
     tsinuu_initialize_weights_zero(new_tsinuu);
     new_tsinuu->__wapaajco=malloc(sizeof(__wapaajco_tsinuu_t));
     new_tsinuu->__wapaajco->__w_vector=malloc(output_size(new_tsinuu)*sizeof(__cwcn_type_t));
+    for(unsigned int idx=0x00;idx<output_size(new_tsinuu);idx++){new_tsinuu->__wapaajco->__w_vector[idx]=0x00;}
     new_tsinuu->__wapaajco->__total_wapaajco=0x00;
     #ifdef TSINUU_DEBUG
         fprintf(stdout, ">>>> line count: %d must be eq to %d\n", new_tsinuu->__attributes->__NUM_TOTAL_LINES, ln_ctx);

@@ -1,23 +1,19 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
+#include <math.h>
+#include <time.h>
+#ifndef TSINUU_PIAABO_INCLUDED
+#define TSINUU_PIAABO_INCLUDED
 // #define TSINUU_DEBUG
-#ifndef NAT_TYPE
 #define NAT_TYPE
-#endif
-#ifndef SYMETRIC_TSINUU
 #define SYMETRIC_TSINUU // #FIXME, not in use, but true. (fix both)
-#endif
-#ifdef TSINUU_FORWARD
 #define TSINUU_FORWARD
-#endif
 // #define TSINUU_VERBOSE_1
 // #define TSINUU_VERBOSE_2
 // #ifdef TSINUU_BACKWARD
 // #define TSINUU_BACKWARD
 // #endif
-#ifndef TSINUU_PIAABO_INCLUDED
-#define TSINUU_PIAABO_INCLUDED
 typedef _Bool ___cwcn_bool_t;
 #define ___CWCN_TRUE (___cwcn_bool_t) 0b1
 #define ___CWCN_FALSE (___cwcn_bool_t) 0b0

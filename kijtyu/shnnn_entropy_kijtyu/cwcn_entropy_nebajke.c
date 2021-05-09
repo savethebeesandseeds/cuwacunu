@@ -5,16 +5,6 @@
 /*
     UTILS
 */
-void set_seed(){
-    srand(time(NULL)); // #FIXME
-}
-void delay(double dly){
-    const time_t start = time(NULL);
-    time_t current;
-    do{
-        time(&current);
-    } while(difftime(current,start)<dly);
-}
 __cwcn_type_t GAMMA(__cwcn_type_t input, __cwcn_type_t gamma_res){ // FIXME, find the optimal range of discrete GAMMA
     __cwcn_type_t g_v = 1;
     for(unsigned short fact=1;fact<=input * gamma_res * GAMMA_SCALE - 1; fact++){
@@ -65,9 +55,9 @@ void beta_difference_entropy(__beta_pdf_t *_beta_pdf, _Bool _in_nats){
 void beta_map_tsane(__beta_pdf_t *_beta_pdf){
     // FIXME, this computational method can be better
     unsigned int ctx=0x00;
-    for(unsigned int idx=0x00; idx<NUM_TSANE;idx++){
+    for(unsigned int idx=0x00; idx<_beta_pdf->__num_tsane;idx++){
         _beta_pdf->__tsane_map[idx] = 0;
-        for(unsigned int idy=0x00; idy<(unsigned int)_beta_pdf->__direct_resolution/NUM_TSANE;idy++){
+        for(unsigned int idy=0x00; idy<(unsigned int)_beta_pdf->__direct_resolution/_beta_pdf->__num_tsane;idy++){
             _beta_pdf->__tsane_map[idx] += _beta_pdf->__direct_map[ctx];
             // printf(">> ctd %d, dir: %f\n", idx, _beta_pdf->__direct_map[ctx]);
             ctx++;
@@ -198,6 +188,7 @@ void beta_forward(void *_beta_pdf, __cwcn_type_t _beta_lambda, __cwcn_type_t _be
 }
 __beta_pdf_t *_ipivye_beta_pdf(unsigned int _d_res, unsigned int _n_tsane){
     printf(">> _ipivye_beta_pdf\n");
+    
 	__beta_pdf_t * new_beta_pdf = malloc(sizeof(__beta_pdf_t));
     new_beta_pdf->__beta_lambda_tsinuu_index=0x00;
     new_beta_pdf->__beta_eta_tsinuu_index=0x00;
@@ -530,26 +521,31 @@ __cauchy_pdf_t *_ipivye_cauchy_pdf(unsigned int _d_res, unsigned int _n_tsane){
 
 /*
 */
-void entropycosa_forward(void _ec, __cwcn_type_t *_param_vect){
-    _jkimyei->__ec->__cosa[0]->__forward(_jkimyei->__ec->__cosa[0], _param_vect[0], _param_vect[1]);
-	_jkimyei->__ec->__cosa[1]->__forward(_jkimyei->__ec->__cosa[1], _param_vect[2], _param_vect[3]);
+void entropycosa_forward(void *_ec, __cwcn_type_t *_param_vect){
+    ((__beta_pdf_t *)((__entropycosa_t *)_ec)->__cosa[0])->__forward(((__entropycosa_t *)_ec)->__cosa[0], _param_vect[0], _param_vect[1]);
+	((__cauchy_pdf_t *)((__entropycosa_t *)_ec)->__cosa[1])->__forward(((__entropycosa_t *)_ec)->__cosa[1], _param_vect[2], _param_vect[3]);
 }
 __entropycosa_t *entropycosa_fabric(unsigned int _d_res, unsigned int _n_tsane){
     __entropycosa_t *new_ec = malloc(sizeof(__entropycosa_t));
     new_ec->__cosa_size=BUGGER_ENTROPYCOSA_SIZE;
+    new_ec->__cosa=malloc(new_ec->__cosa_size*sizeof(void));
+    new_ec->__cosa[0]=malloc(sizeof(__beta_pdf_t));
+    new_ec->__cosa[1]=malloc(sizeof(__cauchy_pdf_t));
     new_ec->__cosa[0]=_ipivye_beta_pdf(_d_res,_n_tsane);
     new_ec->__cosa[1]=_ipivye_cauchy_pdf(_d_res,_n_tsane);
     new_ec->__total_cosa_params=0x00;
-    new_ec->__total_cosa_params+=new_ec->__cosa[0]->__num_params;
-    new_ec->__total_cosa_params+=new_ec->__cosa[1]->__num_params;
+    new_ec->__total_cosa_params+=((__beta_pdf_t *)new_ec->__cosa[0])->__num_params;
+    new_ec->__total_cosa_params+=((__cauchy_pdf_t *)new_ec->__cosa[1])->__num_params;
     new_ec->__forward=&entropycosa_forward;
     return new_ec;
 }
 void entropycosa_destroy(__entropycosa_t *_ec){
-    free(_ec[1]->__direct_map);
-    free(_ec[1]->__tsane_map);
-    free(_ec[1]);
-    free(_ec[0]->__direct_map);
-    free(_ec[0]->__tsane_map);
-    free(_ec[0]);
+    free(((__cauchy_pdf_t *)_ec->__cosa[1])->__direct_map);
+    free(((__cauchy_pdf_t *)_ec->__cosa[1])->__tsane_map);
+    free(((__cauchy_pdf_t *)_ec->__cosa[1]));
+    free(((__beta_pdf_t *)_ec->__cosa[0])->__direct_map);
+    free(((__beta_pdf_t *)_ec->__cosa[0])->__tsane_map);
+    free(((__beta_pdf_t *)_ec->__cosa[0]));
+    free(_ec->__cosa);
+    free(_ec);
 }
