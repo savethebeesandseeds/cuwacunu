@@ -521,9 +521,24 @@ __cauchy_pdf_t *_ipivye_cauchy_pdf(unsigned int _d_res, unsigned int _n_tsane){
 
 /*
 */
-void entropycosa_forward(void *_ec, __cwcn_type_t *_param_vect){
+void entropycosa_tsane(void *_ec){
+    cwcn_type_t c_sum=0x00;
+    for(unsigned int idx_tsane=0x00;idx_tsane<(__entropycosa_t *)->__cosa_size;idx_tsane++){
+		((__entropycosa_t *)__ec)->__tsane[idx_tsane]=0x00;
+	    for(unsigned int idx=0x00;idx<((__entropycosa_t *)__ec)->__cosa_size;idx++){
+			((__entropycosa_t *)__ec)->__tsane[idx_tsane]+=((__entropycosa_t *)__ec)->__cosa[idx]->__tsane_map[idx_tsane];
+            c_sum+=((__entropycosa_t *)__ec)->__tsane[idx_tsane];
+		}
+	}
+    for(unsigned int idx_tsane=0x00;idx_tsane<_wikimyei->__tsane_state_size;idx_tsane++){
+        ((__entropycosa_t *)__ec)->__tsane[idx_tsane]/=c_sum;
+    }
+}
+__cwcb_type_t entropycosa_forward(void *_ec, __cwcn_type_t *_param_vect){
     ((__beta_pdf_t *)((__entropycosa_t *)_ec)->__cosa[0])->__forward(((__entropycosa_t *)_ec)->__cosa[0], _param_vect[0], _param_vect[1]);
 	((__cauchy_pdf_t *)((__entropycosa_t *)_ec)->__cosa[1])->__forward(((__entropycosa_t *)_ec)->__cosa[1], _param_vect[2], _param_vect[3]);
+    ((__entropycosa_t *)_ec)->__entropy=(((__beta_pdf_t *)((__entropycosa_t *)_ec)->__cosa[0])->__entropy+((__cauchy_pdf_t *)((__entropycosa_t *)_ec)->__cosa[1])->__entropy)/2;
+    entropycosa_tsane(_ec);
 }
 __entropycosa_t *entropycosa_fabric(unsigned int _d_res, unsigned int _n_tsane){
     __entropycosa_t *new_ec = malloc(sizeof(__entropycosa_t));
@@ -537,6 +552,8 @@ __entropycosa_t *entropycosa_fabric(unsigned int _d_res, unsigned int _n_tsane){
     new_ec->__total_cosa_params+=((__beta_pdf_t *)new_ec->__cosa[0])->__num_params;
     new_ec->__total_cosa_params+=((__cauchy_pdf_t *)new_ec->__cosa[1])->__num_params;
     new_ec->__forward=&entropycosa_forward;
+    new_ec->__tsane=malloc(_wikimyei->__tsane_state_size*sizeof(__cwcn_type_t));
+    new_ec->__entropy=0x00;
     return new_ec;
 }
 void entropycosa_destroy(__entropycosa_t *_ec){
@@ -546,6 +563,7 @@ void entropycosa_destroy(__entropycosa_t *_ec){
     free(((__beta_pdf_t *)_ec->__cosa[0])->__direct_map);
     free(((__beta_pdf_t *)_ec->__cosa[0])->__tsane_map);
     free(((__beta_pdf_t *)_ec->__cosa[0]));
+    free(_ec->__tsane)
     free(_ec->__cosa);
     free(_ec);
 }

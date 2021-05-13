@@ -3,6 +3,7 @@
 #include "wikimyei.config.h"
 #include <math.h>
 #include <assert.h>
+#include <stdlib.h>
 typedef _Bool ___cwcn_bool_t;
 typedef float (__cwcn_type_t);
 #define __cwcn_infinite (__cwcn_type_t) 0xFFFFFFFF
@@ -21,6 +22,6 @@ typedef struct __alliu__ {
     unsigned int __source_count;
 }__alliu_t;
 __alliu_t *alliu_fabric(__alliu_source_t _source, unsigned int _source_size);
-void getnext_alliu(__alliu_t *_alliu);
+__cwcn_type_t *getnext_alliu(__alliu_t *_alliu);
 void alliu_destroy(__alliu_t *_alliu);
 #endif

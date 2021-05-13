@@ -70,7 +70,16 @@ void dist_duuruva(__duuruva_t *_duuruva){ // #FIXME might be util to check for _
         }
     }
 }
-
+__cwcn_type_t duuruva_normalize_index(__duuruva_t *_duuruva, unsigned int _idx){
+    return (_duuruva->__value[idx]-_duuruva->__dv_dist[_idx].__mean) / (_duuruva->__dv_dist[_idx].__std);
+}
+void duuruva_normalize(__duuruva_t *_duuruva, ___cwcn_type_t *_value_vect){
+    // This method asserts value has been computed, returns in _value_vect the 
+    // previous set value normalized version. #FIXME assert value has been computed.
+    for(unsigned int idx=0x00;idx<_duuruva->__num_base_duuruva;idx++){
+        _value_vect[idx]=duuruva_normalize_index(_duuruva,idx);
+    }
+}
 /*
 
 */
@@ -131,6 +140,9 @@ void set_duuruva_value(__duuruva_t *_duuruva, __cwcn_type_t *_set_vector){
     for(unsigned int idx=0x00;idx<_duuruva->__num_base_duuruva;idx++){
         _duuruva->__value[idx]=_set_vector[idx];
     }
+}
+cwcn_type_t *get_duuruva_value(__duuruva_t *_duuruva){
+    return _duuruva->__value;
 }
 
 void duuruva_destroy(__duuruva_t *_duuruva){

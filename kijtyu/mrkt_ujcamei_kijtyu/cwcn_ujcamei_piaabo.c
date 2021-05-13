@@ -8,7 +8,7 @@ __alliu_t *alliu_fabric(__alliu_source_t _source_type, unsigned int _source_size
     for(unsigned int idx=0x00;idx<_source_size;idx++){new_alliu->__source_value[idx]=0x00;}
     return new_alliu;
 }
-void getnext_alliu(__alliu_t *_alliu){
+__cwcn_type_t *getnext_alliu(__alliu_t *_alliu){
     switch(_alliu->__source_type){
         case SINE_as_alliu:
             for(unsigned int idx=0x00;idx<_alliu->__source_size;idx++){
@@ -20,6 +20,10 @@ void getnext_alliu(__alliu_t *_alliu){
             fprintf(stderr, ">> ERROR, encounter unknown <alliu->__source_type> in <get_alliu>\n");
             assert(0x00);
             break;
+    }
+    if(_alliu->__source_count>=_alliu->__source_size){
+        fprintf(stdout,">>> \033[1;32m source alliu agotated succesfully...\033[0m\n CWCN_EXIT...\n");
+        exit(0x00);
     }
 }
 void alliu_destroy(__alliu_t *_alliu){

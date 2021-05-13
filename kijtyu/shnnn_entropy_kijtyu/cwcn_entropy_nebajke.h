@@ -87,6 +87,7 @@ typedef struct __entropycosa{
     __entropycosa_forward_pointer_t __forward;
 }__entropycosa_t;
 __entropycosa_t *entropycosa_fabric(unsigned int _d_res, unsigned int _n_tsane);
+void entropycosa_tsane(void *_ec);
 void entropycosa_destroy(__entropycosa_t *_ec);
 void entropycosa_forward(void *_ec, __cwcn_type_t *_param_vect);
 /*

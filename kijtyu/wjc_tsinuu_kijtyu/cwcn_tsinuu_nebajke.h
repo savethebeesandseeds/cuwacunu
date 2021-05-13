@@ -45,6 +45,8 @@
     
     void wapaajco_bydifference(__tsinuu_t *_tsinuu, __cwcn_type_t *_correct_output);
     void set_wapaajco(__tsinuu_t *_tsinuu, __cwcn_type_t *_set_wapaajco);
+    void set_wapaajco_eq(__tsinuu_t *_tsinuu, __cwcn_type_t _set_wapaajco);
+    void set_wapaajco_index_eq(__tsinuu_t *_tsinuu, __cwcn_type_t _set_wapaajco, unsigned int _index);
     void wapaajco_bynodeentropymax(__tsinuu_t *_tsinuu); // #FIXME inplement
     void set_seed();
 

@@ -46,7 +46,10 @@ void set_duuruvaboleanparametrics(
 void reset_duuruva(__duuruva_t *_duuruva);
 void dist_duuruva(__duuruva_t *_duuruva);
 void print_duuruva(__duuruva_t *_duuruva);
+__cwcn_type_t duuruva_normalize_index(__duuruva_t *_duuruva, unsigned int _idx);
+void duuruva_normalize(__duuruva_t *_duuruva, ___cwcn_type_t *_value_vect);
 __duuruva_t *duuruva_fabric(unsigned int _num_base_duuruva);
 void duuruva_destroy(__duuruva_t *_duuruva);
 void set_duuruva_value(__duuruva_t *_duuruva, __cwcn_type_t *_set_vector);
+cwcn_type_t *get_duuruva_value(__duuruva_t *_duuruva);
 #endif

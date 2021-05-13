@@ -445,6 +445,20 @@ void set_wapaajco(__tsinuu_t *_tsinuu, __cwcn_type_t *_set_wapaajco){
         fprintf(stdout,">>>> request <set_wapaajco>\n");
     #endif
 }
+void set_wapaajco_eq(__tsinuu_t *_tsinuu, __cwcn_type_t _set_wapaajco){
+    for(unsigned int idx_n=0x00;idx_n<layer_size_from_layer_stack_index(_tsinuu,output_layer_index(_tsinuu));idx_n++){
+        _tsinuu->__wapaajco->__w_vector[idx_n]=_tsinuu->__attributes->__wapaajco_potency*_set_wapaajco;
+    }
+    #ifdef TSINUU_DEBUG
+        fprintf(stdout,">>>> request <set_wapaajco_eq>\n");
+    #endif
+}
+void set_wapaajco_index_eq(__tsinuu_t *_tsinuu, __cwcn_type_t _set_wapaajco, unsigned int _index){
+    _tsinuu->__wapaajco->__w_vector[_index]=_tsinuu->__attributes->__wapaajco_potency*_set_wapaajco;
+    #ifdef TSINUU_DEBUG
+        fprintf(stdout,">>>> request <set_wapaajco_index_eq>\n");
+    #endif
+}
 /*
 
 */

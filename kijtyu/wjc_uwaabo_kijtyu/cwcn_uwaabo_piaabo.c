@@ -17,11 +17,11 @@ __tsinuu_t *uwaabo_fabric(unsigned int _uwaabo_base_size, unsigned int _uwaabo_s
     c_attribute_tsinuu->__wapaajco_potency=1.0; // the potency of the wapaajco
     c_attribute_tsinuu->__omega_stiffess=1.0; // #FIXME not in use
     c_attribute_tsinuu->__weight_limits=malloc(sizeof(__limits_t));
-    c_attribute_tsinuu->__weight_limits->__max=5.0;
-    c_attribute_tsinuu->__weight_limits->__min=-5.0;
+    c_attribute_tsinuu->__weight_limits->__max=__cwcn_infinite_t;
+    c_attribute_tsinuu->__weight_limits->__min=-__cwcn_infinite_t;
     c_attribute_tsinuu->__bias_limits=malloc(sizeof(__limits_t));
-    c_attribute_tsinuu->__bias_limits->__max=5.0;
-    c_attribute_tsinuu->__bias_limits->__min=-5.0;
+    c_attribute_tsinuu->__bias_limits->__max=__cwcn_infinite_t;
+    c_attribute_tsinuu->__bias_limits->__min=-__cwcn_infinite_t;
     /* fabric */
     __tsinuu_t *new_uwaabo_tsinuu=malloc(sizeof(__tsinuu_t));
     new_uwaabo_tsinuu=tsinuu_fabric(c_attribute_tsinuu);

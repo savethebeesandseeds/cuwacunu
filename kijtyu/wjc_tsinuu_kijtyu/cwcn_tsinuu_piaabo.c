@@ -725,6 +725,7 @@ void tsinuu_initialize_weights_zero(__tsinuu_t *_tsinuu){
 */
 void tsinuu_initialize_bias_random(__tsinuu_t *_tsinuu, __cwcn_type_t _v_max, __cwcn_type_t _v_min){
     set_seed();
+    assert(_v_max>=_v_min);
     for(unsigned int idx_l=0; idx_l < total_layers(_tsinuu); idx_l++){
         for(unsigned int idx_n=0; idx_n < layer_size_from_layer_stack_index(_tsinuu, idx_l); idx_n++){
             _tsinuu->__layers[idx_l]->__nodes[idx_n]->__n_kemu->__bias = (__cwcn_type_t) (rand() % ((int)((_v_max-_v_min)*100.0)) + ((int)(_v_min*100.0)))/(100.0);

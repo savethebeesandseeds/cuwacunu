@@ -22,6 +22,7 @@ typedef struct __tsane {
     __tsane_status_t __tsane_status_value;
 }__tsane_t;
 __tsane_t *tsane_fabric(___cwcn_bool_t _take_tsane, unsigned int _tsane_size);
+void imibajcho_munaajpi_cajtucu_transformation(__wikimyei_t *_wikimyei);
 void putc_tsane(__tsane_t *_tsane);
 void tsane_destroy(__tsane_t *_tsane);
 #endif
