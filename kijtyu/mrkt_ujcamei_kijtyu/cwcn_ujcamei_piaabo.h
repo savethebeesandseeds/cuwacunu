@@ -13,6 +13,7 @@ typedef float (__cwcn_type_t);
 #define min(a,b)({__typeof__(a) _a=(a);__typeof__(b) _b=(b);_a < _b ? _a : _b;})
 typedef enum{
     SINE_as_alliu,
+    INDEX_as_alliu,
     MARKET_as_alliu
 } __alliu_source_t; // not in use #FIXME
 typedef struct __alliu__ {
@@ -21,7 +22,8 @@ typedef struct __alliu__ {
     unsigned int __source_size;
     unsigned int __source_count;
 }__alliu_t;
-__alliu_t *alliu_fabric(__alliu_source_t _source, unsigned int _source_size);
-__cwcn_type_t *getnext_alliu(__alliu_t *_alliu);
+__alliu_t *alliu_fabric(__alliu_source_t _source_type, unsigned int _source_size);
+void getnext_alliu(__alliu_t *_alliu);
 void alliu_destroy(__alliu_t *_alliu);
 #endif
+

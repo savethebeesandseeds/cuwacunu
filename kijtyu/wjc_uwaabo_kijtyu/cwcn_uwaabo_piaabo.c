@@ -5,7 +5,7 @@ __tsinuu_t *uwaabo_fabric(unsigned int _uwaabo_base_size, unsigned int _uwaabo_s
     unsigned int uw_input_size=_uwaabo_base_size; // huge thing
     unsigned int uw_output_size=_uwaabo_size;
     unsigned int uw_layers_sizes[0x04] = {uw_input_size,5,5,uw_output_size};
-    __list_activations_t uw_activations_iho[0x04] = {LINEAR, LINEAR, LINEAR, LINEAR};
+    __list_activations_t uw_activations_iho[0x04] = {LINEAR, LINEAR, LINEAR, SIGMOID};
     __attribute_tsinuu_t *c_attribute_tsinuu = malloc(sizeof(__attribute_tsinuu_t));
     c_attribute_tsinuu->__NUM_TOTAL_LAYERS=uw_total_layers;
     c_attribute_tsinuu->__layers_sizes=uw_layers_sizes;
@@ -17,11 +17,11 @@ __tsinuu_t *uwaabo_fabric(unsigned int _uwaabo_base_size, unsigned int _uwaabo_s
     c_attribute_tsinuu->__wapaajco_potency=1.0; // the potency of the wapaajco
     c_attribute_tsinuu->__omega_stiffess=1.0; // #FIXME not in use
     c_attribute_tsinuu->__weight_limits=malloc(sizeof(__limits_t));
-    c_attribute_tsinuu->__weight_limits->__max=__cwcn_infinite_t;
-    c_attribute_tsinuu->__weight_limits->__min=-__cwcn_infinite_t;
+    c_attribute_tsinuu->__weight_limits->__max=__cwcn_infinite;
+    c_attribute_tsinuu->__weight_limits->__min=-__cwcn_infinite;
     c_attribute_tsinuu->__bias_limits=malloc(sizeof(__limits_t));
-    c_attribute_tsinuu->__bias_limits->__max=__cwcn_infinite_t;
-    c_attribute_tsinuu->__bias_limits->__min=-__cwcn_infinite_t;
+    c_attribute_tsinuu->__bias_limits->__max=__cwcn_infinite;
+    c_attribute_tsinuu->__bias_limits->__min=-__cwcn_infinite;
     /* fabric */
     __tsinuu_t *new_uwaabo_tsinuu=malloc(sizeof(__tsinuu_t));
     new_uwaabo_tsinuu=tsinuu_fabric(c_attribute_tsinuu);

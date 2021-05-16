@@ -701,7 +701,7 @@ void pardon_all_bias(__tsinuu_t *_tsinuu){
 
 */
 void tsinuu_initialize_weights_random(__tsinuu_t *_tsinuu, __cwcn_type_t _v_max, __cwcn_type_t _v_min){
-    set_seed();
+    // #FIXME assert set_seed();
     for(unsigned int l_ctx=0x00; l_ctx < total_lines(_tsinuu); l_ctx++){
         _tsinuu->__lines[l_ctx]->__ln_kemu->__weight = (__cwcn_type_t) (rand() % ((int)((_v_max-_v_min)*100.0)) + ((int)(_v_min*100.0)))/(100.0);
     }
@@ -724,7 +724,7 @@ void tsinuu_initialize_weights_zero(__tsinuu_t *_tsinuu){
 
 */
 void tsinuu_initialize_bias_random(__tsinuu_t *_tsinuu, __cwcn_type_t _v_max, __cwcn_type_t _v_min){
-    set_seed();
+    // #FIXME assert set_seed();
     assert(_v_max>=_v_min);
     for(unsigned int idx_l=0; idx_l < total_layers(_tsinuu); idx_l++){
         for(unsigned int idx_n=0; idx_n < layer_size_from_layer_stack_index(_tsinuu, idx_l); idx_n++){

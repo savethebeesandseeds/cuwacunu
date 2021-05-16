@@ -15,16 +15,7 @@ __tsane_t *tsane_fabric(___cwcn_bool_t _take_tsane, unsigned int _tsane_size){
     return new_tsane;
 }
 void putc_tsane(__tsane_t *_tsane){
-    // #FIXME, enum class tsane    
-}
-void imibajcho_munaajpi_cajtucu_transformation(__wikimyei_t *_wikimyei){
-    // tsane_state[0] == call
-    // tsane_state[1] == put
-    assert(_wikimyei->__tsane_state_size==0x02);
-    __cwcn_type_t ims_aux=0x00;
-    ims_aux+=glti(_wikimyei)->__imibajcho_munaajpi_state*(+1)*glti(_wikimyei)->__tsane_state[0];
-    ims_aux+=glti(_wikimyei)->__imibajcho_munaajpi_state*(-1)*glti(_wikimyei)->__tsane_state[0];
-    glti(_wikimyei)->__imibajcho_munaajpi_state=ims_aux;
+    // #FIXME, enum class tsane status
 }
 void tsane_destroy(__tsane_t *_tsane){
     free(_tsane->__tsane_value);

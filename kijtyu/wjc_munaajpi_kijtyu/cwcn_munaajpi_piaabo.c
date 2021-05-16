@@ -17,11 +17,11 @@ __tsinuu_t *munaajpi_fabric(unsigned int _munaajpi_base_size, unsigned int _muna
     c_attribute_tsinuu->__wapaajco_potency=1.0; // the potency of the wapaajco
     c_attribute_tsinuu->__omega_stiffess=1.0; // #FIXME not in use
     c_attribute_tsinuu->__weight_limits=malloc(sizeof(__limits_t));
-    c_attribute_tsinuu->__weight_limits->__max=__cwcn_infinite_t;
-    c_attribute_tsinuu->__weight_limits->__min=-__cwcn_infinite_t;
+    c_attribute_tsinuu->__weight_limits->__max=__cwcn_infinite;
+    c_attribute_tsinuu->__weight_limits->__min=-__cwcn_infinite;
     c_attribute_tsinuu->__bias_limits=malloc(sizeof(__limits_t));
-    c_attribute_tsinuu->__bias_limits->__max=__cwcn_infinite_t;
-    c_attribute_tsinuu->__bias_limits->__min=-__cwcn_infinite_t;
+    c_attribute_tsinuu->__bias_limits->__max=__cwcn_infinite;
+    c_attribute_tsinuu->__bias_limits->__min=-__cwcn_infinite;
     /* fabric */
     __tsinuu_t *new_munaajpi_tsinuu=malloc(sizeof(__tsinuu_t));
     new_munaajpi_tsinuu = tsinuu_fabric(c_attribute_tsinuu);
@@ -33,32 +33,4 @@ __tsinuu_t *munaajpi_fabric(unsigned int _munaajpi_base_size, unsigned int _muna
     pardon_inputoutput_bias(new_munaajpi_tsinuu); // #FIXME check if needed of enabled
     set_all_linebooleanpardon_parametric(new_munaajpi_tsinuu, 0x00, 0x00);
     return new_munaajpi_tsinuu;
-}
-
-__cwcn_type_t *read_munaajpi_base(__wikimyei_t *_wikimyei){
-    __cwcn_type_t c_base[_wikimyei->__munaajpi_base_size];
-    unsigned int m_ctx=0x00;
-    for(unsigned int idx=0x00;idx<_wikimyei->__alliu_state_size;idx++){
-        c_base[m_ctx]=glti(_wikimyei)->__alliu_state[idx];
-        m_ctx++;
-    }
-    for(unsigned int idx=0x00;idx<_wikimyei->__alliu_state_size;idx++){
-        c_base[m_ctx]=glti(_wikimyei)->__nonuwaabo_alliu[idx];
-        m_ctx++;
-    }
-    for(unsigned int idx=0x00;idx<_wikimyei->__uwaabo_state_size;idx++){
-        c_base[m_ctx]=glti(_wikimyei)->__uwaabo_state[idx];
-        m_ctx++;
-    }
-    for(unsigned int idx=0x00;idx<_wikimyei->__tsane_state_size;idx++){
-        c_base[m_ctx]=glti(_wikimyei)->__tsane_state[idx];
-        m_ctx++;
-    }
-    for(unsigned int idx=0x00;idx<_wikimyei->__munaajpi_duuruva->__duuruva_vector_size;idx++){
-        c_base[m_ctx]=glti(_wikimyei)->__imibajcho_munaajpi_duuruva_state[idx];
-        m_ctx++;
-    }
-
-    assert(_wikimyei->__munaajpi_base_size==m_ctx);
-    return c_base;
 }

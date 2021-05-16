@@ -8,11 +8,19 @@ __alliu_t *alliu_fabric(__alliu_source_t _source_type, unsigned int _source_size
     for(unsigned int idx=0x00;idx<_source_size;idx++){new_alliu->__source_value[idx]=0x00;}
     return new_alliu;
 }
-__cwcn_type_t *getnext_alliu(__alliu_t *_alliu){
+void getnext_alliu(__alliu_t *_alliu){
+    ___cwcn_bool_t _done=___CWCN_FALSE; // #FIXME add alliu done
     switch(_alliu->__source_type){
+        case INDEX_as_alliu:
+            for(unsigned int idx=0x00;idx<_alliu->__source_size;idx++){
+                _alliu->__source_value[idx]=(__cwcn_type_t)_alliu->__source_count;
+            }
+            _alliu->__source_count+=0x01;
+            break;
         case SINE_as_alliu:
             for(unsigned int idx=0x00;idx<_alliu->__source_size;idx++){
-                _alliu->__source_value[idx]=0.5*sin(2*3.141592*0.01*_alliu->__source_count)+1;
+                _alliu->__source_value[idx]=sin(2*3.141592*0.01*_alliu->__source_count);
+                // printf("\t\t\twaka alliu: [%d]=%f\n",_alliu->__source_count,sin(3.14+2*3.141592*0.01*_alliu->__source_count));
             }
             _alliu->__source_count+=0x01;
             break;
@@ -21,7 +29,7 @@ __cwcn_type_t *getnext_alliu(__alliu_t *_alliu){
             assert(0x00);
             break;
     }
-    if(_alliu->__source_count>=_alliu->__source_size){
+    if(_done){
         fprintf(stdout,">>> \033[1;32m source alliu agotated succesfully...\033[0m\n CWCN_EXIT...\n");
         exit(0x00);
     }

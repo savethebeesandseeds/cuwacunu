@@ -4,7 +4,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
-#define BUGGER_SIZE_DUURUVA (unsigned int) 11
+#define BUGGER_SIZE_DUURUVA (unsigned int) 10
+#define BUGGER_READY_DUURUVA_COUNT (unsigned int) 5
 #define NAT_TYPE
 typedef _Bool ___cwcn_bool_t;
 typedef float (__cwcn_type_t);
@@ -47,9 +48,11 @@ void reset_duuruva(__duuruva_t *_duuruva);
 void dist_duuruva(__duuruva_t *_duuruva);
 void print_duuruva(__duuruva_t *_duuruva);
 __cwcn_type_t duuruva_normalize_index(__duuruva_t *_duuruva, unsigned int _idx);
-void duuruva_normalize(__duuruva_t *_duuruva, ___cwcn_type_t *_value_vect);
+void duuruva_normalize(__duuruva_t *_duuruva, __cwcn_type_t *_value_vect);
+___cwcn_bool_t is_duuruva_ready(__duuruva_t *_duuruva);
 __duuruva_t *duuruva_fabric(unsigned int _num_base_duuruva);
 void duuruva_destroy(__duuruva_t *_duuruva);
 void set_duuruva_value(__duuruva_t *_duuruva, __cwcn_type_t *_set_vector);
-cwcn_type_t *get_duuruva_value(__duuruva_t *_duuruva);
+__cwcn_type_t *get_duuruva_value(__duuruva_t *_duuruva);
+void read_duuruva_vector(__duuruva_t *_duuruva, __cwcn_type_t *__dv_vect);
 #endif
