@@ -1,15 +1,39 @@
 #ifndef WIKIMYEI_PIAABO_INCLUDED
 #define WIKIMYEI_PIAABO_INCLUDED
+#define COLOR_MUNAAJPI "\x1B[0;33m"
+#define COLOR_B_MUNAAJPI "\x1B[1;33m"
+#define COLOR_GOOD "\033[1;32m"
+#define COLOR_DANGER "\033[0;31m"
+#define COLOR_ALLIU "\x1B[0;36m"
+#define COLOR_REGULGAR "\033[0m"
+#define COLOR_WARNING "\033[0;31m"
+#define COLOR_UWAABO "\x1B[0;35m"
+#define COLOR_JKIMYEI "\x1B[0;32m"
 #define WIKIMYEI_DEBUG
-// #define WIKIMYEI_DEBUG_v2
+#define WIKIMYEI_DEBUG_v2
 // #define WIKIMYEI_DEBUG_v3
-// #define DEBUG_DUURUVA
+#define DEBUG_DUURUVA
+#define JKIMYEI_DEBUG
+#define MUNAAJPI_DEBUG
+
+#define BUGGER_SIZE_DUURUVA (unsigned int) 10
+#define BUGGER_READY_DUURUVA_COUNT (unsigned int) 5
+#define BUGGER_MAX_DUURUVA_COUNT (__cwcn_type_t) 100.0
+#define BUGGER_DUURUVA_MIN_STD (float) 0.0001
+
 typedef _Bool (___cwcn_bool_t);
 #define ___CWCN_TRUE (___cwcn_bool_t) 0b1
 #define ___CWCN_FALSE (___cwcn_bool_t) 0b0
+typedef float (__cwcn_type_t);
+#define __cwcn_type_size sizeof(__cwcn_type_t) // #FIXME not in use
+typedef __cwcn_type_t (*__function_pointer_t)(__cwcn_type_t);
+#define __function_pointer_t_size sizeof(__function_pointer_t)
+#define __cwcn_infinite (__cwcn_type_t) 0xFFFFFFFF
+
+#define _DEFAULT_NORM_STAND_ (___cwcn_bool_t) 0x1
+
 #define max(a,b)({__typeof__(a) _a=(a);__typeof__(b) _b=(b);_a > _b ? _a : _b;})
 #define min(a,b)({__typeof__(a) _a=(a);__typeof__(b) _b=(b);_a < _b ? _a : _b;})
-#include "cwcn_munaajpi_piaabo.h"
 typedef struct __wk_flags {
     ___cwcn_bool_t __done;
     ___cwcn_bool_t __nonuwaabo_alliu_done;
@@ -17,6 +41,8 @@ typedef struct __wk_flags {
     ___cwcn_bool_t __alliu_duuruva_ready;
     ___cwcn_bool_t __munaajpi_duuruva_ready;
     ___cwcn_bool_t __adventage_duuruva_ready;
+    ___cwcn_bool_t __virgin_load; // load fabric needs for it
+    ___cwcn_bool_t __norm_stand; // 
 } __wk_flags_t;
 typedef struct __trayectory { // #FIXME too many fields
     __cwcn_type_t *__alliu_state;// ...
@@ -99,6 +125,7 @@ typedef struct __wikimyei {
     __wk_flags_t *__flags;
     __cwcn_type_t *__munaajpi_base_w_state; // the temporal base hold in wikimyei struct of a redundant concatenated vector
 }__wikimyei_t;
+#include "cwcn_munaajpi_piaabo.h"
 #include "cwcn_jkimyei_nebajke.h"
 #include "cwcn_wikimyei_nebajke.h"
 __wikimyei_t *wikimyei_fabric(
@@ -134,4 +161,7 @@ void kill_load(__wikimyei_t *_wikimyei);
 void kill_trayectory(__trayectory_t *_trayectory);
 void destroy_wikimyei(__wikimyei_t *_wikimyei);
 ___cwcn_bool_t all_duuruva_ready(__wikimyei_t *_wikimyei);
+___cwcn_bool_t load_is_empty(__wikimyei_t *_wikimyei);
+void empty_load(__wikimyei_t *_wikimyei);
+void printflags(__wikimyei_t *_wikimyei);
 #endif

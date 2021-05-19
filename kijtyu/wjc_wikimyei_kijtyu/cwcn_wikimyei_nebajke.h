@@ -27,13 +27,10 @@ void ___uwaabo_hash(__wikimyei_t *_wikimyei);
 void ___entropy_hash(__wikimyei_t *_wikimyei);
 void ___tsane_dehash(__wikimyei_t *_wikimyei);
 void ___munaajpi_hash(__wikimyei_t *_wikimyei);
-void compute_imibajcho_munaajpi(__wikimyei_t *_wikimyei);
-___cwcn_bool_t are_munaajpi_pending(__wikimyei_t *_wikimyei);
-___cwcn_bool_t set_load_pending_munaajpi(__wikimyei_t *_wikimyei);
+void ___munaajpi_duuruva_hash(__wikimyei_t *_wikimyei);
+
 void wikimyei_nolive_one(__wikimyei_t *_wikimyei);
 void wikimyei_live_one(__wikimyei_t *_wikimyei);
 void wikimyei_live_load(__wikimyei_t *_wikimyei, int _size_of_load);
 
-void read_munaajpi_w_base(__wikimyei_t *_wikimyei);
-void imibajcho_munaajpi_cajtucu_transformation(__wikimyei_t *_wikimyei);
 #endif

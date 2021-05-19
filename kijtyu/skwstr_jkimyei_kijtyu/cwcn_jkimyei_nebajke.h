@@ -2,7 +2,7 @@
 #define JKIMYEI_PIAABO_INCLUDED
 #include "cwcn_tsinuu_piaabo.h"
 #include "cwcn_wikimyei_piaabo.h"
-#define JKIMYEI_DEBUG
+// #define JKIMYEI_DEBUG
 typedef float (__cwcn_type_t);
 typedef _Bool (___cwcn_bool_t);
 // typedef __wikimyei_t;

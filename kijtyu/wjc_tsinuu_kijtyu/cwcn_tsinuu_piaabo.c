@@ -783,16 +783,18 @@ __tsinuu_t *tsinuu_fabric(__attribute_tsinuu_t *_attributes){
     new_tsinuu->__attributes->__bias_limits=_attributes->__bias_limits;
     new_tsinuu->__attributes->__wapaajco_potency=_attributes->__wapaajco_potency;
     new_tsinuu->__attributes->__NUM_TOTAL_LAYERS = _attributes->__NUM_TOTAL_LAYERS;
-    new_tsinuu->__attributes->__layers_sizes = malloc(total_layers(new_tsinuu)*sizeof(unsigned int));
-    new_tsinuu->__attributes->__layers_activation = malloc(total_layers(new_tsinuu)*sizeof(__list_activations_t));
+    // new_tsinuu->__attributes->__layers_sizes = malloc(total_layers(new_tsinuu)*sizeof(unsigned int));
+    // new_tsinuu->__attributes->__layers_activation = malloc(total_layers(new_tsinuu)*sizeof(__list_activations_t));
+    new_tsinuu->__attributes->__layers_sizes=_attributes->__layers_sizes;
+    new_tsinuu->__attributes->__layers_activation=_attributes->__layers_activation;
     new_tsinuu->__layers = malloc(total_layers(new_tsinuu)*sizeof(__layer_tsinuu_t));
     if(!new_tsinuu->__layers){
         fprintf(stderr, ">>>> ERROR: malloc falied allocating __layers");
         assert(0x00);
     }
     for(unsigned int idx_l=0x00;idx_l<total_layers(new_tsinuu);idx_l++){
-        new_tsinuu->__attributes->__layers_sizes[idx_l] = _attributes->__layers_sizes[idx_l];
-        new_tsinuu->__attributes->__layers_activation[idx_l] = _attributes->__layers_activation[idx_l];
+        // new_tsinuu->__attributes->__layers_sizes[idx_l] = _attributes->__layers_sizes[idx_l];
+        // new_tsinuu->__attributes->__layers_activation[idx_l] = _attributes->__layers_activation[idx_l];
         
         new_tsinuu->__layers[idx_l] = malloc(sizeof(__layer_tsinuu_t));
         new_tsinuu->__layers[idx_l]->__nodes = malloc(new_tsinuu->__attributes->__layers_sizes[idx_l]*sizeof(__node_tsinuu_t));

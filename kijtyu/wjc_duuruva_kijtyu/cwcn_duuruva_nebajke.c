@@ -24,7 +24,12 @@ void reset_duuruva(__duuruva_t *_duuruva){
         _duuruva->__dv_dist[idx].__skewness=0x00;
     }
 }
-
+void reset_duuruva_max_min(__duuruva_t *_duuruva){
+    for(unsigned int idx=0x00;idx<_duuruva->__num_base_duuruva;idx++){
+        _duuruva->__dv_dist[idx].__max=-__cwcn_infinite;
+        _duuruva->__dv_dist[idx].__min=__cwcn_infinite;
+    }
+}
 void dist_duuruva(__duuruva_t *_duuruva){ // #FIXME might be util to check for __is_reset 
     /* ASSUMES _duuruva->__value has been computed.  
         ___duuruva_bolean_parametrics {
@@ -55,7 +60,12 @@ void dist_duuruva(__duuruva_t *_duuruva){ // #FIXME might be util to check for _
             /*
                 https://en.wikipedia.org/wiki/Algorithms_for_calculating_variance#cite_note-11
             */
-            __cwcn_type_t _n = _duuruva->__dv_dist[idx].__count;
+            __cwcn_type_t _n;
+            if(_duuruva->__dv_dist[idx].__count<BUGGER_MAX_DUURUVA_COUNT){
+                _n = _duuruva->__dv_dist[idx].__count;
+            }else{
+                _n = BUGGER_MAX_DUURUVA_COUNT;
+            }
             __cwcn_type_t _delta = _duuruva->__value[idx] - _duuruva->__dv_dist[idx].__mean;
             __cwcn_type_t _delta_n = _delta/_n;
             __cwcn_type_t _delta_n2 = _delta_n*_delta_n;
@@ -70,18 +80,47 @@ void dist_duuruva(__duuruva_t *_duuruva){ // #FIXME might be util to check for _
         }
     }
 }
-__cwcn_type_t duuruva_normalize_index(__duuruva_t *_duuruva, unsigned int _idx){
-    return (_duuruva->__value[_idx]-_duuruva->__dv_dist[_idx].__mean) / (_duuruva->__dv_dist[_idx].__std+0.0001);
+__cwcn_type_t duuruva_standarize_inindex(__duuruva_t *_duuruva, __cwcn_type_t _value_scalar, unsigned int _idx){
+    return (_value_scalar) / (_duuruva->__dv_dist[_idx].__std+BUGGER_DUURUVA_MIN_STD);
 }
-void duuruva_normalize(__duuruva_t *_duuruva, __cwcn_type_t *_value_vect){
-    // This method asserts value has been computed, returns in _value_vect the 
-    // previous set value normalized version. #FIXME assert value has been computed.
-    for(unsigned int idx=0x00;idx<_duuruva->__num_base_duuruva;idx++){
-        _value_vect[idx]=duuruva_normalize_index(_duuruva,idx);
+__cwcn_type_t duuruva_normalize_inindex(__duuruva_t *_duuruva, __cwcn_type_t _value_scalar, unsigned int _idx){
+    return (_value_scalar-_duuruva->__dv_dist[_idx].__mean) / (_duuruva->__dv_dist[_idx].__std+BUGGER_DUURUVA_MIN_STD);
+}
+void duuruva_standarize(__duuruva_t *_duuruva, __cwcn_type_t *_value_vect){
+    for(unsigned int _idx=0x00;_idx<_duuruva->__num_base_duuruva;_idx++){
+        _value_vect[_idx]=duuruva_standarize_inindex(_duuruva, _value_vect[_idx],_idx);
     }
 }
+void duuruva_normalize(__duuruva_t *_duuruva, __cwcn_type_t *_value_vect){
+    for(unsigned int _idx=0x00;_idx<_duuruva->__num_base_duuruva;_idx++){
+        _value_vect[_idx]=duuruva_normalize_inindex(_duuruva, _value_vect[_idx],_idx);
+    }
+}
+/*
+*/
+__cwcn_type_t duuruva_destandarize_inindex(__duuruva_t *_duuruva, __cwcn_type_t _value_scalar, unsigned int _idx){
+    return (_value_scalar) * (_duuruva->__dv_dist[_idx].__std+BUGGER_DUURUVA_MIN_STD);
+}
+__cwcn_type_t duuruva_denormalize_inindex(__duuruva_t *_duuruva, __cwcn_type_t _value_scalar, unsigned int _idx){
+    return (_value_scalar) * (_duuruva->__dv_dist[_idx].__std+BUGGER_DUURUVA_MIN_STD)+_duuruva->__dv_dist[_idx].__mean;
+}
+void duuruva_destandarize(__duuruva_t *_duuruva, __cwcn_type_t *_value_vect){
+    for(unsigned int _idx=0x00;_idx<_duuruva->__num_base_duuruva;_idx++){
+        _value_vect[_idx]=duuruva_destandarize_inindex(_duuruva, _value_vect[_idx],_idx);
+    }
+}
+void duuruva_denormalize(__duuruva_t *_duuruva, __cwcn_type_t *_value_vect){
+    for(unsigned int _idx=0x00;_idx<_duuruva->__num_base_duuruva;_idx++){
+        _value_vect[_idx]=duuruva_denormalize_inindex(_duuruva, _value_vect[_idx],_idx);
+    }
+}
+/*
+*/
 ___cwcn_bool_t is_duuruva_ready(__duuruva_t *_duuruva){
     // #FIXME might yield problems due to forcing group state from item 0x00 reading
+    if(!_duuruva->__dvbp->__reset_flag && _duuruva->__dv_dist[0x00].__count>=BUGGER_READY_DUURUVA_COUNT){
+        _duuruva->__dvbp->__reset_flag=0x01; // #FIXME, not in use
+    }
     return _duuruva->__dv_dist[0x00].__count>=BUGGER_READY_DUURUVA_COUNT;
 }
 /*
@@ -98,46 +137,63 @@ __duuruva_t *duuruva_fabric(unsigned int _num_base_duuruva){
     new_duuruva->__value=malloc(_num_base_duuruva*sizeof(__cwcn_type_t));
     new_duuruva->__dvbp=malloc(sizeof(__duuruva_bolean_parametrics_t));
     set_duuruvaboleanparametrics(new_duuruva,0x00,0x00,0x00);
+    new_duuruva->__dvbp->__reset_flag=0x00;
     reset_duuruva(new_duuruva);
     return new_duuruva;
 }
 
 void print_duuruva(__duuruva_t *_duuruva){
-    for(unsigned int idx=0x00;idx<_duuruva->__num_base_duuruva;idx++){
-        fprintf(stdout, "DUURUVA [ %d ]\n",idx);
-        fprintf(stdout, "DUURUVA [ %d ] __value: %f \n",idx,_duuruva->__value[idx]);
-        fprintf(stdout, "DUURUVA [ %d ] __dv_dist __count: %f\n",idx,_duuruva->__dv_dist[idx].__count);
-        fprintf(stdout, "DUURUVA [ %d ] __dv_dist __max: %f\n",idx,_duuruva->__dv_dist[idx].__max);
-        fprintf(stdout, "DUURUVA [ %d ] __dv_dist __min: %f\n",idx,_duuruva->__dv_dist[idx].__min);
-        fprintf(stdout, "DUURUVA [ %d ] __dv_dist __std: %f\n",idx,_duuruva->__dv_dist[idx].__std);
-        fprintf(stdout, "DUURUVA [ %d ] __dv_dist __mean: %f\n",idx,_duuruva->__dv_dist[idx].__mean);
-        fprintf(stdout, "DUURUVA [ %d ] __dv_dist __M2: %f\n",idx,_duuruva->__dv_dist[idx].__M2);
-        fprintf(stdout, "DUURUVA [ %d ] __dv_dist __M3: %f\n",idx,_duuruva->__dv_dist[idx].__M3);
-        fprintf(stdout, "DUURUVA [ %d ] __dv_dist __M4: %f\n",idx,_duuruva->__dv_dist[idx].__M4);
-        fprintf(stdout, "DUURUVA [ %d ] __dv_dist __kurtosis: %f\n",idx,_duuruva->__dv_dist[idx].__kurtosis);
-        fprintf(stdout, "DUURUVA [ %d ] __dv_dist __skewness: %f\n",idx,_duuruva->__dv_dist[idx].__skewness);
+    for(unsigned int _idx=0x00;_idx<_duuruva->__num_base_duuruva;_idx++){
+        fprintf(stdout, "PRINTING DUURUVA [ %d ]\t\t\t(actual)\t\t(regularized)\n",_idx);
+        fprintf(stdout, "DUURUVA [ %d ] __value: \t\t\t%f\t\t%f \n",_idx,_duuruva->__value[_idx],duuruva_standarize_inindex(_duuruva, _duuruva->__value[_idx],_idx));
+        fprintf(stdout, "DUURUVA [ %d ] __dv_dist __count: \t%f\n",_idx,_duuruva->__dv_dist[_idx].__count);
+        fprintf(stdout, "DUURUVA [ %d ] __dv_dist __max: \t\t%f\t\t%f\n",_idx,_duuruva->__dv_dist[_idx].__max,duuruva_normalize_inindex(_duuruva, _duuruva->__dv_dist[_idx].__max,_idx));
+        fprintf(stdout, "DUURUVA [ %d ] __dv_dist __min: \t\t%f\t\t%f\n",_idx,_duuruva->__dv_dist[_idx].__min,duuruva_normalize_inindex(_duuruva, _duuruva->__dv_dist[_idx].__min,_idx));
+        fprintf(stdout, "DUURUVA [ %d ] __dv_dist __std: \t\t%f\n",_idx,_duuruva->__dv_dist[_idx].__std);
+        fprintf(stdout, "DUURUVA [ %d ] __dv_dist __mean: \t%f\t\t%f\n",_idx,_duuruva->__dv_dist[_idx].__mean,duuruva_standarize_inindex(_duuruva, _duuruva->__dv_dist[_idx].__mean,_idx));
+        fprintf(stdout, "DUURUVA [ %d ] __dv_dist __M2: \t\t%f\n",_idx,_duuruva->__dv_dist[_idx].__M2);
+        fprintf(stdout, "DUURUVA [ %d ] __dv_dist __M3: \t\t%f\n",_idx,_duuruva->__dv_dist[_idx].__M3);
+        fprintf(stdout, "DUURUVA [ %d ] __dv_dist __M4: \t\t%f\n",_idx,_duuruva->__dv_dist[_idx].__M4);
+        fprintf(stdout, "DUURUVA [ %d ] __dv_dist __kurtosis: \t%f\n",_idx,_duuruva->__dv_dist[_idx].__kurtosis);
+        fprintf(stdout, "DUURUVA [ %d ] __dv_dist __skewness: \t%f\n",_idx,_duuruva->__dv_dist[_idx].__skewness);
         fprintf(stdout, "\n");
     }
-    fprintf(stdout, "\n\n");
 }
 
-void read_duuruva_vector(__duuruva_t *_duuruva, __cwcn_type_t *__dv_vect){
+void read_duuruva_vector(__duuruva_t *_duuruva, __cwcn_type_t *_dvx, ___cwcn_bool_t _norm_or_standar){
     unsigned int ctx_check=0x00;
-    for(unsigned int idx=0x00;idx<_duuruva->__num_base_duuruva;idx++){
-        if(!isnan(_duuruva->__value[idx])){__dv_vect[idx+0x00]=_duuruva->__value[idx];}else{__dv_vect[idx+0x00]=0x00;}
-        // if(!isnan(_duuruva->__dv_dist[idx].__count)){__dv_vect[idx+0x01]=_duuruva->__dv_dist[idx].__count;}else{__dv_vect[idx+0x01]=0x00;}
-        if(!isnan(_duuruva->__dv_dist[idx].__max)){__dv_vect[idx+0x01]=_duuruva->__dv_dist[idx].__max;}else{__dv_vect[idx+0x01]=0x00;}
-        if(!isnan(_duuruva->__dv_dist[idx].__min)){__dv_vect[idx+0x02]=_duuruva->__dv_dist[idx].__min;}else{__dv_vect[idx+0x02]=0x00;}
-        if(!isnan(_duuruva->__dv_dist[idx].__std)){__dv_vect[idx+0x03]=_duuruva->__dv_dist[idx].__std;}else{__dv_vect[idx+0x03]=0x00;}
-        if(!isnan(_duuruva->__dv_dist[idx].__mean)){__dv_vect[idx+0x04]=_duuruva->__dv_dist[idx].__mean;}else{__dv_vect[idx+0x04]=0x00;}
-        if(!isnan(_duuruva->__dv_dist[idx].__M2)){__dv_vect[idx+0x05]=_duuruva->__dv_dist[idx].__M2;}else{__dv_vect[idx+0x05]=0x00;}
-        if(!isnan(_duuruva->__dv_dist[idx].__M3)){__dv_vect[idx+0x06]=_duuruva->__dv_dist[idx].__M3;}else{__dv_vect[idx+0x06]=0x00;}
-        if(!isnan(_duuruva->__dv_dist[idx].__M4)){__dv_vect[idx+0x07]=_duuruva->__dv_dist[idx].__M4;}else{__dv_vect[idx+0x07]=0x00;}
-        if(!isnan(_duuruva->__dv_dist[idx].__kurtosis)){__dv_vect[idx+0x08]=_duuruva->__dv_dist[idx].__kurtosis;}else{__dv_vect[idx+0x08]=0x00;}
-        if(!isnan(_duuruva->__dv_dist[idx].__skewness)){__dv_vect[idx+0x09]=_duuruva->__dv_dist[idx].__skewness;}else{__dv_vect[idx+0x09]=0x00;}
+    for(unsigned int _idx=0x00;_idx<_duuruva->__num_base_duuruva;_idx++){
+        // if(!isnan(_duuruva->__dv_dist[_idx].__count)){_dvx[_idx+0x01]=_duuruva->__dv_dist[_idx].__count;}else{_dvx[_idx+0x01]=0x00;}
+        if(!isnan(_duuruva->__value[_idx])){
+            if(_norm_or_standar){
+                _dvx[_idx+0x00]=duuruva_standarize_inindex(_duuruva, _duuruva->__value[_idx],_idx);
+            }else{_dvx[_idx+0x00]=_duuruva->__value[_idx];}
+        }else{_dvx[_idx+0x00]=0x00;}
+        if(!isnan(_duuruva->__dv_dist[_idx].__max)){
+            if(_norm_or_standar){
+                _dvx[_idx+0x01]=duuruva_normalize_inindex(_duuruva, _duuruva->__dv_dist[_idx].__max,_idx);
+            }else{_dvx[_idx+0x01]=_duuruva->__dv_dist[_idx].__max;}
+        }else{_dvx[_idx+0x01]=0x00;}
+        if(!isnan(_duuruva->__dv_dist[_idx].__min)){
+            if(_norm_or_standar){
+                _dvx[_idx+0x02]=duuruva_normalize_inindex(_duuruva, _duuruva->__dv_dist[_idx].__min,_idx);
+            }else{_dvx[_idx+0x02]=_duuruva->__dv_dist[_idx].__min;}
+        }else{_dvx[_idx+0x02]=0x00;}
+        if(!isnan(_duuruva->__dv_dist[_idx].__mean)){
+            if(_norm_or_standar){
+                _dvx[_idx+0x03]=duuruva_standarize_inindex(_duuruva, _duuruva->__dv_dist[_idx].__mean,_idx);
+            }else{_dvx[_idx+0x03]=_duuruva->__dv_dist[_idx].__mean;}
+        }else{_dvx[_idx+0x03]=0x00;}
+        if(!isnan(_duuruva->__dv_dist[_idx].__std)){_dvx[_idx+0x04]=_duuruva->__dv_dist[_idx].__std;}else{_dvx[_idx+0x04]=0x00;}
+        if(!isnan(_duuruva->__dv_dist[_idx].__M2)){_dvx[_idx+0x05]=_duuruva->__dv_dist[_idx].__M2;}else{_dvx[_idx+0x05]=0x00;}
+        if(!isnan(_duuruva->__dv_dist[_idx].__M3)){_dvx[_idx+0x06]=_duuruva->__dv_dist[_idx].__M3;}else{_dvx[_idx+0x06]=0x00;}
+        if(!isnan(_duuruva->__dv_dist[_idx].__M4)){_dvx[_idx+0x07]=_duuruva->__dv_dist[_idx].__M4;}else{_dvx[_idx+0x07]=0x00;}
+        if(!isnan(_duuruva->__dv_dist[_idx].__kurtosis)){_dvx[_idx+0x08]=_duuruva->__dv_dist[_idx].__kurtosis;}else{_dvx[_idx+0x08]=0x00;}
+        if(!isnan(_duuruva->__dv_dist[_idx].__skewness)){_dvx[_idx+0x09]=_duuruva->__dv_dist[_idx].__skewness;}else{_dvx[_idx+0x09]=0x00;}
         ctx_check++;
     }
     assert(ctx_check==_duuruva->__num_base_duuruva);
+    assert(BUGGER_SIZE_DUURUVA==0x09+0x01); // nine plus ommited count
 }
 
 void set_duuruva_value(__duuruva_t *_duuruva, __cwcn_type_t *_set_vector){

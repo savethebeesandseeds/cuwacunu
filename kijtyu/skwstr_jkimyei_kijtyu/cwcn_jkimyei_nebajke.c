@@ -81,8 +81,9 @@ void copy_c_cwcn_blocks_from_b_to_a(__cwcn_type_t *_a, __cwcn_type_t *_b, unsign
 // }
 
 void GAE(__wikimyei_t *_wikimyei){
+    // assumes __imibajcho_munaajpi_state has been computed
     #ifdef JKIMYEI_DEBUG
-        printf(">> request GAE\n");
+        printf(">> > ... request GAE\n");
     #endif
     int c_index=_wikimyei->__load_index;
     __cwcn_type_t *delta=malloc(0x01*sizeof(__cwcn_type_t));
@@ -106,13 +107,17 @@ void GAE(__wikimyei_t *_wikimyei){
             dist_duuruva(_wikimyei->__adventage_duuruva);
             _wikimyei->__flags->__adventage_duuruva_ready=is_duuruva_ready(_wikimyei->__adventage_duuruva);
             #ifdef DEBUG_DUURUVA
-            fprintf(stdout,"__ADVENTAGE_DUURUVA:\n");
-            print_duuruva(_wikimyei->__adventage_duuruva);
+            ...
             #endif
         }
     }while(load_go_down(_wikimyei)!=-1);
+    #ifdef DEBUG_DUURUVA
+    fprintf(stdout," ADVENTAGE DUURUVA:\n");
+    print_duuruva(_wikimyei->__adventage_duuruva);
+    #endif
     do{
         duuruva_normalize(_wikimyei->__adventage_duuruva, glti(_wikimyei)->__uwaabo_adventage);
+        // normalize_duuruva_value(_wikimyei->__alliu_duuruva);
     }while(load_go_up(_wikimyei)!=-1 && _wikimyei->__load_index<_wikimyei->__load_size-_wikimyei->__horizon_munaajpi-0x01);
     load_to_index(_wikimyei, c_index);
     free(gae);
@@ -135,17 +140,52 @@ void jkimyei_one(void *_wikimyei,
         __cwcn_type_t *ratio_handler,
         __cwcn_type_t *old_uwaabo_handler){
     #ifdef JKIMYEI_DEBUG
-        printf(">> request jkimyei_one\n");
+        printf("%s>> > ... --- --- --- --- --- ---%s\n",COLOR_DANGER,COLOR_REGULGAR);
+        printf("%s>> request jkimyei_one%s\n",COLOR_JKIMYEI,COLOR_REGULGAR);
     #endif
     do{
         load_to_index(((__wikimyei_t *)_wikimyei), jk_rand_index(((__wikimyei_t *)_wikimyei)));
     }while(glti(((__wikimyei_t *)_wikimyei))->__pending_munaajpi);
+    #ifdef JKIMYEI_DEBUG
+    printf("%s>> > ... (rand idx: [%d] start as:) uwaabo_state: [ ",COLOR_UWAABO,((__wikimyei_t*)_wikimyei)->__load_index);
+    for(unsigned int idx=0x00;idx<((__wikimyei_t *)_wikimyei)->__uwaabo_state_size;idx++){
+        printf(" %.4f,",glti((__wikimyei_t *)_wikimyei)->__uwaabo_state[idx]);
+    }
+    printf(" ]%s\n",COLOR_REGULGAR);
+    printf("%s>> > ... (rand idx: [%d] start as:) alliu_state: [ ",COLOR_ALLIU,((__wikimyei_t*)_wikimyei)->__load_index);
+    for(unsigned int idx=0x00;idx<((__wikimyei_t *)_wikimyei)->__alliu_state_size;idx++){
+        printf(" %.4f,",glti((__wikimyei_t *)_wikimyei)->__alliu_state[idx]);
+    }
+    printf(" ]%s\n",COLOR_REGULGAR);
+    #endif
     copy_c_cwcn_blocks_from_b_to_a(\
         old_uwaabo_handler, \
         glti(((__wikimyei_t *)_wikimyei))->__uwaabo_state, \
         ((__wikimyei_t *)_wikimyei)->__uwaabo_state_size);
     wikimyei_nolive_one(((__wikimyei_t *)_wikimyei));
-    if(all_duuruva_ready(_wikimyei)){ // all 3 wikimyei duuruva are ready
+    #ifdef JKIMYEI_DEBUG
+    printf("%s>> > ... uwaabo_state: [ ",COLOR_UWAABO);
+    for(unsigned int idx=0x00;idx<((__wikimyei_t *)_wikimyei)->__uwaabo_state_size;idx++){
+        printf(" %.4f,",glti((__wikimyei_t *)_wikimyei)->__uwaabo_state[idx]);
+    }
+    printf(" ]%s\n",COLOR_REGULGAR);
+    printf("%s>> > ... old_uwaabo_state: [ ",COLOR_UWAABO);
+    for(unsigned int idx=0x00;idx<((__wikimyei_t *)_wikimyei)->__uwaabo_state_size;idx++){
+        printf(" %.4f,",old_uwaabo_handler[idx]);
+    }
+    printf(" ]%s\n",COLOR_REGULGAR);
+    printf("%s>> > ... (not rand idx: [%d] start as:) alliu_state: [ ",COLOR_ALLIU,((__wikimyei_t*)_wikimyei)->__load_index);
+    for(unsigned int idx=0x00;idx<((__wikimyei_t *)_wikimyei)->__alliu_state_size;idx++){
+        printf(" %.4f,",glti((__wikimyei_t *)_wikimyei)->__alliu_state[idx]);
+    }
+    printf(" ]%s\n",COLOR_REGULGAR);
+    #endif
+    #ifdef JKIMYEI_DEBUG
+        printf("%sENTER TO STEP:%s",COLOR_GOOD,COLOR_REGULGAR);
+        getchar();
+        printf(" %s",COLOR_JKIMYEI);
+    #endif
+    if(all_duuruva_ready(_wikimyei)){ // all 3 wikimyei duuruva's are ready
         for(unsigned int idx=0x00;idx<((__wikimyei_t *)_wikimyei)->__uwaabo_state_size;idx++){
             ratio_handler[0x00]=exp(log(glti(((__wikimyei_t *)_wikimyei))->__uwaabo_state[idx])-log(old_uwaabo_handler[idx]));
             surr1_handler[0x00]=ratio_handler[0x00]*glti(((__wikimyei_t *)_wikimyei))->__uwaabo_adventage[idx];
@@ -155,30 +195,50 @@ void jkimyei_one(void *_wikimyei,
                     0x01+((__wikimyei_t *)_wikimyei)->__clip_param)*\
                 glti(((__wikimyei_t *)_wikimyei))->__uwaabo_adventage[idx];
             // printf("index: %d, uwaabo beta: %.2f, uwaabo: %.2fm ");
+            #ifdef JKIMYEI_DEBUG
+                printf(">> > ... uwaabo_index: [%d], value:%f\n",idx,glti(((__wikimyei_t *)_wikimyei))->__uwaabo_state[idx]);
+                printf(">> > ... ratio: %.4f, adventage: %.4f\n",ratio_handler[0x00],glti(((__wikimyei_t *)_wikimyei))->__uwaabo_adventage[idx]);
+                printf(">> > ... log(uwaabo_state[idx]): %f, log(old_uwaabo): %f\n",log(glti(((__wikimyei_t *)_wikimyei))->__uwaabo_state[idx]),log(old_uwaabo_handler[idx]));
+                printf(">> > ... uwaabo_beta: %.4f, surr1: %.4f, surr2: %.4f\n",((__wikimyei_t *)_wikimyei)->__uwaabo_beta,surr1_handler[0x00],surr2_handler[0x00]);
+                printf(">> > ... entropy_beta: %.4f, entropy: %.4f\n",((__wikimyei_t *)_wikimyei)->__entropy_beta,glti(((__wikimyei_t *)_wikimyei))->__entropy);
+                printf(">> > ... uwaabo_returns: %.4f, munaajpi_state: %.4f\n",glti(((__wikimyei_t *)_wikimyei))->__uwaabo_returns[idx],glti(((__wikimyei_t *)_wikimyei))->__munaajpi_state[idx]);
+                printf(">> > ... jkimyei_one: set_uwaabo:\t(uw_beta*min(sur1,sur2)-h_beta*H)\n");
+                printf("\x1B[0;35m");
+            #endif
             set_wapaajco_index_eq(\
                 ((__wikimyei_t *)_wikimyei)->__uwaabo, \
                 ((__wikimyei_t *)_wikimyei)->__uwaabo_beta*min(surr1_handler[0x00],surr2_handler[0x00]) - \
                 ((__wikimyei_t *)_wikimyei)->__entropy_beta*glti(((__wikimyei_t *)_wikimyei))->__entropy, \
                 idx);
+            #ifdef JKIMYEI_DEBUG
+                printf("\033[0m");
+                printf(">> > ... jkimyei_one: set_munaajpi:\t(mjpi_beta*(uw_returns-mjpi_state)^2-h_beta*H)\n");
+                printf("\x1B[0;35m");
+            #endif
             set_wapaajco_index_eq(\
             ((__wikimyei_t *)_wikimyei)->__munaajpi, \
                 ((__wikimyei_t *)_wikimyei)->__munaajpi_beta*pow(glti(((__wikimyei_t *)_wikimyei))->__uwaabo_returns[idx]-glti(((__wikimyei_t *)_wikimyei))->__munaajpi_state[idx],2) - \
                 ((__wikimyei_t *)_wikimyei)->__entropy_beta*glti(((__wikimyei_t *)_wikimyei))->__entropy, \
                 idx);
+            #ifdef JKIMYEI_DEBUG
+                printf("\033[0m");
+            #endif
         }
-        printf("waka jkimyei_tsinuu_bydirectNABLA failing\n");
-        jkimyei_tsinuu_bydirectNABLA(((__wikimyei_t *)_wikimyei)->__uwaabo);
         jkimyei_tsinuu_bydirectNABLA(((__wikimyei_t *)_wikimyei)->__munaajpi);
+        jkimyei_tsinuu_bydirectNABLA(((__wikimyei_t *)_wikimyei)->__uwaabo);
         // print_results(((__wikimyei_t *)_wikimyei)->__uwaabo);
         // print_results(((__wikimyei_t *)_wikimyei)->__munaajpi);
         #ifdef JKIMYEI_DEBUG
-            fprintf(stdout,"\x1B[0;35m>> > jkimyei_one, jkimyei ready for load index %d\033[0m\n",((__wikimyei_t *)_wikimyei)->__load_index);
+            fprintf(stdout,">> > jkimyei_one, jkimyei ready for load index %d\n",((__wikimyei_t *)_wikimyei)->__load_index);
         #endif
     }else{
         #ifdef JKIMYEI_DEBUG
-            fprintf(stdout,"\x1B[0;35m>> > jkimyei_one, skip jkimyei; duuruva not ready for load index %d\033[0m\n",((__wikimyei_t *)_wikimyei)->__load_index);
+            fprintf(stdout,">> > jkimyei_one, skip jkimyei; duuruva not ready for load index %d\n",((__wikimyei_t *)_wikimyei)->__load_index);
         #endif
     }
+    #ifdef JKIMYEI_DEBUG
+        printf("%s",COLOR_REGULGAR);
+    #endif
 }
 void wikimyei_jkimyei(__wikimyei_t *_wikimyei, unsigned int _epochs){ // Asumes load is full
 	#ifdef JKIMYEI_DEBUG

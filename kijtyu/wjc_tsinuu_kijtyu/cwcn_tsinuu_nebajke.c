@@ -300,7 +300,6 @@ void jkimyei_tsinuu_bydirectNABLA(__tsinuu_t *_tsinuu){ // #FIXME make function 
     unsigned int ln_ctx = total_lines(_tsinuu)-0x01;
     for(unsigned int idx_l_from=total_layers(_tsinuu)-0x02;idx_l_from>=0x00;idx_l_from--){ // omits input
         for(unsigned int idx_n_from=layer_size_from_layer_stack_index(_tsinuu, idx_l_from)-0x01;idx_n_from>=0x00;idx_n_from--){
-    printf("waka\n");
             c_node_from = node(_tsinuu, node_index_to_node_coord(_tsinuu, idx_l_from, idx_n_from));
             if(!c_node_from->__nbp->__has_grad){
                 fprintf(stderr, ">>>> ERROR: node must have (_has_grad) [%d][%d].\n",idx_l_from,idx_n_from);
@@ -330,18 +329,15 @@ void jkimyei_tsinuu_bydirectNABLA(__tsinuu_t *_tsinuu){ // #FIXME make function 
                 if(idx_n_to==0){break;}
             }
             c_node_from->__n_kemu->__nabla=c_sum*c_node_from->__n_kemu->__nodeactivation_grad;
-    printf("\033[1;32mwaka din\033[0m\n");
             #ifdef TSINUU_VERBOSE_2
                 fprintf(stdout,"\033[0;35m");
                 fprintf(stdout,"NODE :(from):[%d][%d]: <<Nabla = c_sum*biasGrad.>>\t\t\t\tNabla:%2.5f   biasGrad:%2.3f   c_sum:%2.3f\n",idx_l_from,idx_n_from,c_node_from->__n_kemu->__nabla,c_node_from->__n_kemu->__nodeactivation_grad,c_sum);
                 fprintf(stdout,"\033[0m");
             #endif
             c_sum = 0x00;
-    printf("\033[1;32mwaka dao\033[0m\n");
             if(idx_n_from==0){break;}
         }
         if(idx_l_from==0){break;}
-    printf("\033[1;32mwaka tao\033[0m\n");
     }
     free(c_wapaajco_vector);
     /*

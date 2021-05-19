@@ -22,8 +22,14 @@ int main(void){
     // Fabric tsinuu
     __attribute_tsinuu_t *c_attribute_tsinuu = malloc(sizeof(__attribute_tsinuu_t));
     c_attribute_tsinuu->__NUM_TOTAL_LAYERS=TOTAL_LAYERS;
-    c_attribute_tsinuu->__layers_sizes=c_layers_sizes;
-    c_attribute_tsinuu->__layers_activation=c_activations_iho;
+    // c_attribute_tsinuu->__layers_sizes=c_layers_sizes;
+    // c_attribute_tsinuu->__layers_activation=c_activations_iho;
+    c_attribute_tsinuu->__layers_sizes=malloc(TOTAL_LAYERS*sizeof(unsigned int));
+    c_attribute_tsinuu->__layers_activation=malloc(TOTAL_LAYERS*sizeof(__list_activations_t));
+    for(unsigned int idx=0x00;idx<TOTAL_LAYERS;idx++){
+        c_attribute_tsinuu->__layers_sizes[idx]=c_layers_sizes[idx];
+        c_attribute_tsinuu->__layers_activation[idx]=c_activations_iho[idx];
+    }
     c_attribute_tsinuu->__is_symetric=___CWCN_TRUE;
     c_attribute_tsinuu->__alpha=0.0; // alpha assert negative, is a mesure for resisting change; is if you kguht the friction of the learning; required to create new tsinuu
     c_attribute_tsinuu->__eta=1; // eta is the error impulse, required to create new tsinuu

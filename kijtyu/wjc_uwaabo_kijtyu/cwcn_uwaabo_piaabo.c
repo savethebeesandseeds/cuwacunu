@@ -1,15 +1,21 @@
 #include "cwcn_uwaabo_piaabo.h"
 __tsinuu_t *uwaabo_fabric(unsigned int _uwaabo_base_size, unsigned int _uwaabo_size){
     /* config */
-    unsigned int uw_total_layers=0x04;
+    unsigned int uw_total_layers=0x05;
     unsigned int uw_input_size=_uwaabo_base_size; // huge thing
     unsigned int uw_output_size=_uwaabo_size;
-    unsigned int uw_layers_sizes[0x04] = {uw_input_size,5,5,uw_output_size};
-    __list_activations_t uw_activations_iho[0x04] = {LINEAR, LINEAR, LINEAR, SIGMOID};
+    unsigned int uw_layers_sizes[0x05] = {uw_input_size,50,75,50,uw_output_size};
+    __list_activations_t uw_activations_iho[0x05] = {LINEAR, LINEAR, LINEAR, SIGMOID};
     __attribute_tsinuu_t *c_attribute_tsinuu = malloc(sizeof(__attribute_tsinuu_t));
     c_attribute_tsinuu->__NUM_TOTAL_LAYERS=uw_total_layers;
-    c_attribute_tsinuu->__layers_sizes=uw_layers_sizes;
-    c_attribute_tsinuu->__layers_activation=uw_activations_iho;
+    // c_attribute_tsinuu->__layers_sizes=uw_layers_sizes;
+    // c_attribute_tsinuu->__layers_activation=uw_activations_iho;
+    c_attribute_tsinuu->__layers_sizes=malloc(uw_total_layers*sizeof(unsigned int));
+    c_attribute_tsinuu->__layers_activation=malloc(uw_total_layers*sizeof(__list_activations_t));
+    for(unsigned int idx=0x00;idx<uw_total_layers;idx++){
+        c_attribute_tsinuu->__layers_sizes[idx]=uw_layers_sizes[idx];
+        c_attribute_tsinuu->__layers_activation[idx]=uw_activations_iho[idx];
+    }
     c_attribute_tsinuu->__is_symetric=___CWCN_TRUE;
     c_attribute_tsinuu->__alpha=0.0; // alpha assert negative, is a mesure for resisting change; is if you kguht the friction of the learning; required to create new tsinuu
     c_attribute_tsinuu->__eta=1; // eta is the error impulse, required to create new tsinuu
