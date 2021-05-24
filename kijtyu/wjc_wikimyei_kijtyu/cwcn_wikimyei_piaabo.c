@@ -27,7 +27,7 @@ __trayectory_t *trayectory_fabric(__wikimyei_t *_wikimyei){
     for(unsigned int idx=0x00;idx<_wikimyei->__alliu_state_size;idx++){new_trayectory->__alliu_state[idx]=-1;}
     for(unsigned int idx=0x00;idx<_wikimyei->__alliu_state_size;idx++){new_trayectory->__nonuwaabo_alliu_state[idx]=0x00;}
     new_trayectory->__entropy=0x00;
-    new_trayectory->__uwaabo_mask=0x00;
+    new_trayectory->__uwaabo_mask=0x01;
     for(unsigned int idx=0x00;idx<_wikimyei->__alliu_duuruva_state_size;idx++){new_trayectory->__alliu_duuruva_state[idx]=0x00;}
     for(unsigned int idx=0x00;idx<_wikimyei->__uwaabo_state_size;idx++){new_trayectory->__uwaabo_state[idx]=0x00;}
     for(unsigned int idx=0x00;idx<_wikimyei->__tsane_state_size;idx++){new_trayectory->__tsane_state[idx]=0x00;}
@@ -52,7 +52,7 @@ __load_queue_t *load_fabric(__wikimyei_t *_wikimyei){
     new_load->__down=NULL;
     _wikimyei->__load_index=0x00;
     _wikimyei->__load_size=0x01;
-    _wikimyei->__flags->__virgin_load=___CWCN_TRUE;
+    _wikimyei->__flags->__noob_load=___CWCN_TRUE;
     _wikimyei->__flags->__endhead_empty_alliu=___CWCN_TRUE;
     _wikimyei->__flags->__nonuwaabo_alliu_done=___CWCN_FALSE;
     return new_load;
@@ -139,9 +139,12 @@ __wikimyei_t *wikimyei_fabric(
     new_wikimyei->__flags->__alliu_duuruva_ready=___CWCN_FALSE;
     new_wikimyei->__flags->__munaajpi_duuruva_ready=___CWCN_FALSE;
     new_wikimyei->__flags->__adventage_duuruva_ready=___CWCN_FALSE;
-    new_wikimyei->__flags->__virgin_load=___CWCN_TRUE; // redindant (dur to fabric load)
+    new_wikimyei->__flags->__noob_load=___CWCN_TRUE; // redindant (dur to fabric load)
+    #ifndef DEBUG_LINEAR_EXPERIMENT
     new_wikimyei->__flags->__norm_stand=_DEFAULT_NORM_STAND_;
-
+    #else
+    new_wikimyei->__flags->__norm_stand=0x00;
+    #endif
     new_wikimyei->__load_batch_head=load_fabric(new_wikimyei);
     new_wikimyei->__munaajpi_base_w_state=malloc(new_wikimyei->__munaajpi_base_size*sizeof(__cwcn_type_t));
 
@@ -149,7 +152,7 @@ __wikimyei_t *wikimyei_fabric(
 }
 ___cwcn_bool_t all_duuruva_ready(__wikimyei_t *_wikimyei){
     #ifdef JKIMYEI_DEBUG
-        fprintf(stdout,"\x1B[0;35m>> > adventage_duuruva_ready: %d, munaajpi_duuruva_ready: %d, alliu_duuruva_ready: %d %s\n",_wikimyei->__flags->__adventage_duuruva_ready, _wikimyei->__flags->__munaajpi_duuruva_ready,_wikimyei->__flags->__alliu_duuruva_ready,COLOR_REGULGAR);
+        fprintf(stdout,"\x1B[0;35m>> > adventage_duuruva_ready: %d, munaajpi_duuruva_ready: %d, alliu_duuruva_ready: %d %s\n",_wikimyei->__flags->__adventage_duuruva_ready, _wikimyei->__flags->__munaajpi_duuruva_ready,_wikimyei->__flags->__alliu_duuruva_ready,COLOR_REGULAR);
     #endif
     return  _wikimyei->__flags->__adventage_duuruva_ready&&\
             _wikimyei->__flags->__munaajpi_duuruva_ready &&\
@@ -208,7 +211,7 @@ void load_to_index(__wikimyei_t *_wikimyei, int _index){
 int load_enqueue_trayectory(__wikimyei_t *_wikimyei, __trayectory_t *_new_trayectory){
     __load_queue_t *new_head=malloc(sizeof(__load_queue_t));
     if(!new_head){
-        fprintf(stderr, ">>>> ERROR: load_enqueue_trayectory failed to alocate memory\n");
+        fprintf(stderr, "%s>> > ERROR: load_enqueue_trayectory failed to alocate memory%s\n",COLOR_DANGER,COLOR_REGULAR);
         assert(0x00);
     }
     load_to_end(_wikimyei);
@@ -282,7 +285,6 @@ void empty_load(__wikimyei_t *_wikimyei){
     if(!load_is_empty(_wikimyei)){
         kill_load(_wikimyei);
     }
-    printflags(_wikimyei);
     _wikimyei->__load_batch_head=load_fabric(_wikimyei);
     assert(load_is_empty(_wikimyei));
 }
@@ -347,12 +349,12 @@ void destroy_wikimyei(__wikimyei_t *_wikimyei){
 }
 
 void printflags(__wikimyei_t *_wikimyei){
-    fprintf(stdout,">> > ... PRINT WK FLGAS\n");
+    fprintf(stdout,">> > Wikimyei Flags:\n");
     fprintf(stdout,">> > ... done: %d \t\n",_wikimyei->__flags->__done);
     fprintf(stdout,">> > ... nonuwaabo_alliu_done: %d \t\n",_wikimyei->__flags->__nonuwaabo_alliu_done);
     fprintf(stdout,">> > ... endhead_empty_alliu: %d \t\n",_wikimyei->__flags->__endhead_empty_alliu);
-    fprintf(stdout,">> > ... %salliu_duuruva_ready: %d %s\t\n",COLOR_ALLIU,_wikimyei->__flags->__alliu_duuruva_ready,COLOR_REGULGAR);
-    fprintf(stdout,">> > ... %smunaajpi_duuruva_ready: %d %s\t\n",COLOR_MUNAAJPI, _wikimyei->__flags->__munaajpi_duuruva_ready,COLOR_REGULGAR);
+    fprintf(stdout,">> > ... %salliu_duuruva_ready: %d %s\t\n",COLOR_ALLIU,_wikimyei->__flags->__alliu_duuruva_ready,COLOR_REGULAR);
+    fprintf(stdout,">> > ... %smunaajpi_duuruva_ready: %d %s\t\n",COLOR_MUNAAJPI, _wikimyei->__flags->__munaajpi_duuruva_ready,COLOR_REGULAR);
     fprintf(stdout,">> > ... adventage_duuruva_ready: %d \t\n",_wikimyei->__flags->__adventage_duuruva_ready);
-    fprintf(stdout,">> > ... virgin_load: %d \t\n",_wikimyei->__flags->__virgin_load);
+    fprintf(stdout,">> > ... noob_load: %d \t\n",_wikimyei->__flags->__noob_load);
 }

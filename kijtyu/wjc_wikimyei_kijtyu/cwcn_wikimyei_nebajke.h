@@ -29,8 +29,9 @@ void ___tsane_dehash(__wikimyei_t *_wikimyei);
 void ___munaajpi_hash(__wikimyei_t *_wikimyei);
 void ___munaajpi_duuruva_hash(__wikimyei_t *_wikimyei);
 
-void wikimyei_nolive_one(__wikimyei_t *_wikimyei);
 void wikimyei_live_one(__wikimyei_t *_wikimyei);
 void wikimyei_live_load(__wikimyei_t *_wikimyei, int _size_of_load);
+void wikimyei_relive_one(__wikimyei_t *_wikimyei);
+void wikimyei_relive_load(__wikimyei_t *_wikimyei);
 
 #endif

@@ -16,12 +16,14 @@ MUNAAJPI_=$(KIJTYU)/wjc_munaajpi_kijtyu
 UWAABO_=$(KIJTYU)/wjc_uwaabo_kijtyu
 TSINUU_=$(KIJTYU)/wjc_tsinuu_kijtyu
 WIKIMYEI_=$(KIJTYU)/wjc_wikimyei_kijtyu
+KALAMAR_=$(KIJTYU)/wjc_kalamar_kijtyu
 
 
 # CFLAGS=-I $(KEMU_)/ -I $(UWAABO_)/ -I $(MUNAAJPI_)/ -I $(ALLIU_)/ -I $(CONFIGURATIONS)/ -I $(COMMUNICATIONS)/ -I $(JIKIMYEI_)/
 
 # AUXFLAGS=-lfann -lm -Wall -O3 # FIXME
-
+KALAMAR_TARGETS=$(KALAMAR_)/cwcn_kalamar_piaabo.c
+KALAMAR_HEADERS=$(KALAMAR_)/
 WIKIMYEI_TARGETS=$(WIKIMYEI_)/cwcn_wikimyei_nebajke.c $(WIKIMYEI_)/cwcn_wikimyei_piaabo.c
 WIKIMYEI_HEADERS=$(WIKIMYEI_)/
 CAJTUCU_TARGETS=$(CAJTUCU_)/cwcn_cajtucu_piaabo.c
@@ -72,6 +74,8 @@ REGULAR_HEADERS=\
 -I $(WIKIMYEI_HEADERS)
 
 # BTC_FUT_TARGETS=$(CONFIGURATIONS)/btc_fut.config.c $(WIKIMYEI_)/cwcn_btc_fut_wikimyei.c
+KALAMAR_TEST_TARGETS=$(KALAMAR_TARGETS)
+KALAMAR_TEST_HEADERS=-I $(KALAMAR_HEADERS)
 
 WIKIMYEI_TEST_TARGETS=$(REGULAR_TARGETS)
 WIKIMYEI_TEST_HEADERS=$(REGULAR_HEADERS)
@@ -80,6 +84,9 @@ ENTROPY_TEST_TARGETS=$(ENTROPY_)/*.c $(TEST_)/testing_entropy.c
 TSINUU_TEST_TARGETS=$(TSINUU_)/cwcn_tsinuu_piaabo.c $(TSINUU_)/cwcn_tsinuu_nebajke.c $(TEST_)/testing_tsinuu.c
 DUURUVA_TEST_TARGETS=$(DUURUVA_)/cwcn_duuruva_nebajke.c $(TEST_)/testing_duuruva.c
 _all_wikimyei: _wikimyei_btc_fut
+_kalamar_test:
+	$(CC) $(KALAMAR_TEST_TARGETS) $(TEST_)/testing_kalamar.c $(KALAMAR_TEST_HEADERS) -lncurses -lm -Wall -o $(ROOT)/_kalamar_test
+	$(ROOT)/_kalamar_test
 _wikimyei_test:
 	$(CC) $(WIKIMYEI_TEST_TARGETS) $(TEST_)/testing_wikimyei.c $(WIKIMYEI_TEST_HEADERS) -lm -Wall -o $(ROOT)/_wikimyei_test
 	$(ROOT)/_wikimyei_test
@@ -93,4 +100,4 @@ _duuruva_test:
 	$(CC) $(DUURUVA_TEST_TARGETS) -I $(DUURUVA_)/ -lm -Wall -o $(ROOT)/_duuruva_test
 	$(ROOT)/_duuruva_test
 clean:
-	rm -f $(ROOT)/_wikimyei_test $(ROOT)/_entropy_test $(ROOT)/_tsinuu_test $(ROOT)/_duuruva_test
+	rm -f $(ROOT)/_kalamar_test $(ROOT)/_wikimyei_test $(ROOT)/_entropy_test $(ROOT)/_tsinuu_test $(ROOT)/_duuruva_test

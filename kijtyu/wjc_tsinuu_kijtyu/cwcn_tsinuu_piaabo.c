@@ -700,6 +700,15 @@ void pardon_all_bias(__tsinuu_t *_tsinuu){
 /*
 
 */
+void tsinuu_initialize_weights_fixed(__tsinuu_t *_tsinuu, __cwcn_type_t _v_fixed){
+    for(unsigned int l_ctx=0x00; l_ctx < total_lines(_tsinuu); l_ctx++){
+        _tsinuu->__lines[l_ctx]->__ln_kemu->__weight = _v_fixed;
+    }
+    #ifdef TSINUU_DEBUG
+        fprintf(stderr, ">>>> request <tsinuu_initialize_weights_fixed>\n");
+        fprintf(stderr, ">>>> suspect element values [%f, %f... %f] must be random\n",_tsinuu->__lines[0x00]->__ln_kemu->__weight, _tsinuu->__lines[0x01]->__ln_kemu->__weight, _tsinuu->__lines[total_lines(_tsinuu)-0x01]->__ln_kemu->__weight);
+    #endif
+}
 void tsinuu_initialize_weights_random(__tsinuu_t *_tsinuu, __cwcn_type_t _v_max, __cwcn_type_t _v_min){
     // #FIXME assert set_seed();
     for(unsigned int l_ctx=0x00; l_ctx < total_lines(_tsinuu); l_ctx++){
@@ -723,6 +732,17 @@ void tsinuu_initialize_weights_zero(__tsinuu_t *_tsinuu){
 /*
 
 */
+void tsinuu_initialize_bias_fixed(__tsinuu_t *_tsinuu, __cwcn_type_t _v_fixed){
+    for(unsigned int idx_l=0; idx_l < total_layers(_tsinuu); idx_l++){
+        for(unsigned int idx_n=0; idx_n < layer_size_from_layer_stack_index(_tsinuu, idx_l); idx_n++){
+            _tsinuu->__layers[idx_l]->__nodes[idx_n]->__n_kemu->__bias = _v_fixed;
+        }
+    }
+    #ifdef TSINUU_DEBUG
+        fprintf(stderr, ">>>> request <tsinuu_initialize_bias_fixed>\n");
+        fprintf(stderr, ">>>> suspect element bias values [%f, %f... %f] must be eq\n",_tsinuu->__layers[0x00]->__nodes[idx_n]->__n_kemu->__bias, _tsinuu->__layers[0x01]->__nodes[idx_n]->__n_kemu->__bias, _tsinuu->__layers[total_layers(_tsin->__nodes[idx_n]uu)-0x01]->__n_kemu->__bias);
+    #endif
+}
 void tsinuu_initialize_bias_random(__tsinuu_t *_tsinuu, __cwcn_type_t _v_max, __cwcn_type_t _v_min){
     // #FIXME assert set_seed();
     assert(_v_max>=_v_min);
@@ -1139,3 +1159,6 @@ void clamp_all_weights(__tsinuu_t *_tsinuu){
         clamp_weight(_tsinuu,line_kemu(_tsinuu, line_index_to_line_coord(_tsinuu, idx_ln)));
     }
 }
+/*
+
+*/

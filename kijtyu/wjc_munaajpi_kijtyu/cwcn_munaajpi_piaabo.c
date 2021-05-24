@@ -1,11 +1,15 @@
 #include "cwcn_munaajpi_piaabo.h"
 __tsinuu_t *munaajpi_fabric(unsigned int _munaajpi_base_size, unsigned int _munaajpi_returns_size){
     /* config */
-    unsigned int mjpi_total_layers=0x03;
+    unsigned int mjpi_total_layers=0x05;
     unsigned int mjpi_input_size=_munaajpi_base_size; // huge thing
     unsigned int mjpi_output_size=_munaajpi_returns_size;
-    unsigned int mjpi_layers_sizes[0x03]={mjpi_input_size,30,mjpi_output_size};
-    __list_activations_t mjpi_activations_iho[0x03]={LINEAR, LINEAR, SIGNEDSIGMOID};
+    unsigned int mjpi_layers_sizes[0x05] = {mjpi_input_size,50,75,50,mjpi_output_size};
+    #ifndef DEBUG_LINEAR_EXPERIMENT
+    __list_activations_t mjpi_activations_iho[0x05] = {LINEAR, LINEAR, LINEAR, SIGMOID};
+    #else
+    __list_activations_t mjpi_activations_iho[0x05] = {LINEAR, LINEAR, LINEAR, LINEAR};
+    #endif
     __attribute_tsinuu_t *c_attribute_tsinuu=malloc(sizeof(__attribute_tsinuu_t));
     c_attribute_tsinuu->__NUM_TOTAL_LAYERS=mjpi_total_layers;
     // c_attribute_tsinuu->__layers_sizes=mjpi_layers_sizes;
@@ -33,8 +37,13 @@ __tsinuu_t *munaajpi_fabric(unsigned int _munaajpi_base_size, unsigned int _muna
     new_munaajpi_tsinuu=tsinuu_fabric(c_attribute_tsinuu);
     // tsinuu_initialize_weights_zero(new_munaajpi_tsinuu);
     // tsinuu_initialize_bias_zero(new_munaajpi_tsinuu);
+    #ifndef DEBUG_LINEAR_EXPERIMENT
     tsinuu_initialize_weights_random(new_munaajpi_tsinuu, 0.5, -0.5);
     tsinuu_initialize_bias_random(new_munaajpi_tsinuu, 0.5, -0.5);
+    #else
+    tsinuu_initialize_weights_fixed(new_munaajpi_tsinuu,1.0);
+    tsinuu_initialize_bias_fixed(new_munaajpi_tsinuu,1.0);
+    #endif
     set_all_nodebooleanpardon_parametric(new_munaajpi_tsinuu, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00);
     pardon_inputoutput_bias(new_munaajpi_tsinuu); // #FIXME check if needed of enabled
     set_all_linebooleanpardon_parametric(new_munaajpi_tsinuu, 0x00, 0x00);
@@ -44,10 +53,8 @@ __tsinuu_t *munaajpi_fabric(unsigned int _munaajpi_base_size, unsigned int _muna
 
 */
 ___cwcn_bool_t set_load_pending_munaajpi(__wikimyei_t *_wikimyei){
-    #ifdef WIKIMYEI_DEBUG
-        fprintf(stdout,"%s>> > ... set_load_pending_munaajpi%s\n",COLOR_MUNAAJPI,COLOR_REGULGAR);
-    #endif
     if(_wikimyei->__load_size<_wikimyei->__horizon_munaajpi){
+        fprintf(stdout,">> > WARNING, load to short...\n");
         return are_munaajpi_pending(_wikimyei);
     }
     // #FIXME include mask
@@ -57,13 +64,16 @@ ___cwcn_bool_t set_load_pending_munaajpi(__wikimyei_t *_wikimyei){
     load_to_start(_wikimyei); // go down
     do{ // go up
         #ifdef WIKIMYEI_DEBUG_v2
-            fprintf(stdout,"%s>> > \033[0;32m--- --- --- --- --- --- --- --- --- --- --- BASE UP: %d%s\n",COLOR_MUNAAJPI,_wikimyei->__load_index,COLOR_REGULGAR);
+            fprintf(stdout,"%s>> > for load_index: [%d] set_load_pending_munaajpi%s\n",COLOR_MUNAAJPI,_wikimyei->__load_index,COLOR_REGULAR);
+        #endif
+        #ifdef WIKIMYEI_DEBUG_v2
+            fprintf(stdout,"%s>> > \033[0;32m--- --- --- --- --- --- --- --- --- --- --- BASE UP: %d%s\n",COLOR_MUNAAJPI,_wikimyei->__load_index,COLOR_REGULAR);
         #endif
         c_item=glti(_wikimyei);
         c_index=_wikimyei->__load_index;
         do{ // go up the horizon
             #ifdef WIKIMYEI_DEBUG_v2
-                fprintf(stdout,"%s>> > \033[0;36m--- --- --- --- --- --- --- --- --- --- --- GO UP (sec): %d%s\n",COLOR_MUNAAJPI,_wikimyei->__load_index,COLOR_REGULGAR);
+                fprintf(stdout,"%s>> > \033[0;36m--- --- --- --- --- --- --- --- --- --- --- GO UP (sec): %d%s\n",COLOR_MUNAAJPI,_wikimyei->__load_index,COLOR_REGULAR);
             #endif
             if(!c_item->__pending_munaajpi){break;} // skip
             if(_wikimyei->__load_size-c_index<_wikimyei->__horizon_munaajpi){break;} // skip
@@ -77,7 +87,7 @@ ___cwcn_bool_t set_load_pending_munaajpi(__wikimyei_t *_wikimyei){
                     for(unsigned int m_idx=0x00;m_idx<_wikimyei->__alliu_state_size;m_idx++){
                         printf(" nonuwaabo_alliu_state [%d/%d]: %f, alliu_state [%d/%d]: %f\t ", c_index, m_idx, c_item->__nonuwaabo_alliu_state[m_idx], _wikimyei->__load_index, m_idx, glti(_wikimyei)->__alliu_state[m_idx]);
                     }
-                    printf(" ]%s\n",COLOR_REGULGAR);
+                    printf(" ]%s\n",COLOR_REGULAR);
                 #endif
             }if(c_item->__pending_munaajpi_index==_wikimyei->__horizon_munaajpi){
                 load_to_index(_wikimyei,c_index);
@@ -94,9 +104,26 @@ ___cwcn_bool_t set_load_pending_munaajpi(__wikimyei_t *_wikimyei){
     load_to_index(_wikimyei,start_index);
     return are_munaajpi_pending(_wikimyei);
 }
+void reset_load_pending_munaajpi(__wikimyei_t *_wikimyei){
+    int start_index=_wikimyei->__load_index;
+    load_to_start(_wikimyei); // go down
+    do{
+        glti(_wikimyei)->__pending_munaajpi_index=0x00;
+    }while(load_go_up(_wikimyei)!=-1);
+    load_to_index(_wikimyei,start_index);
+    assert(are_munaajpi_pending(_wikimyei));
+}
 /*
 
 */
+void print_munaajpi_w_base(__wikimyei_t *_wikimyei){
+    fprintf(stdout,"%s>> > ... munaajpi_w_base: [%s",COLOR_MUNAAJPI,COLOR_REGULAR);
+    for(unsigned int idx=0x00;idx<_wikimyei->__munaajpi_base_size;idx++){
+        if(!(idx%9)&&idx!=0x00){fprintf(stdout,"\n\t\t\t");}
+        fprintf(stdout, "\t%.2f,",_wikimyei->__munaajpi_base_w_state[idx]);
+    }
+    fprintf(stdout," %s]%s\n",COLOR_MUNAAJPI,COLOR_REGULAR);
+}
 void read_munaajpi_w_base(__wikimyei_t *_wikimyei){
     unsigned int m_ctx=0x00;
     for(unsigned int idx=0x00;idx<_wikimyei->__alliu_duuruva_state_size;idx++){
@@ -119,12 +146,9 @@ void read_munaajpi_w_base(__wikimyei_t *_wikimyei){
         _wikimyei->__munaajpi_base_w_state[m_ctx]=glti(_wikimyei)->__imibajcho_munaajpi_duuruva_state[idx];
         m_ctx++;
     }
-    #ifdef WIKIMYEI_DEBUG_v2
-        fprintf(stdout,"%s>> > ... read_munaajpi_w_base\t[",COLOR_MUNAAJPI);
-        for(unsigned int idx=0x00;idx<_wikimyei->__munaajpi_base_size;idx++){
-            fprintf(stdout, " %.2f,",_wikimyei->__munaajpi_base_w_state[m_ctx]);
-        }
-        fprintf(stdout," ]%s\n",COLOR_REGULGAR);
+    #ifdef WIKIMYEI_DEBUG
+        fprintf(stdout,"%s>> > load_index: [%d] ... request to read_munaajpi_w_base %s\n",COLOR_MUNAAJPI,_wikimyei->__load_index,COLOR_REGULAR);
+        print_munaajpi_w_base(_wikimyei);
     #endif
     assert(_wikimyei->__munaajpi_base_size==m_ctx);
 }
@@ -143,11 +167,11 @@ void imibajcho_munaajpi_cajtucu_transformation(__wikimyei_t *_wikimyei){
     // #FIXME, try the experiment to normalize after ims
     #ifdef WIKIMYEI_DEBUG
         if(_wikimyei->__flags->__norm_stand){
-            fprintf(stdout,"%s>> > ... imibajcho_munaajpi_cajtucu_transformation ---\t imibajcho_munaajpi_state: (regularized) %f%s\n",COLOR_MUNAAJPI,\
+            fprintf(stdout,"%s>> > load_index: [%d] ... (result of) imibajcho munaajpi cajtucu transformation: (regularized) %f%s\n",COLOR_MUNAAJPI,_wikimyei->__load_index,\
                 glti(_wikimyei)->__imibajcho_munaajpi_state[0x00],\
-                COLOR_REGULGAR);
+                COLOR_REGULAR);
         }else{
-            fprintf(stdout,"%s>> > ... imibajcho_munaajpi_cajtucu_transformation ---\t imibajcho_munaajpi_state: %f%s\n",COLOR_MUNAAJPI,glti(_wikimyei)->__imibajcho_munaajpi_state[0x00],COLOR_REGULGAR);
+            fprintf(stdout,"%s>> > load_index: [%d] ... (result of) imibajcho munaajpi cajtucu transformation: %f%s\n",COLOR_MUNAAJPI,_wikimyei->__load_index,glti(_wikimyei)->__imibajcho_munaajpi_state[0x00],COLOR_REGULAR);
         }
     #endif
 }
@@ -171,10 +195,17 @@ void compute_imibajcho_munaajpi(__wikimyei_t *_wikimyei){ // J
         (__cwcn_type_t)_wikimyei->__alliu_state_size;
     }
     #ifdef MUNAAJPI_DEBUG
-    fprintf(stdout,"%s>> > ... imibajcho_munaajpi_state: %.4f%s\t alliu_state: %.4f\n",COLOR_MUNAAJPI,glti(_wikimyei)->__imibajcho_munaajpi_state[0x00],COLOR_REGULGAR,glti(_wikimyei)->__alliu_state[0x00]);
-    #endif
-    #ifdef WIKIMYEI_DEBUG
-        fprintf(stdout,"%s>> > ... compute_imibajcho_munaajpi\t\timibajcho_munaajpi_state[%d/0x00]: %f%s\n",COLOR_MUNAAJPI,_wikimyei->__load_index,glti(_wikimyei)->__imibajcho_munaajpi_state[0x00],COLOR_REGULGAR);
+    fprintf(stdout,"%s>> > load_index: [%d] ... request to compute_imibajcho_munaajpi\n",COLOR_MUNAAJPI,_wikimyei->__load_index);
+    fprintf(stdout,"\timibajcho_munaajpi_state: %.4f",glti(_wikimyei)->__imibajcho_munaajpi_state[0x00]);
+    fprintf(stdout,"\t%s nonuwaabo_alliu_state: [ ",COLOR_ALLIU);
+    for(unsigned int m_idx=0x00;m_idx<_wikimyei->__alliu_state_size;m_idx++){
+        fprintf(stdout," %.2f,",glti(_wikimyei)->__nonuwaabo_alliu_state[m_idx]);
+    }
+    fprintf(stdout," ]\t alliu_state: [ ");
+    for(unsigned int m_idx=0x00;m_idx<_wikimyei->__alliu_state_size;m_idx++){
+        fprintf(stdout," %.2f,",glti(_wikimyei)->__alliu_state[m_idx]);
+    }
+    fprintf(stdout," ]%s\n",COLOR_REGULAR);
     #endif
     glti(_wikimyei)->__pending_munaajpi=___CWCN_FALSE; // means not lacking compute_imibajcho
     #ifdef WIKIMYEI_DEBUG_v2
@@ -196,18 +227,18 @@ ___cwcn_bool_t are_munaajpi_pending(__wikimyei_t *_wikimyei){
             c_stillpending=___CWCN_TRUE;
             ctx++;
             #ifdef WIKIMYEI_DEBUG_v2
-            fprintf(stdout,"%s>> > ... load [%d] \t%sTRUE  %s(munaajpi_pending)%s\n",COLOR_MUNAAJPI,_wikimyei->__load_index,COLOR_DANGER,COLOR_MUNAAJPI,COLOR_REGULGAR); // hug from the past
+            fprintf(stdout,"%s>> > load_index: [%d] ... load [%d] \t%sTRUE  %s(munaajpi_pending)%s\n",COLOR_MUNAAJPI,_wikimyei->__load_index,_wikimyei->__load_index,COLOR_DANGER,COLOR_MUNAAJPI,COLOR_REGULAR); // hug from the past
             #endif
         } else {
             #ifdef WIKIMYEI_DEBUG_v2
-            fprintf(stdout,"%s>> > ... load [%d] \t%sFALSE %s(munaajpi_pending)%s\n",COLOR_MUNAAJPI,_wikimyei->__load_index,COLOR_B_MUNAAJPI,COLOR_MUNAAJPI,COLOR_REGULGAR);
+            fprintf(stdout,"%s>> > load_index: [%d] ... load [%d] \t%sFALSE %s(munaajpi_pending)%s\n",COLOR_MUNAAJPI,_wikimyei->__load_index,_wikimyei->__load_index,COLOR_B_MUNAAJPI,COLOR_MUNAAJPI,COLOR_REGULAR);
             #endif
         }
     }while(load_go_up(_wikimyei)!=-1);
-    #ifdef WIKIMYEI_DEBUG
-        fprintf(stdout,"%s>> > ... load have still ctx: %d munaajpi_pending%s\n",COLOR_MUNAAJPI,ctx,COLOR_REGULGAR);
-    #endif
     load_to_index(_wikimyei,start_index);
+    #ifdef WIKIMYEI_DEBUG
+    fprintf(stdout,"%s>> > load_index: [%d] ... load have still %sctx: %d munaajpi_pending%s\n",COLOR_REGULAR,_wikimyei->__load_index,COLOR_MUNAAJPI,ctx,COLOR_REGULAR);
+    #endif
     return c_stillpending; // if any item in load is still pending
 }
 /*
@@ -216,7 +247,7 @@ ___cwcn_bool_t are_munaajpi_pending(__wikimyei_t *_wikimyei){
 void print_report_munaajpi(__wikimyei_t *_wikimyei){
     fprintf(stdout,"%s",COLOR_MUNAAJPI);
     load_to_start(_wikimyei);
-    fprintf(stdout,"\t THE ONE AND ONLY, REPORT MUNAAJPI:\n\t(MUNAAJPI) ");
+    fprintf(stdout,"\t THE ONE AND ONLY, REPORT MUNAAJPI:\n\t(MUNAAJPI)\n");
     print_duuruva(_wikimyei->__munaajpi_duuruva);
     do{
         for(unsigned int mjpi_idx=0x00;mjpi_idx<0x01;mjpi_idx++){
@@ -228,5 +259,5 @@ void print_report_munaajpi(__wikimyei_t *_wikimyei){
         }
     }while(load_go_up(_wikimyei)!=-1);
     
-    fprintf(stdout,"%s\n",COLOR_REGULGAR);
+    fprintf(stdout,"%s\n",COLOR_REGULAR);
 }

@@ -1,19 +1,25 @@
 #ifndef WIKIMYEI_PIAABO_INCLUDED
 #define WIKIMYEI_PIAABO_INCLUDED
+#define COLOR_TSANE "\x1B[0;34m"
 #define COLOR_MUNAAJPI "\x1B[0;33m"
 #define COLOR_B_MUNAAJPI "\x1B[1;33m"
+#define COLOR_GAE "\033[0;32m"
 #define COLOR_GOOD "\033[1;32m"
 #define COLOR_DANGER "\033[0;31m"
 #define COLOR_ALLIU "\x1B[0;36m"
-#define COLOR_REGULGAR "\033[0m"
+#define COLOR_REGULAR "\033[0m"
+#define COLOR_ENTROPY "\033[0m"
 #define COLOR_WARNING "\033[0;31m"
 #define COLOR_UWAABO "\x1B[0;35m"
 #define COLOR_JKIMYEI "\x1B[0;32m"
+// #define DEBUG_LINEAR_EXPERIMENT
+#define TSINUU_DEBUG
 #define WIKIMYEI_DEBUG
-#define WIKIMYEI_DEBUG_v2
+// #define WIKIMYEI_DEBUG_v2
 // #define WIKIMYEI_DEBUG_v3
-#define DEBUG_DUURUVA
+// #define DEBUG_DUURUVA
 #define JKIMYEI_DEBUG
+// #define JKIMYEI_DEBUG_v2
 #define MUNAAJPI_DEBUG
 
 #define BUGGER_SIZE_DUURUVA (unsigned int) 10
@@ -30,7 +36,7 @@ typedef __cwcn_type_t (*__function_pointer_t)(__cwcn_type_t);
 #define __function_pointer_t_size sizeof(__function_pointer_t)
 #define __cwcn_infinite (__cwcn_type_t) 0xFFFFFFFF
 
-#define _DEFAULT_NORM_STAND_ (___cwcn_bool_t) 0x1
+#define _DEFAULT_NORM_STAND_ (___cwcn_bool_t) 0x0
 
 #define max(a,b)({__typeof__(a) _a=(a);__typeof__(b) _b=(b);_a > _b ? _a : _b;})
 #define min(a,b)({__typeof__(a) _a=(a);__typeof__(b) _b=(b);_a < _b ? _a : _b;})
@@ -41,7 +47,7 @@ typedef struct __wk_flags {
     ___cwcn_bool_t __alliu_duuruva_ready;
     ___cwcn_bool_t __munaajpi_duuruva_ready;
     ___cwcn_bool_t __adventage_duuruva_ready;
-    ___cwcn_bool_t __virgin_load; // load fabric needs for it
+    ___cwcn_bool_t __noob_load; // load fabric needs for it
     ___cwcn_bool_t __norm_stand; // 
 } __wk_flags_t;
 typedef struct __trayectory { // #FIXME too many fields

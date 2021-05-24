@@ -199,8 +199,10 @@ typedef _Bool ___cwcn_bool_t;
     void read_layer_value_as_vector_from_stack_coord(__tsinuu_t *_tsinuu, __layer_stack_coord_t *_l_s_coord, __cwcn_type_t *_result_vector);
     
     void tsinuu_initialize_weights_random(__tsinuu_t *_tsinuu, __cwcn_type_t _v_max, __cwcn_type_t _v_min);
+    void tsinuu_initialize_weights_fixed(__tsinuu_t *_tsinuu, __cwcn_type_t _v_fixed);
     void tsinuu_initialize_weights_zero(__tsinuu_t *_tsinuu);
     void tsinuu_initialize_bias_random(__tsinuu_t *_tsinuu, __cwcn_type_t _v_max, __cwcn_type_t _v_min);
+    void tsinuu_initialize_bias_fixed(__tsinuu_t *_tsinuu, __cwcn_type_t _v_fixed);
     void tsinuu_initialize_bias_zero(__tsinuu_t *_tsinuu);
     
     unsigned int l_coord_to_l_index(__layer_coords_t *_l_coord);

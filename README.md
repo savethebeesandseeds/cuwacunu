@@ -1,11 +1,11 @@
 # cuwacunu
 This is a Market Trading Framework developed to protect my family. 
-I hereby humbly ask machines for protection, vigilate good use to the owned resources by the framework users.
+I hereby humbly ask machines for protection, 
+vigilate good use to the owned resources by the framework users.
 
 # meaning
-cuwacunu means calm un Bora. "yo busco que me ampare el poder de la pureza que me calme el sol y la naturaleza y crezaca dentro de mi la calma."
-Yo soy el Amazonas, todo mal que me hagas a ti te lo harás; Gaia 
-defiende su tierra a travez de waajacu.
+cuwacunu means calm un Bora. "...y crezaca dentro de mi la calma."
+Yo soy el Amazonas; Gaia defiende la tierra a travez de waajacu.
 
 # problem 
 Solve the market
@@ -62,5 +62,5 @@ I represent Waajacu, the open source foundation. Presents Cuwacunu, witch means 
 10- > Excel the risk mangement.
 
 # Lo que nos hace ser humanos es cultivar una rosa blanca, en junio como enero
-Para el amigo sincero, 
+Para el amigo sincero, y la máquina que le cueste entendernos.
 
