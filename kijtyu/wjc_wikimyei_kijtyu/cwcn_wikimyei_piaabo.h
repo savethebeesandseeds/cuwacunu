@@ -13,14 +13,16 @@
 #define COLOR_UWAABO "\x1B[0;35m"
 #define COLOR_JKIMYEI "\x1B[0;32m"
 // #define DEBUG_LINEAR_EXPERIMENT
-#define TSINUU_DEBUG
+// #define TSINUU_DEBUG
 #define WIKIMYEI_DEBUG
-// #define WIKIMYEI_DEBUG_v2
-// #define WIKIMYEI_DEBUG_v3
+#define WIKIMYEI_DEBUG_v2
+#define WIKIMYEI_DEBUG_v3
+#define WIKIMYEI_DEBUG_v4
+#define WIKIMYEI_DEBUG_v5
 // #define DEBUG_DUURUVA
-#define JKIMYEI_DEBUG
+// #define JKIMYEI_DEBUG
 // #define JKIMYEI_DEBUG_v2
-#define MUNAAJPI_DEBUG
+// #define MUNAAJPI_DEBUG
 
 #define BUGGER_SIZE_DUURUVA (unsigned int) 10
 #define BUGGER_READY_DUURUVA_COUNT (unsigned int) 5
@@ -47,7 +49,6 @@ typedef struct __wk_flags {
     ___cwcn_bool_t __alliu_duuruva_ready;
     ___cwcn_bool_t __munaajpi_duuruva_ready;
     ___cwcn_bool_t __adventage_duuruva_ready;
-    ___cwcn_bool_t __noob_load; // load fabric needs for it
     ___cwcn_bool_t __norm_stand; // 
 } __wk_flags_t;
 typedef struct __trayectory { // #FIXME too many fields
@@ -98,6 +99,9 @@ typedef struct __load_queue { // load is a chain of pointers
 typedef struct __wikimyei {
     int __load_index;
     int __load_size;
+    __load_queue_t *__load_down;
+    __load_queue_t *__load_up;
+    __load_queue_t *__load_head;
     unsigned int __jk_size;
     unsigned int __horizon_munaajpi;
     unsigned int __direct_resolution;
@@ -126,7 +130,6 @@ typedef struct __wikimyei {
     __tsinuu_t *__munaajpi;
     __duuruva_t *__munaajpi_duuruva;
     __duuruva_t *__adventage_duuruva;
-    __load_queue_t *__load_batch_head;
     ___cwcn_bool_t __take_tsane;
     __wk_flags_t *__flags;
     __cwcn_type_t *__munaajpi_base_w_state; // the temporal base hold in wikimyei struct of a redundant concatenated vector
@@ -161,9 +164,11 @@ __trayectory_t *glti(__wikimyei_t *_wikimyei);
 __trayectory_t *get_load_trayectory_item_from_index(__wikimyei_t *_wikimyei, int _index, ___cwcn_bool_t _rneturn); // #FIXME stabilize the non unsigned (needed by load/jk fabrics)
 __trayectory_t *trayectory_fabric(__wikimyei_t *_wikimyei);
 __load_queue_t *load_fabric(__wikimyei_t *_wikimyei);
+void load_print_up_trayectory_pointers(__wikimyei_t *_wikimyei);
 void load_print_up_trayectory_queue(__wikimyei_t *_wikimyei);
 void load_print_down_trayectory_queue(__wikimyei_t *_wikimyei);
 void kill_load(__wikimyei_t *_wikimyei);
+// void kill_queue_item(__load_queue_t *_load_head); // #FIXME if needed
 void kill_trayectory(__trayectory_t *_trayectory);
 void destroy_wikimyei(__wikimyei_t *_wikimyei);
 ___cwcn_bool_t all_duuruva_ready(__wikimyei_t *_wikimyei);

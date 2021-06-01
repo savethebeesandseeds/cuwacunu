@@ -122,21 +122,20 @@ void beta_differential_entropy(__beta_pdf_t *_beta_pdf, _Bool _in_nats){
     // fprintf(stdout, ">> DIFFENTIAL ENTROPY: numeator: %f, denominator: %f, entropy: %f\n", numerator, denominator, _beta_pdf->__entropy);
 }
 void set_beta_lambda(__beta_pdf_t *_beta_pdf, __cwcn_type_t _lambda){
-    _lambda=fabs(sin(0.5*3.141592*_lambda));
-    assert(_lambda>=0-0.01);
-    assert(_lambda<=1+0.01);
-    _beta_pdf->__lambda=(__cwcn_type_t) _lambda*_beta_pdf->__max_lambda+0x001;
+    _beta_pdf->__lambda=fabs(sin(0.5*3.141592*_lambda));
+    _beta_pdf->__lambda=_beta_pdf->__lambda*_beta_pdf->__max_lambda+0.001;
+    assert(_beta_pdf->__lambda>0);
 }
 void set_beta_eta(__beta_pdf_t *_beta_pdf, __cwcn_type_t _eta){
-    _eta=fabs(sin(0.5*3.141592*_eta));
-    assert(_eta>=0-0.01);
-    assert(_eta<=1+0.01);
-    _beta_pdf->__eta=(__cwcn_type_t) _eta*_beta_pdf->__max_eta+0x001;
+    _beta_pdf->__eta=fabs(sin(0.5*3.141592*_eta));
+    _beta_pdf->__eta=_beta_pdf->__eta*_beta_pdf->__max_eta+0.001;
+    assert(_beta_pdf->__eta>0);
 }
 void set_beta_input(__beta_pdf_t *_beta_pdf, __cwcn_type_t _input){
     assert(_input>=0-0.01);
     assert(_input<=1+0.01);
-    _beta_pdf->__beta_input = _input;
+    _beta_pdf->__beta_input = _input+0.001;
+    assert(_beta_pdf->__beta_input>0);
 }
 void set_num_tsane(__beta_pdf_t *_beta_pdf, unsigned int _n_tsane){
     _beta_pdf->__num_tsane=_n_tsane;
@@ -236,23 +235,25 @@ __beta_pdf_t *_ipivye_beta_pdf(unsigned int _d_res, unsigned int _n_tsane){
 */
 void set_cauchy_a(__cauchy_pdf_t *_cauchy_pdf, __cwcn_type_t _cauchy_a){
     // fprintf(stdout, "CAUCHY a:::: %f\n",_cauchy_a);
-    _cauchy_a=fabs(sin(0.5*3.141592*_cauchy_a));
-    assert(_cauchy_a>=0-0.01);
-    assert(_cauchy_a<=1+0.01);
-    _cauchy_pdf->__cauchy_a=(__cwcn_type_t) (_cauchy_a)*(_cauchy_pdf->__cauchy_a_max-_cauchy_pdf->__cauchy_a_min)+_cauchy_pdf->__cauchy_a_min;
+    _cauchy_pdf->__cauchy_a=fabs(sin(0.5*3.141592*_cauchy_a));
+    _cauchy_pdf->__cauchy_a=(_cauchy_pdf->__cauchy_a)*(_cauchy_pdf->__cauchy_input_max-_cauchy_pdf->__cauchy_input_min)+_cauchy_pdf->__cauchy_input_min;
+    assert(_cauchy_pdf->__cauchy_a>=_cauchy_pdf->__cauchy_input_min);
+    assert(_cauchy_pdf->__cauchy_a<=_cauchy_pdf->__cauchy_input_max);
 }
 void set_cauchy_b(__cauchy_pdf_t *_cauchy_pdf, __cwcn_type_t _cauchy_b){
     // fprintf(stdout, "CAUCHY b:::: %f\n",_cauchy_b);
-    _cauchy_b=fabs(sin(0.5*3.141592*_cauchy_b));
-    assert(_cauchy_b>=0-0.01);
-    assert(_cauchy_b<=1+0.01);
-    _cauchy_pdf->__cauchy_b=(__cwcn_type_t) _cauchy_b*_cauchy_pdf->__cauchy_b_max+0x001;
+    _cauchy_pdf->__cauchy_b=fabs(sin(0.5*3.141592*_cauchy_b));
+    _cauchy_pdf->__cauchy_b=_cauchy_pdf->__cauchy_b*_cauchy_pdf->__cauchy_b_max+0.001;
+    assert(_cauchy_pdf->__cauchy_b>0x00);
+    assert(_cauchy_pdf->__cauchy_b<=_cauchy_pdf->__cauchy_b_max);
 }
 void set_cauchy_input(__cauchy_pdf_t *_cauchy_pdf, __cwcn_type_t _input){
     // #FIXME input [0-1]
     assert(_input>=0-0.01);
     assert(_input<=1+0.01);
     _cauchy_pdf->__cauchy_input=_input*(_cauchy_pdf->__cauchy_input_max-_cauchy_pdf->__cauchy_input_min)+_cauchy_pdf->__cauchy_input_min;
+    assert(_cauchy_pdf->__cauchy_input>=_cauchy_pdf->__cauchy_input_min);
+    assert(_cauchy_pdf->__cauchy_input<=_cauchy_pdf->__cauchy_input_max);
 }
 void cauchy_probability_density(__cauchy_pdf_t *_cauchy_pdf){
     assert(_cauchy_pdf->__cauchy_b > 0);
@@ -567,21 +568,35 @@ void entropycosa_print(void *_ec){
     ((__cauchy_pdf_t *)((__entropycosa_t *)_ec)->__cosa[1])->__print(((__cauchy_pdf_t *)((__entropycosa_t *)_ec)->__cosa[1]));
 }
 void entropycosa_forward(void *_ec, __cwcn_type_t *_param_vect){
+    printf("waka suspect pointer 1: %p\n",_param_vect);
     __cwcn_type_t _ec_delta;
+    __cwcn_type_t *c_param=malloc(0x0F*sizeof(__cwcn_type_t)); // #FIXME might overflow
+    printf("waka suspect pointer 2: %p\n",_param_vect);
     _ec_delta=0x00;
     while(0x01){
-        ((__beta_pdf_t *)((__entropycosa_t *)_ec)->__cosa[0])->__forward(((__entropycosa_t *)_ec)->__cosa[0], _param_vect[0]+_ec_delta, _param_vect[1]+_ec_delta);
+        c_param[0]=_param_vect[0]+_ec_delta;
+        c_param[1]=_param_vect[1]+_ec_delta;
+        ((__beta_pdf_t *)((__entropycosa_t *)_ec)->__cosa[0])->__forward(((__entropycosa_t *)_ec)->__cosa[0], c_param[0],c_param[1]);
+    printf("waka suspect pointer 3: %p [%.2f,%.2f]\n",_param_vect, c_param[0], c_param[1]);
         if(!((__beta_pdf_t *)((__entropycosa_t *)_ec)->__cosa[0])->__is_nan){break;}
-        _ec_delta+=0.01;
+        _ec_delta+=0.05;
     }
+    printf("waka suspect pointer 4: %p\n",_param_vect);
     _ec_delta=0x00;
     while(0x01){
-	    ((__cauchy_pdf_t *)((__entropycosa_t *)_ec)->__cosa[1])->__forward(((__entropycosa_t *)_ec)->__cosa[1], _param_vect[2]+_ec_delta, _param_vect[3]+_ec_delta);
+        c_param[2]=_param_vect[2]+_ec_delta;
+        c_param[3]=_param_vect[3]+_ec_delta;
+	    ((__cauchy_pdf_t *)((__entropycosa_t *)_ec)->__cosa[1])->__forward(((__entropycosa_t *)_ec)->__cosa[1], c_param[2], c_param[3]);
         if(!((__cauchy_pdf_t *)((__entropycosa_t *)_ec)->__cosa[1])->__is_nan){break;}
         _ec_delta+=0.01;
+    printf("waka suspect pointer 5: %p\n",_param_vect);
     }
+    printf("waka suspect pointer 6: %p\n",_param_vect);
     ((__entropycosa_t *)_ec)->__entropy=(((__beta_pdf_t *)((__entropycosa_t *)_ec)->__cosa[0])->__entropy+((__cauchy_pdf_t *)((__entropycosa_t *)_ec)->__cosa[1])->__entropy)/2;
     entropycosa_tsane(_ec);
+    free(c_param);
+    c_param=NULL;
+    printf("waka suspect pointer 7: %p\n",_param_vect);
 }
 __entropycosa_t *entropycosa_fabric(unsigned int _d_res, unsigned int _n_tsane){
     __entropycosa_t *new_ec = malloc(sizeof(__entropycosa_t));

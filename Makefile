@@ -97,7 +97,7 @@ _tsinuu_test:
 	$(CC) $(TSINUU_TEST_TARGETS) -I $(TSINUU_)/ -lm -Wall -o $(ROOT)/_tsinuu_test
 	$(ROOT)/_tsinuu_test 
 _duuruva_test:
-	$(CC) $(DUURUVA_TEST_TARGETS) -I $(DUURUVA_)/ -lm -Wall -o $(ROOT)/_duuruva_test
+	$(CC) $(DUURUVA_TEST_TARGETS) -I $(DUURUVA_)/ -I -lm -Wall -o $(ROOT)/_duuruva_test
 	$(ROOT)/_duuruva_test
 clean:
 	rm -f $(ROOT)/_kalamar_test $(ROOT)/_wikimyei_test $(ROOT)/_entropy_test $(ROOT)/_tsinuu_test $(ROOT)/_duuruva_test

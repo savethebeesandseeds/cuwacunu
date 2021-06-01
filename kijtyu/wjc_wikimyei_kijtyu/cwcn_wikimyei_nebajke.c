@@ -62,8 +62,19 @@ void ___entropy_hash(__wikimyei_t *_wikimyei){
 	/*	entropy */
 	/*	 */
     // #FIXME add assertions
+    printf("waka dao\n");
+    printf("waka din 2.0 head: %p, tryry: %p, sizeof trayectory pointer %ld, sizeof queue pointer: %ld\n",_wikimyei->__load_head,_wikimyei->__load_head->__trayectory_item,sizeof(__trayectory_t), sizeof(__load_queue_t));
+    printf("waka diybke  glti(_wikimyei): %p, glti(_wikimyei)->__uwaabo_state: %p\n",glti(_wikimyei),glti(_wikimyei)->__uwaabo_state);
     _wikimyei->__ec->__forward(_wikimyei->__ec, glti(_wikimyei)->__uwaabo_state);
+    printf("waka din\n");
+    printf("waka diybke  glti(_wikimyei): %p\n",glti(_wikimyei));
+    printf("waka din 2 head: %p, tryry: %p, sizeof trayectory pointer %ld, sizeof queue pointer: %ld\n",_wikimyei->__load_head,_wikimyei->__load_head->__trayectory_item,sizeof(__trayectory_t), sizeof(__load_queue_t));
+    printf("waka diybke  glti(_wikimyei)->__uwaabo_state: %p\n",glti(_wikimyei)->__uwaabo_state);
+    printf("waka diybke  glti(_wikimyei)->__uwaabo_state: %p\n",glti(_wikimyei)->__uwaabo_state);
+    printf("waka din 1 %f\n",_wikimyei->__ec->__entropy);
+    printf("waka din 3 %f\n",glti(_wikimyei)->__entropy);
     glti(_wikimyei)->__entropy=_wikimyei->__ec->__entropy;
+    printf("waka tao\n");
     #ifdef WIKIMYEI_DEBUG
         fprintf(stdout,">> > load_index: [%d] ... ___entropy_hash,\tentropy:%f\n",_wikimyei->__load_index,glti(_wikimyei)->__entropy);
     #endif
@@ -176,47 +187,49 @@ void ___munaajpi_duuruva_hash(__wikimyei_t *_wikimyei){
 void wikimyei_relive_one(__wikimyei_t *_wikimyei){
     // #FIXME add assertions
     assert(_wikimyei->__flags->__done);
-    assert(!_wikimyei->__flags->__noob_load);
     assert(glti(_wikimyei)->__pending_munaajpi_index<=_wikimyei->__horizon_munaajpi); // no live requires munaajpi done
     #ifdef WIKIMYEI_DEBUG
-        fprintf(stdout,">> > load_index: [%d] ... wikimyei_relive_one\n",_wikimyei->__load_index);
+    fprintf(stdout,">> > ... %s wikimyei_[RE]-live_one --- --- --- --- --- --- --- --- --- --- --- LOAD: %s%d\n",COLOR_DANGER,COLOR_REGULAR,_wikimyei->__load_size);
+    fprintf(stdout,">> > ... load_index: [%d] ... wikimyei_relive_one\n",_wikimyei->__load_index);
     #endif
     _wikimyei->__flags->__done=___CWCN_FALSE;
     ___alliu_duuruva_hash(_wikimyei); //for duuruva update porpouses
     ___uwaabo_hash(_wikimyei);
     ___entropy_hash(_wikimyei);
     ___tsane_dehash(_wikimyei); // #FIXME maybe one wants to keep track
-    ...// ___munaajpi_hash(_wikimyei);
+    // # no set pending munaajpi seems correct
+    _wikimyei->__flags->__done=___CWCN_TRUE;
 }
 void wikimyei_live_one(__wikimyei_t *_wikimyei){
     // #FIXME add assertions
     #ifdef WIKIMYEI_DEBUG
-        fprintf(stdout,">> > %s--- --- --- --- --- --- --- --- --- --- --- LOAD: %s%d\n",COLOR_DANGER,COLOR_REGULAR,_wikimyei->__load_size);
-        fprintf(stdout,">> > load_index: [%d] ... wikimyei_live_one\n",_wikimyei->__load_index);
+    fprintf(stdout,">> > ... %s wikimyei_live_one --- --- --- --- --- --- --- --- --- --- --- LOAD: %s%d\n",COLOR_DANGER,COLOR_REGULAR,_wikimyei->__load_size);
+    fprintf(stdout,">> > ... load_index: [%d] ... wikimyei_live_one\n",_wikimyei->__load_index);
     #endif
-    // #FIXME where else is the new trayectory?, seems fine
-    if(!_wikimyei->__flags->__noob_load){
-        printf(">> > load_index: [%d] ... request to enqueue...\n",_wikimyei->__load_index);
-        assert(!load_enqueue_trayectory(_wikimyei, trayectory_fabric(_wikimyei)));
-    }
     #ifdef WIKIMYEI_DEBUG
-        fprintf(stdout,">> > load_index: [%d] ... start with flags:\n",_wikimyei->__load_index);
-        printflags(_wikimyei);
+    fprintf(stdout,">> > ... load_index: [%d] ... starting with flags:\n",_wikimyei->__load_index);
+    printflags(_wikimyei);
     #endif
+    printf(">> > ... load_index: [%d] ... request to enqueue...\n",_wikimyei->__load_index);
+    assert(!load_enqueue_trayectory(_wikimyei, trayectory_fabric(_wikimyei)));
     _wikimyei->__flags->__done=___CWCN_FALSE;
     // clock_t begin;
     // clock_t end;
+    printf("waka din 2 head: %p, tryry: %p, sizeof trayectory pointer %ld, sizeof queue pointer: %ld\n",_wikimyei->__load_head,_wikimyei->__load_head->__trayectory_item,sizeof(__trayectory_t), sizeof(__load_queue_t));
     ___alliu_hash(_wikimyei);
+    printf("waka din 2 head: %p, tryry: %p, sizeof trayectory pointer %ld, sizeof queue pointer: %ld\n",_wikimyei->__load_head,_wikimyei->__load_head->__trayectory_item,sizeof(__trayectory_t), sizeof(__load_queue_t));
     ___alliu_duuruva_hash(_wikimyei);
+    printf("waka din 2 head: %p, tryry: %p, sizeof trayectory pointer %ld, sizeof queue pointer: %ld\n",_wikimyei->__load_head,_wikimyei->__load_head->__trayectory_item,sizeof(__trayectory_t), sizeof(__load_queue_t));
     ___uwaabo_hash(_wikimyei);
+    printf("waka din 2 head: %p, tryry: %p, sizeof trayectory pointer %ld, sizeof queue pointer: %ld\n",_wikimyei->__load_head,_wikimyei->__load_head->__trayectory_item,sizeof(__trayectory_t), sizeof(__load_queue_t));
     ___entropy_hash(_wikimyei);
+    printf("waka din 2 head: %p, tryry: %p, sizeof trayectory pointer %ld, sizeof queue pointer: %ld\n",_wikimyei->__load_head,_wikimyei->__load_head->__trayectory_item,sizeof(__trayectory_t), sizeof(__load_queue_t));
     ___tsane_dehash(_wikimyei);
     // begin=clock();
     // end=clock();
     // printf("\033[1;31m exe time [___tsane_dehash] %f:\033[0m\n", (double)(end-begin)/CLOCKS_PER_SEC);
     set_load_pending_munaajpi(_wikimyei);
     _wikimyei->__flags->__done=___CWCN_TRUE;
-    _wikimyei->__flags->__noob_load=___CWCN_FALSE;
 }
 /*
 
@@ -224,12 +237,13 @@ void wikimyei_live_one(__wikimyei_t *_wikimyei){
 void wikimyei_live_load(__wikimyei_t *_wikimyei, int _size_of_load){
     // #FIXME add assertions
     assert(_size_of_load>0);
-    if(_size_of_load<BUGGER_READY_DUURUVA_COUNT){fprintf(stdout,">> > %sWARNING\t%s load size too small for duuruva ready state...",COLOR_WARNING,COLOR_REGULAR);}
-    empty..._load(_wikimyei);
-    printf("waka start index: %d\n",_wikimyei->__load_index);
-    load_to_start(_wikimyei);
-    printf("waka end index: (eq?) %d\n",_wikimyei->__load_index);
+    empty_load(_wikimyei);
+    printf("%s ENTER TO PRINT TRAYECOTRY POINTERS (after empty):%s\n",COLOR_GOOD,COLOR_REGULAR);
     getchar();
+    load_print_up_trayectory_pointers(_wikimyei);
+    getchar();
+    if(_size_of_load<BUGGER_READY_DUURUVA_COUNT){fprintf(stdout,">> > %sWARNING\t%s w load size too small for duuruva ready state...\n",COLOR_WARNING,COLOR_REGULAR);}
+    load_to_start(_wikimyei);
     // clock_t begin;
     // clock_t end;
     while(_wikimyei->__load_size<_size_of_load){
@@ -248,10 +262,8 @@ void wikimyei_relive_load(__wikimyei_t *_wikimyei){
     assert(_wikimyei->__load_size>0);
     assert(!load_is_empty(_wikimyei));
     if(_wikimyei->__load_size<BUGGER_READY_DUURUVA_COUNT){
-        fprintf(stdout,">> > %sWARNING\t%s load size too small for duuruva ready state...",COLOR_WARNING,COLOR_REGULAR);
+        fprintf(stdout,">> > %sWARNING\t%s load size too small for duuruva ready state...\n",COLOR_WARNING,COLOR_REGULAR);
     }
-    printf("also,load_size: eq?(%d) \n",_wikimyei->__load_size);
-    getchar();
     load_to_start(_wikimyei);
     do{
         if(_wikimyei->__load_index%100==0){

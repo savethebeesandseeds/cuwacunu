@@ -256,34 +256,38 @@ void wikimyei_jkimyei(__wikimyei_t *_wikimyei, unsigned int _epochs){ // Asumes 
 		fprintf(stdout,">> request wikimyei_jkimyei\n");
 	#endif
     // int c_index=_wikimyei->__load_index;
-	__cwcn_type_t *surr1_handler=malloc(sizeof(__cwcn_type_t));
-	__cwcn_type_t *surr2_handler=malloc(sizeof(__cwcn_type_t));
-	__cwcn_type_t *ratio_handler=malloc(sizeof(__cwcn_type_t));
-	__cwcn_type_t *old_uwaabo_handler=malloc(_wikimyei->__uwaabo_state_size*sizeof(__cwcn_type_t));
-    for(unsigned int e_ctx=0x00;e_ctx<_epochs;e_ctx++){
-        #ifdef WIKIMYEI_DEBUG
-            fprintf(stdout,"%s>> > --- --- --- --- --- --- --- --- --- --- --- JKIMYEI EPOCH: %d%s\n",COLOR_DANGER,e_ctx,COLOR_REGULAR);
-        #endif
-	    GAE(_wikimyei); // #FIXME maybe, ¿changes with epoch? ¿not redundant?
-        for(unsigned int l_ctx=0x00;l_ctx<_wikimyei->__load_size;l_ctx++){ // not with while due to rand
+    if(_wikimyei->__load_size>_wikimyei->__horizon_munaajpi){
+        __cwcn_type_t *surr1_handler=malloc(sizeof(__cwcn_type_t));
+        __cwcn_type_t *surr2_handler=malloc(sizeof(__cwcn_type_t));
+        __cwcn_type_t *ratio_handler=malloc(sizeof(__cwcn_type_t));
+        __cwcn_type_t *old_uwaabo_handler=malloc(_wikimyei->__uwaabo_state_size*sizeof(__cwcn_type_t));
+        for(unsigned int e_ctx=0x00;e_ctx<_epochs;e_ctx++){
             #ifdef WIKIMYEI_DEBUG
-                fprintf(stdout,"%s>> > --- --- --- --- --- --- --- --- --- --- --- JKIMYEI EPOCH: %d JK %d%s\n",COLOR_DANGER,e_ctx, l_ctx,COLOR_REGULAR);
+                fprintf(stdout,"%s>> > --- --- --- --- --- --- --- --- --- --- --- JKIMYEI EPOCH: %d%s\n",COLOR_DANGER,e_ctx,COLOR_REGULAR);
             #endif
-            for(unsigned int jk_ctx=0x00;jk_ctx<((__wikimyei_t *)_wikimyei)->__jkimyei->__jk_size;jk_ctx++){
-		        _wikimyei->__jkimyei->__jk_one(
-                    ((void *)_wikimyei),
-                    surr1_handler,
-                    surr2_handler,
-                    ratio_handler,
-                    old_uwaabo_handler);
+            GAE(_wikimyei); // #FIXME maybe, ¿changes with epoch? ¿not redundant?
+            for(unsigned int l_ctx=0x00;l_ctx<_wikimyei->__load_size;l_ctx++){ // not with while due to rand
+                #ifdef WIKIMYEI_DEBUG
+                    fprintf(stdout,"%s>> > --- --- --- --- --- --- --- --- --- --- --- JKIMYEI EPOCH: %d JK %d%s\n",COLOR_DANGER,e_ctx, l_ctx,COLOR_REGULAR);
+                #endif
+                for(unsigned int jk_ctx=0x00;jk_ctx<((__wikimyei_t *)_wikimyei)->__jkimyei->__jk_size;jk_ctx++){
+                    _wikimyei->__jkimyei->__jk_one(
+                        ((void *)_wikimyei),
+                        surr1_handler,
+                        surr2_handler,
+                        ratio_handler,
+                        old_uwaabo_handler);
+                }
             }
         }
-	}
-    // load_to_index(_wikimyei,c_index); // #FIXME, might rise to many index displacements, slow.
-    free(old_uwaabo_handler);
-    free(ratio_handler);
-    free(surr1_handler);
-    free(surr2_handler);
+        // load_to_index(_wikimyei,c_index); // #FIXME, might rise to many index displacements, slow.
+        free(old_uwaabo_handler);
+        free(ratio_handler);
+        free(surr1_handler);
+        free(surr2_handler);
+    }else{
+        fprintf(stdout,">> > ... [skipin] wikimyei_jkimyei, load size is too small, for horizon munaajpi.\n");
+    }
 }
 
 

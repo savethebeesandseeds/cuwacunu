@@ -54,7 +54,7 @@ __tsinuu_t *munaajpi_fabric(unsigned int _munaajpi_base_size, unsigned int _muna
 */
 ___cwcn_bool_t set_load_pending_munaajpi(__wikimyei_t *_wikimyei){
     if(_wikimyei->__load_size<_wikimyei->__horizon_munaajpi){
-        fprintf(stdout,">> > WARNING, load to short...\n");
+        fprintf(stdout,">> > WARNING, request to (set_load_pending_munaajpi) on load to short for horizon_munaajpi...\n");
         return are_munaajpi_pending(_wikimyei);
     }
     // #FIXME include mask
