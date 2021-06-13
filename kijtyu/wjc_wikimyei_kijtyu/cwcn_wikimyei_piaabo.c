@@ -2,12 +2,13 @@
 
 __trayectory_t *trayectory_fabric(__wikimyei_t *_wikimyei){
     __trayectory_t *new_trayectory=malloc(sizeof(__trayectory_t));
-    if(!new_trayectory){
-        fprintf(stderr,"ERROR, unable to allocate memory for new trayectory\n");
-    }
     #ifdef WIKIMYEI_DEBUG
-        fprintf(stdout,">> > ... trayectory_fabric, address: %p\n",new_trayectory);
+        fprintf(stdout,">> > ... request trayectory_fabric, alocated address: %p\n",new_trayectory);
     #endif
+    if(!new_trayectory){
+        fprintf(stderr,"ERROR, program seems unable to allocate memory for requested new trayectory\n");
+        assert(new_trayectory!=NULL);
+    }
     new_trayectory->__pending_munaajpi_index=0x00;
     new_trayectory->__pending_munaajpi=___CWCN_TRUE;
     new_trayectory->__alliu_state=malloc(_wikimyei->__alliu_state_size*sizeof(__cwcn_type_t));
@@ -38,27 +39,39 @@ __trayectory_t *trayectory_fabric(__wikimyei_t *_wikimyei){
     printf("wakaaa tao!!!!!!!\n");
     return new_trayectory;
 }
-__load_queue_t *load_fabric(__wikimyei_t *_wikimyei){
-    #ifdef WIKIMYEI_DEBUG
-        fprintf(stdout,">> > ... request to load_fabric, in load_index: %d\n",_wikimyei->__load_index);
+__load_queue_t *queue_item_fabric(__trayectory_t *_trayectory){
+    __load_queue_t *new_queue_item=malloc(sizeof(__load_queue_t));
+    new_queue_item->__trayectory_item=NULL; // #FIXME, queue_fabric seems unstable by allowing ty_item null
+    new_queue_item->__up=malloc(sizeof(__load_queue_t*));
+    new_queue_item->__down=malloc(sizeof(__load_queue_t*));
+    #ifdef WIKIMYEI_DEBUG_LOAD
+    fprintf(stdout,"\t +++ [queue fabric]: \t\t [head:]%p, [up:]%p, [down:]%p\n",new_queue_item,*new_queue_item->__up,*new_queue_item->__down);
     #endif
+    assert(new_queue_item!=NULL);
+    assert(new_queue_item->__up!=NULL);
+    assert(new_queue_item->__down!=NULL);
+    
+    new_queue_item->__trayectory_item=_trayectory;
+    
+    return new_queue_item;
+}
+__load_queue_t *load_fabric(__wikimyei_t *_wikimyei){
     // if(_wikimyei->__load_index!=-1){
     //     fprintf(stderr,">> > ERROR, unable to fabric load, fabric has been set");
     //     assert(0x00);
     // }
-    assert(_wikimyei->__load_up==NULL);
-    assert(_wikimyei->__load_down==NULL);
-    assert(_wikimyei->__load_head==NULL);
-    __load_queue_t *new_load=malloc(sizeof(__load_queue_t));
-    assert(new_load!=NULL);
-    new_load->__trayectory_item=trayectory_fabric(_wikimyei);
-    new_load->__down=NULL;
-    new_load->__up=NULL;
-    _wikimyei->__load_index=-1;
+    assert(load_is_empty(_wikimyei));
+
+    #if defined(WIKIMYEI_DEBUG) || defined(WIKIMYEI_DEBUG_LOAD)
+        fprintf(stdout,">> > ... request to [load_fabric], at load_index: %d\n",_wikimyei->__load_index);
+    #endif
+    __load_queue_t *new_head=queue_item_fabric(trayectory_fabric(_wikimyei));
+    
+    _wikimyei->__load_index=0x00;
     _wikimyei->__load_size=0x01;
     _wikimyei->__flags->__endhead_empty_alliu=___CWCN_TRUE;
     _wikimyei->__flags->__nonuwaabo_alliu_done=___CWCN_FALSE;
-    return new_load;
+    return new_head;
 }
 __wikimyei_t *wikimyei_fabric(
         __alliu_source_t _alliu_source,
@@ -147,15 +160,24 @@ __wikimyei_t *wikimyei_fabric(
     #else
     new_wikimyei->__flags->__norm_stand=0x00;
     #endif
-    new_wikimyei->__load_up=NULL;
+    new_wikimyei->__load_head=malloc(sizeof(__load_queue_t));
     new_wikimyei->__load_head=NULL;//load_fabric(new_wikimyei);
-    new_wikimyei->__load_down=NULL;
+    // new_wikimyei->__load_up=malloc(sizeof(*__load_queue_t));
+    // new_wikimyei->__load_down=malloc(sizeof(*__load_queue_t));
+    // assert(new_wikimyei->__load_up!=NULL);
+    // assert(new_wikimyei->__load_down!=NULL);
+    // new_wikimyei->__load_up=NULL;
+    // new_wikimyei->__load_down=NULL;
+    
+    assert(load_is_healty(new_wikimyei));
+    assert(load_is_empty(new_wikimyei));
+
     new_wikimyei->__munaajpi_base_w_state=malloc(new_wikimyei->__munaajpi_base_size*sizeof(__cwcn_type_t));
 
     return new_wikimyei;
 }
 ___cwcn_bool_t all_duuruva_ready(__wikimyei_t *_wikimyei){
-    #ifdef JKIMYEI_DEBUG
+    #if defined(JKIMYEI_DEBUG) || defined(DUURUVA_DEBUG)
         fprintf(stdout,"\x1B[0;35m>> > adventage_duuruva_ready: %d, munaajpi_duuruva_ready: %d, alliu_duuruva_ready: %d %s\n",_wikimyei->__flags->__adventage_duuruva_ready, _wikimyei->__flags->__munaajpi_duuruva_ready,_wikimyei->__flags->__alliu_duuruva_ready,COLOR_REGULAR);
     #endif
     return  _wikimyei->__flags->__adventage_duuruva_ready&&\
@@ -166,52 +188,66 @@ ___cwcn_bool_t all_duuruva_ready(__wikimyei_t *_wikimyei){
     LOAD QUEUE
 */
 int load_go_up(__wikimyei_t *_wikimyei){
-    assert(_wikimyei->__load_head!=NULL);
-    #ifdef WIKIMYEI_DEBUG_v5
+    #ifdef WIKIMYEI_DEBUG_LOAD
     fprintf(stdout,">> > ... request to go [up] on load index [%d]\n",_wikimyei->__load_index);
-    if(_wikimyei->__load_head->__head==NULL){fprintf(stdout,">> > ... (return -1) on load index [%d] \t [is NULL]  load_head: %p\n",_wikimyei->__load_index,_wikimyei->__load_head);}
-    if(_wikimyei->__load_head->__down==NULL){fprintf(stdout,">> > ... (return -1) on load index [%d] \t [is NULL]  load_down: %p\n",_wikimyei->__load_index,_wikimyei->__load_head->__down);}
-    if(_wikimyei->__load_head->__up==NULL){fprintf(stdout,">> > ... (return -1) on load index [%d] \t [is NULL]  load_up: %p\n",_wikimyei->__load_index,_wikimyei->__load_head->__up);}
     #endif
-    if(_wikimyei->__load_up==NULL){return -0x01;}
+    if(load_is_empty(_wikimyei)){
+        #ifdef WIKIMYEI_DEBUG_LOAD
+        fprintf(stdout,"\t [return -1] load is empty\n");
+        #endif
+        return -0x01;
+    }
+    #ifdef WIKIMYEI_DEBUG_LOAD
+    if(load_on_end(_wikimyei)){fprintf(stdout,"\t[go_up will return -1] on load index [%d] \t (is NULL)  load_up: %p\n",_wikimyei->__load_index,*_wikimyei->__load_head->__up);}
+    #endif
+    if(load_on_end(_wikimyei)){
+        assert(load_on_end(_wikimyei));
+        return -0x01;
+    }
     _wikimyei->__load_index+=0x01;
-    _wikimyei->__load_head=_wikimyei->__load_up;
-    assert(_wikimyei->__load_index<_wikimyei->__load_size);
+    _wikimyei->__load_head=*_wikimyei->__load_head->__up;
     return 0x00;
 }
 int load_go_down(__wikimyei_t *_wikimyei){
-    #ifdef WIKIMYEI_DEBUG_v5
-    fprintf(stdout,">> > ... going [down] on load index [%d]\n",_wikimyei->__load_index);
-    if(_wikimyei->__load_head==NULL){fprintf(stdout,">> > ... (return -1) [down] on load index [%d] \t load_head==NULL \t%p\n",_wikimyei->__load_index,_wikimyei->__load_head);}
-    else if(_wikimyei->__load_down==NULL){fprintf(stdout,">> > ... (return -1) [down] on load index [%d] \t __load_down==NULL \t%p\n",_wikimyei->__load_index,_wikimyei->__load_down);}
+    #ifdef WIKIMYEI_DEBUG_LOAD
+    fprintf(stdout,">> > ... request to go [down] on load index [%d]\n",_wikimyei->__load_index);
     #endif
-    assert(_wikimyei->__load_head!=NULL);
-    assert(_wikimyei->__load_index<0);
-    if(_wikimyei->__load_down==NULL){return -0x01;}
-    __load_queue_t *c_head=_wikimyei->__load_head;
+    if(load_is_empty(_wikimyei)){
+        #ifdef WIKIMYEI_DEBUG_LOAD
+        fprintf(stdout,"\t [return -1] load is empty\n");
+        #endif
+        return -0x01;
+    }
+    #ifdef WIKIMYEI_DEBUG_LOAD
+    if(load_on_start(_wikimyei)){fprintf(stdout,"\t load_go_down will [return -1] for load index [%d] (is NULL): [load_down:] %p\n",_wikimyei->__load_index,*_wikimyei->__load_head->__down);}
+    #endif
+    if(load_on_start(_wikimyei)){
+        assert(load_on_start(_wikimyei));
+        return -0x01;
+    }
     _wikimyei->__load_index+=-0x01;
-    _wikimyei->__load_head=_wikimyei->__load_down;
-    _wikimyei->__load_up=c_head;
+    _wikimyei->__load_head=*_wikimyei->__load_head->__down;
     return 0x00;
 }
 void load_to_start(__wikimyei_t *_wikimyei){
-    while(load_go_down(_wikimyei)!=-1){}
-    #ifdef WIKIMYEI_DEBUG_v2
+    #ifdef WIKIMYEI_DEBUG_LOAD
         fprintf(stdout,">> > ... load_to_start ; c_index: [%d]\n",_wikimyei->__load_index);
     #endif
+    while(load_go_down(_wikimyei)!=-1){}
+    assert(load_on_start(_wikimyei));
 }
 void load_to_end(__wikimyei_t *_wikimyei){
-    while(load_go_up(_wikimyei)!=-1){}
-    #ifdef WIKIMYEI_DEBUG_v2
+    #ifdef WIKIMYEI_DEBUG_LOAD
         fprintf(stdout,">> > ... load_to_end ; c_index: [%d]\n",_wikimyei->__load_index);
     #endif
+    while(load_go_up(_wikimyei)!=-1){}
+    assert(load_on_end(_wikimyei));
 }
 void load_to_index(__wikimyei_t *_wikimyei, int _index){
     assert(_index<_wikimyei->__load_size);
     if(!load_is_empty(_wikimyei)){
         if(_wikimyei->__load_size<_index){
             fprintf(stdout, ">> WARNING: requested load index [%d] is unreachable on load size [%d].\n",_index,_wikimyei->__load_size);
-            getchar();
         }
         if(_wikimyei->__load_index<_index){
             while(_wikimyei->__load_index!=_index){
@@ -226,35 +262,46 @@ void load_to_index(__wikimyei_t *_wikimyei, int _index){
                 }
             }
         }
-        #ifdef WIKIMYEI_DEBUG_v5
+        #ifdef WIKIMYEI_DEBUG_LOAD
             fprintf(stdout,">> > ... load_to_index ; commanded: [%d] ; c_index: [%d]\n",_index, _wikimyei->__load_index);
         #endif
     }
-    #ifdef WIKIMYEI_DEBUG_v5
+    #ifdef WIKIMYEI_DEBUG_LOAD
     else{fprintf(stdout,">> > ... load_to_index avoided due to noob load, load_to_index ; commanded: [%d] ; c_index: [%d]\n",_index, _wikimyei->__load_index);}
     #endif
 }
-int load_enqueue_trayectory(__wikimyei_t *_wikimyei, __trayectory_t *_new_trayectory){
-    load_to_end(_wikimyei);
-    __load_queue_t *new_head=malloc(sizeof(__load_queue_t));
-    assert(new_head!=NULL);
-    assert(_new_trayectory!=NULL);
-    #ifdef WIKIMYEI_DEBUG_v4
-    fprintf(stdout,">> > +++ enqueued: \t head: %p, \t trayectory: %p\n",new_head, _new_trayectory);
+int yield_next_trayectory(__wikimyei_t *_wikimyei){
+    #ifdef WIKIMYEI_DEBUG
+    fprintf(stdout,">> > ... request to yield_next_trayectory\n");
     #endif
-    new_head->__trayectory_item=_new_trayectory;
-    _wikimyei->__load_down=_wikimyei->__load_head;
-    _wikimyei->__load_head=new_head;
-    _wikimyei->__load_up=NULL;
-    _wikimyei->__load_index+=0x01;
-    _wikimyei->__load_size+=0x01;
-    _wikimyei->__flags->__endhead_empty_alliu=___CWCN_TRUE;
-    _wikimyei->__flags->__nonuwaabo_alliu_done=___CWCN_FALSE;
-    #ifdef WIKIMYEI_DEBUG_v4
+    assert(load_is_healty(_wikimyei));
+    if(load_is_empty(_wikimyei)){
+        assert(load_is_empty(_wikimyei));
+        _wikimyei->__load_head=load_fabric(_wikimyei);
+        *_wikimyei->__load_head->__down=NULL;
+        *_wikimyei->__load_head->__up=NULL;
+    }else{
+        load_to_end(_wikimyei);
+        __load_queue_t *new_head=queue_item_fabric(trayectory_fabric(_wikimyei));
+        *new_head->__down=_wikimyei->__load_head;
+        *new_head->__up=NULL;
+        *_wikimyei->__load_head->__up=new_head;
+        _wikimyei->__load_head=new_head;
+        _wikimyei->__load_index+=0x01;
+        _wikimyei->__load_size+=0x01;
+        _wikimyei->__flags->__endhead_empty_alliu=___CWCN_TRUE;
+        _wikimyei->__flags->__nonuwaabo_alliu_done=___CWCN_FALSE;
+        fprintf(stdout,"   .     load index: [%d] :: head: %p, \tup: %p, \tdown: %p \ttryty: %p\n", _wikimyei->__load_index, _wikimyei->__load_head, *_wikimyei->__load_head->__up, *_wikimyei->__load_head->__down, _wikimyei->__load_head->__trayectory_item);
+    }
+    #ifdef WIKIMYEI_DEBUG_LOAD
+    fprintf(stdout,"\t +++ [trayectory enqueued]: \t [head:] %p, \t [up:] %p, \t [down:] %p, \t [trayectory:] %p\n",_wikimyei->__load_head,*_wikimyei->__load_head->__up,*_wikimyei->__load_head->__down, _wikimyei->__load_head->__trayectory_item);
+    #endif
+
+    #ifdef WIKIMYEI_DEBUG_LOAD
     fprintf(stdout,"\t [enque (head) (up==NULL)] trayectory in load index: %d address: %p\n",_wikimyei->__load_index,_wikimyei->__load_head->__trayectory_item);
     #endif
     #ifdef WIKIMYEI_DEBUG_v2
-        fprintf(stdout,">> > .+. load_enqueue_trayectory, c_load_index:%d, c_load_size:%d\n", _wikimyei->__load_index, _wikimyei->__load_size);
+    fprintf(stdout,">> > ... yield_next_trayectory, c_load_index:%d, c_load_size:%d\n", _wikimyei->__load_index, _wikimyei->__load_size);
     #endif
     return 0x00;
 }
@@ -265,21 +312,20 @@ __trayectory_t *glti(__wikimyei_t *_wikimyei){
     return get_load_trayectory_item(_wikimyei);
 }
 __trayectory_t *get_load_trayectory_item_from_index(__wikimyei_t *_wikimyei, int _index, ___cwcn_bool_t _rneturn){
-    // _rneturn marks the flag to allow load_head displacement to index  
+    // _rneturn holds the flag to rever the head index displacement
+
     // fprintf(stdout,"__load_index<_index && __load_index<__load_size \t %d < %d  &&  %d < %d\n",_wikimyei->__load_index,_index, _wikimyei->__load_index,_wikimyei->__load_size);
     // fprintf(stdout,"__load_index>_index && __load_index<__load_size \t %d > %d  &&  %d < %d\n",_wikimyei->__load_index,_index, _wikimyei->__load_index,_wikimyei->__load_size);
     #ifdef WIKIMYEI_DEBUG_v2
         fprintf(stdout,">> > ... get_load_trayectory_item_from_index\n");
     #endif
-    __trayectory_t *rnetrival=NULL;
+    __trayectory_t *rnetrival=NULL; // #FIXME, c noob knows not about this function
     if(load_is_empty(_wikimyei)){return rnetrival;}
     int start_index=_wikimyei->__load_index;
-    while(_wikimyei->__load_index<_index && _wikimyei->__load_index<_wikimyei->__load_size-0x01){load_go_up(_wikimyei);}// #FIXME assert this method insted of load_go_index
-    while(_wikimyei->__load_index>_index && _wikimyei->__load_index<_wikimyei->__load_size-0x01){load_go_down(_wikimyei);}
+    load_to_index(_wikimyei, _index);
     rnetrival=_wikimyei->__load_head->__trayectory_item;
     if(!_rneturn){
-        while(_wikimyei->__load_index<start_index && _wikimyei->__load_index<_wikimyei->__load_size-0x01){load_go_up(_wikimyei);}
-        while(_wikimyei->__load_index>start_index && _wikimyei->__load_index<_wikimyei->__load_size-0x01){load_go_down(_wikimyei);}
+        load_to_index(_wikimyei,start_index);
     }
     return rnetrival;
 }
@@ -290,7 +336,7 @@ void load_print_up_trayectory_pointers(__wikimyei_t *_wikimyei){
         int c_index=_wikimyei->__load_index;
         load_to_start(_wikimyei);
         if(!load_is_empty(_wikimyei)){do{
-            fprintf(stdout,"\t load index: [%d] :: head: %p, \tup: %p, \tdown: %p \ttryty: %p\n", _wikimyei->__load_index, _wikimyei->__load_head, _wikimyei->__load_up, _wikimyei->__load_down, _wikimyei->__load_head->__trayectory_item);
+            fprintf(stdout,"   .     load index: [%d] :: head: %p, \tup: %p, \tdown: %p \ttryty: %p\n", _wikimyei->__load_index, _wikimyei->__load_head, *_wikimyei->__load_head->__up, *_wikimyei->__load_head->__down, _wikimyei->__load_head->__trayectory_item);
         }while(load_go_up(_wikimyei)!=-1);}
         load_to_index(_wikimyei, c_index);
     }
@@ -321,31 +367,138 @@ void load_print_down_trayectory_queue(__wikimyei_t *_wikimyei){
 }
 /*
 */
+___cwcn_bool_t load_on_end(__wikimyei_t *_wikimyei){
+    return _wikimyei->__load_index-_wikimyei->__load_size==-1;
+}
+___cwcn_bool_t load_on_start(__wikimyei_t *_wikimyei){
+    return _wikimyei->__load_index==0;
+}
+___cwcn_bool_t load_on_noob(__wikimyei_t *_wikimyei){
+    return load_on_start(_wikimyei) && load_on_end(_wikimyei);
+}
+___cwcn_bool_t load_is_healty(__wikimyei_t *_wikimyei){
+    if(load_is_empty(_wikimyei)){
+        #ifdef WIKIMYEI_DEBUG_HEALT
+        fprintf(stdout,"%s\t [empty load]: \tH E A L T\
+        \n\t\tindex: \t\t\t\t\t\t%d, \
+        \n\t\tload_is_empty(): \t\t\t\t\t%s %s\n", \
+        COLOR_HEALT,\
+        _wikimyei->__load_index,\
+        print_cwcn_bool((load_is_empty(_wikimyei))),\
+        COLOR_REGULAR\
+        );
+        #endif
+        return ___CWCN_TRUE;
+    } else {
+        if(load_on_noob(_wikimyei)){
+            #ifdef WIKIMYEI_DEBUG_HEALT
+fprintf(stdout,"\t %s[noob load]: \tH E A L T\
+\n\t\tindex: \t\t\t\t\t\t%d, \
+\n\t\t_wikimyei->__load_head!=NULL: \t\t\t\t%s \t&&\
+\n\t\t_wikimyei->__load_head->__trayectory_item!=NULL: \t%s \t&&\
+\n\t\t*_wikimyei->__load_head->__up==NULL: \t\t\t%s \t&&\
+\n\t\t*_wikimyei->__load_head->__down==NULL, \t\t\t%s \t&&\
+\n\t\t_wikimyei->__load_index<_wikimyei->__load_size: \t%s \t&&\
+\n\t\t!load_is_empty: \t\t\t\t\t%s%s\n",\
+                            COLOR_HEALT,
+                            _wikimyei->__load_index,\
+                            print_cwcn_bool((_wikimyei->__load_head!=NULL)),\
+                            print_cwcn_bool((_wikimyei->__load_head->__trayectory_item!=NULL)),\
+                            print_cwcn_bool((*_wikimyei->__load_head->__up==NULL)),\
+                            print_cwcn_bool((*_wikimyei->__load_head->__down==NULL)),\
+                            print_cwcn_bool((_wikimyei->__load_index<_wikimyei->__load_size)),\
+                            print_cwcn_bool((!load_is_empty(_wikimyei))),
+                            COLOR_REGULAR
+                            );
+            #endif
+            return  _wikimyei->__load_head!=NULL &&\
+                    _wikimyei->__load_head->__trayectory_item!=NULL &&\
+                    *_wikimyei->__load_head->__up==NULL &&\
+                    *_wikimyei->__load_head->__down==NULL &&\
+                    _wikimyei->__load_index<_wikimyei->__load_size &&\
+                    !load_is_empty(_wikimyei);
+        }else if(load_on_end(_wikimyei)){
+            #ifdef WIKIMYEI_DEBUG_HEALT
+fprintf(stdout,"%s\t [up extrema]: \tH E A L T\
+\n\t\tindex: \t\t\t\t\t\t%d, \
+\n\t\t_wikimyei->__load_head!=NULL: \t\t\t\t%s \t&&\
+\n\t\t_wikimyei->__load_head->__trayectory_item!=NULL: \t%s \t&&\
+\n\t\t*_wikimyei->__load_head->__up==NULL: \t\t\t%s \t&&\
+\n\t\t_wikimyei->__load_index<_wikimyei->__load_size: \t%s \t&&\
+\n\t\t!load_is_empty: \t\t\t\t\t%s%s\n",\
+                            COLOR_HEALT,
+                            _wikimyei->__load_index,\
+                            print_cwcn_bool((_wikimyei->__load_head!=NULL)),\
+                            print_cwcn_bool((_wikimyei->__load_head->__trayectory_item!=NULL)),\
+                            print_cwcn_bool((*_wikimyei->__load_head->__up==NULL)),\
+                            print_cwcn_bool((_wikimyei->__load_index<_wikimyei->__load_size)),\
+                            print_cwcn_bool((!load_is_empty(_wikimyei))),
+                            COLOR_REGULAR);
+            #endif
+            return  _wikimyei->__load_head!=NULL &&\
+                    _wikimyei->__load_head->__trayectory_item!=NULL &&\
+                    *_wikimyei->__load_head->__up==NULL &&\
+                    _wikimyei->__load_index<_wikimyei->__load_size &&\
+                    !load_is_empty(_wikimyei);
+        } else if(load_on_start(_wikimyei)){
+            #ifdef WIKIMYEI_DEBUG_HEALT
+fprintf(stdout,"%s\t [down extrema]: \tH E A L T\
+\n\t\tindex: \t\t\t\t\t\t%d, \
+\n\t\t_wikimyei->__load_head!=NULL: \t%s \t&&\
+\n\t\t_wikimyei->__load_head->__trayectory_item!=NULL: \t%s \t&&\
+\n\t\t*_wikimyei->__load_head->__down==NULL: \t\t\t%s \t&&\
+\n\t\t_wikimyei->__load_index<_wikimyei->__load_size: \t%s \t&&\
+\n\t\t!load_is_empty: \t\t\t\t\t%s%s\n",\
+                            COLOR_HEALT,
+                            (_wikimyei->__load_index),
+                            print_cwcn_bool((_wikimyei->__load_head!=NULL)),\
+                            print_cwcn_bool((_wikimyei->__load_head->__trayectory_item!=NULL)),\
+                            print_cwcn_bool((*_wikimyei->__load_head->__down==NULL)),\
+                            print_cwcn_bool((_wikimyei->__load_index<_wikimyei->__load_size)),\
+                            print_cwcn_bool((!load_is_empty(_wikimyei))),
+                            COLOR_REGULAR);
+            #endif
+            return  _wikimyei->__load_head!=NULL &&\
+                    _wikimyei->__load_head->__trayectory_item!=NULL &&\
+                    *_wikimyei->__load_head->__down==NULL &&\
+                    _wikimyei->__load_index<_wikimyei->__load_size &&\
+                    !load_is_empty(_wikimyei);
+        } else {
+            #ifdef WIKIMYEI_DEBUG_HEALT
+fprintf(stdout,"%s\t[no extrema]: \tH E A L T\
+\n\t\tindex: \t\t\t\t\t\t%d, \
+\n\t\t_wikimyei->__load_head!=NULL: \t\t\t\t%s \t&&\
+\n\t\t_wikimyei->__load_head->__trayectory_item!=NULL: \t%s \t&&\
+\n\t\t_wikimyei->__load_index<_wikimyei->__load_size: \t%s \t&&\
+\n\t\t!load_is_empty: \t\t\t\t\t%s%s\n",\
+                            COLOR_HEALT,
+                            _wikimyei->__load_index,\
+                            print_cwcn_bool((_wikimyei->__load_head!=NULL)),\
+                            print_cwcn_bool((_wikimyei->__load_head->__trayectory_item!=NULL)),\
+                            print_cwcn_bool((_wikimyei->__load_index<_wikimyei->__load_size)),\
+                            print_cwcn_bool((!load_is_empty(_wikimyei))),
+                            COLOR_REGULAR);
+            #endif
+            return  _wikimyei->__load_head!=NULL &&\
+                    _wikimyei->__load_head->__trayectory_item!=NULL &&\
+                    _wikimyei->__load_index<_wikimyei->__load_size &&\
+                    !load_is_empty(_wikimyei); // empty load is NOT healty
+        }
+    }
+}
 ___cwcn_bool_t load_is_empty(__wikimyei_t *_wikimyei){
     assert(_wikimyei->__load_index<_wikimyei->__load_size);
-    if(_wikimyei->__load_head==NULL){
+    if(_wikimyei->__load_head==NULL){ // #FIXME, add checks for ** pointer chain
         assert(_wikimyei->__load_head==NULL);
-        assert(_wikimyei->__load_up==NULL);
-        assert(_wikimyei->__load_down==NULL);
-        assert(_wikimyei->__load_index==-1);
+        assert(_wikimyei->__load_index==-0x01);
         assert(_wikimyei->__load_size==0);
         return ___CWCN_TRUE;
-    }else{return ___CWCN_FALSE;}
-}
-void empty_load(__wikimyei_t *_wikimyei){
-    #ifdef WIKIMYEI_DEBUG
-    fprintf(stdout,">> > ... request to empty_load\n");
-    #endif
-    if(!load_is_empty(_wikimyei)){
-        kill_load(_wikimyei);
     }else{
-        #ifdef WIKIMYEI_DEBUG
-        fprintf(stdout,"\t [found empty load]\n");
-        #endif
+        assert(_wikimyei->__load_head!=NULL);
+        assert(_wikimyei->__load_index>=0);
+        assert(_wikimyei->__load_size>0);
+        return ___CWCN_FALSE;
     }
-    assert(_wikimyei->__load_head==NULL);
-    assert(load_is_empty(_wikimyei));
-    _wikimyei->__flags->__done=___CWCN_FALSE;
 }
 /*
 */
@@ -363,98 +516,88 @@ void kill_trayectory(__trayectory_t *_trayectory){
     free(_trayectory->__imibajcho_munaajpi_duuruva_state);  _trayectory->__imibajcho_munaajpi_duuruva_state=NULL;
     free(_trayectory->__tsane_state);                       _trayectory->__tsane_state=NULL;
     free(_trayectory->__munaajpi_state);                    _trayectory->__munaajpi_state=NULL;
-    free(_trayectory);                                      _trayectory=NULL;
 }
-void load_kill_up(__wikimyei_t *_wikimyei){
-    #ifdef WIKIMYEI_DEBUG_v4
-    fprintf(stdout,">> > ... request to [kill] load index: [%d]\n",_wikimyei->__load_index+1);
+void kill_queue(__load_queue_t *_queue){
+    #ifdef WIKIMYEI_DEBUG_ALOCATION_CLEANING
+    fprintf(stdout,">> > --- [killin queue] \t address: (pass)[head:]%p, (kill)[up:]%p (kill)[down:]%p (kill)[ty:]%p\n",\
+                    _queue,\
+                    _queue->__up,\
+                    _queue->__down,\
+                    _queue->__trayectory_item);
     #endif
-    if(_wikimyei->__load_up!=NULL){
-        if(_wikimyei->__load_up->__trayectory_item!=NULL){
-            #ifdef WIKIMYEI_DEBUG_v4
-            fprintf(stdout,">> > --- [killin up trayectory] \t load index: [%d]\t address: %p\n",_wikimyei->__load_index,_wikimyei->__load_up->__trayectory_item);
-            #endif
-            kill_trayectory(_wikimyei->__load_up->__trayectory_item);
-        }
-        #ifdef WIKIMYEI_DEBUG_v4
-        else{fprintf(stdout,">> > /// [skippin up trayectory] \t load index: [%d]\t\n",_wikimyei->__load_index);}
+    kill_trayectory(_queue->__trayectory_item);
+    free(_queue->__trayectory_item);                        _queue->__trayectory_item=NULL;
+    free(_queue->__down);                                   _queue->__down=NULL;
+    free(_queue->__up);                                     _queue->__up=NULL;
+}
+void empty_queue_on_last(__wikimyei_t *_wikimyei){
+    assert(load_is_healty(_wikimyei));
+    load_to_end(_wikimyei);
+    if(_wikimyei->__load_size>=0x02){
+        load_go_down(_wikimyei); // head is null
+        #if defined(WIKIMYEI_DEBUG) || defined(WIKIMYEI_DEBUG_ALOCATION_CLEANING)
+        fprintf(stdout,"\t [killing load in]: [%d]->__up (load size: %d)\n",_wikimyei->__load_index,_wikimyei->__load_size);
         #endif
-        // if(_wikimyei->__load_down!=NULL){ // #UPdown shit cost me a month!
-        //     #ifdef WIKIMYEI_DEBUG_v4
-        //     fprintf(stdout,">> > --- [killin updown queue] \t load index: [%d]\t address: %p\n",_wikimyei->__load_index,_wikimyei->__load_down);
-        //     #endif
-        //     free(_wikimyei->__load_down);
-        //     _wikimyei->__load_down=NULL;
-        // }
-        // #ifdef WIKIMYEI_DEBUG_v4
-        // else{fprintf(stdout,">> > /// [skippin updown queue] \t load index: [%d]\t address: %p\n",_wikimyei->__load_index,_wikimyei->__load_down);}
-        // #endif
-        #ifdef WIKIMYEI_DEBUG_v4
-        fprintf(stdout,">> > --- [killin up queue] \t\t load index: [%d]\t address: %p\n",_wikimyei->__load_index,_wikimyei->__load_up);
-        #endif
-        free(_wikimyei->__load_up);
-        _wikimyei->__load_up=NULL;
+        assert(!load_on_end(_wikimyei));
+        kill_queue(*_wikimyei->__load_head->__up);
+        free(*_wikimyei->__load_head->__up);
+        *_wikimyei->__load_head->__up=NULL;
+        assert(_wikimyei->__load_head->__up!=NULL);
+        assert(*_wikimyei->__load_head->__up==NULL);
+        assert(_wikimyei->__load_head!=NULL);
+        assert(_wikimyei->__load_size>=0x02);
         _wikimyei->__load_size--;
+        assert(load_is_healty(_wikimyei));
+    } else if(_wikimyei->__load_size==1){
+        #if defined(WIKIMYEI_DEBUG) || defined(WIKIMYEI_DEBUG_ALOCATION_CLEANING)
+        #endif
+        #if defined(WIKIMYEI_DEBUG) || defined(WIKIMYEI_DEBUG_ALOCATION_CLEANING)
+        fprintf(stdout,"\t [killing last queue]: [%d] with (load size: %d)\n",_wikimyei->__load_index,_wikimyei->__load_size);
+        #endif
+        assert(load_on_start(_wikimyei) && load_on_end(_wikimyei));
+        kill_queue(_wikimyei->__load_head);
+        free(_wikimyei->__load_head);
+        _wikimyei->__load_head=NULL;
+        _wikimyei->__load_size--;
+        _wikimyei->__load_index--;
+        assert(load_is_empty(_wikimyei));
+        assert(load_is_healty(_wikimyei)); // #FIXME an empty load is a healty load?
     }
-    #ifdef WIKIMYEI_DEBUG_v4
-    else{fprintf(stdout,">> > /// [skippin up queue] \t\t load index: [%d]\t address: %p\n",_wikimyei->__load_index,_wikimyei->__load_up);}
+    #ifdef WIKIMYEI_DEBUG_ALOCATION_CLEANING
+    else{fprintf(stdout,">> > /// [skippin up queue] \t(item found to be NULL)\t at load index: [%d]\t with address: %p\n",_wikimyei->__load_index,_wikimyei->__load_head->__up);}
     #endif
 }
 void kill_load(__wikimyei_t *_wikimyei){
-    #ifdef WIKIMYEI_DEBUG_v2
+    #if defined(WIKIMYEI_DEBUG) || defined(WIKIMYEI_DEBUG_ALOCATION_CLEANING)
     fprintf(stdout,">> > ... request to kill_load\n");
     #endif
-    if(load_is_empty(_wikimyei)){fprintf(stdout, "\t [found empty load]\n");}
-    else{
-        load_to_end(_wikimyei);
-        #ifdef WIKIMYEI_DEBUG_v4
-        printf(">> > ... The dying trayectory:\n");
-        load_print_up_trayectory_pointers(_wikimyei);
+    if(load_is_empty(_wikimyei)){
+        #if defined(WIKIMYEI_DEBUG)  || defined(WIKIMYEI_DEBUG_ALOCATION_CLEANING)
+        fprintf(stdout, "\t [found empty load]\n");
         #endif
+    } else {
         do{
-            assert(_wikimyei->__load_head!=NULL);
-            load_kill_up(_wikimyei);
-        }while(load_go_down(_wikimyei)!=-1);
-        if(_wikimyei->__load_head!=NULL){
-            if(_wikimyei->__load_head->__trayectory_item!=NULL){
-                #ifdef WIKIMYEI_DEBUG_v4
-                fprintf(stdout,">> > --- [killin haed trayectory] \t load index: [%d]\t address: %p\n",_wikimyei->__load_index,_wikimyei->__load_head->__trayectory_item);
-                #endif
-                kill_trayectory(_wikimyei->__load_head->__trayectory_item);
-            }
-            #ifdef WIKIMYEI_DEBUG_v4
-            else{fprintf(stdout,">> > /// [skippin haed trayectory] \t load index: [%d]\t\n",_wikimyei->__load_index);}
+            empty_queue_on_last(_wikimyei);
+            #ifdef WIKIMYEI_DEBUG_ALOCATION_CLEANING
+            printf("\t [current queue pointer state:]\n");
+            load_print_up_trayectory_pointers(_wikimyei);
             #endif
-            #ifdef WIKIMYEI_DEBUG_v4
-            fprintf(stdout,">> > --- [killin head queue] \t\t load index: [%d]\t address: %p\n",_wikimyei->__load_index,_wikimyei->__load_head);
-            #endif
-            free(_wikimyei->__load_head);
-            _wikimyei->__load_head=NULL;
-            _wikimyei->__load_index--;
-            _wikimyei->__load_size--;
-        }
-        #ifdef WIKIMYEI_DEBUG_v4
-        else{fprintf(stdout,">> > /// [skippin head queue] \t\t\t load index: [%d]\t address: %p\n",_wikimyei->__load_index+1,_wikimyei->__load_head);}
-        #endif
-        int load_c1_index = _wikimyei->__load_index;
-        load_to_start(_wikimyei);
-        int load_c2_index = _wikimyei->__load_index;
-        load_to_end(_wikimyei); // navigate again to the end; to check all is fine allong the queue.
-        int load_c3_index = _wikimyei->__load_index;
-        assert(load_c1_index==load_c2_index && load_c1_index==load_c3_index);
-        assert(_wikimyei->__load_size==0x00);
-        assert(_wikimyei->__load_index==-1);
+        }while(!load_is_empty(_wikimyei));
     }
+    assert(load_is_empty(_wikimyei));
+    _wikimyei->__flags->__done=___CWCN_FALSE;
 }
 /*
 
 */
 void destroy_wikimyei(__wikimyei_t *_wikimyei){
     // #FIXME end it
-    #ifdef WIKIMYEI_DEBUG
+    #if defined(WIKIMYEI_DEBUG) || defined(WIKIMYEI_DEBUG_ALOCATION_CLEANING)
         fprintf(stdout,">> > ... destroy_wikimyei\n");
     #endif
     free(_wikimyei->__munaajpi_base_w_state);
+    kill_load(_wikimyei);
+    free(_wikimyei->__load_head);
     alliu_destroy(_wikimyei->__alliu);
     duuruva_destroy(_wikimyei->__alliu_duuruva);
     duuruva_destroy(_wikimyei->__munaajpi_duuruva);
@@ -464,11 +607,8 @@ void destroy_wikimyei(__wikimyei_t *_wikimyei){
     tsinuu_destroy(_wikimyei->__uwaabo);
     tsinuu_destroy(_wikimyei->__munaajpi);
     free(_wikimyei->__flags);
-    kill_load(_wikimyei);
-    if(_wikimyei->__load_up!=NULL){free(_wikimyei->__load_up);}
-    if(_wikimyei->__load_down!=NULL){free(_wikimyei->__load_down);}
     if(_wikimyei->__load_head!=NULL){free(_wikimyei->__load_head);}
-    free(_wikimyei);
+    // free(_wikimyei); // #FIXME assert me outside
 }
 
 void printflags(__wikimyei_t *_wikimyei){

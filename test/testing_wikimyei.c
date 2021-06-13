@@ -70,7 +70,6 @@ int main(){
         printf("%s ENTER TO LIVE LOAD AGAIN:%s\n",COLOR_GOOD,COLOR_REGULAR);
         getchar();
     }
-    
     printf("%s waka dao %s\n",COLOR_GOOD,COLOR_REGULAR);
     printf("%s waka din %s\n",COLOR_GOOD,COLOR_REGULAR);
     // load_print_down_trayectory_queue(c_wikimyei);

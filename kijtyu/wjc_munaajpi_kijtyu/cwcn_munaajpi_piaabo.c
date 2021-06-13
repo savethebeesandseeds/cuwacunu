@@ -217,10 +217,13 @@ void compute_imibajcho_munaajpi(__wikimyei_t *_wikimyei){ // J
     #endif
 }
 ___cwcn_bool_t are_munaajpi_pending(__wikimyei_t *_wikimyei){
+    
     int start_index=_wikimyei->__load_index;
     unsigned int ctx=0x00;
     ___cwcn_bool_t c_stillpending=___CWCN_FALSE;
+    printf("waka stull \n");
     load_to_start(_wikimyei); // go down
+    printf("waka stull tao \n");
     do{ // go up
         if(glti(_wikimyei)->__pending_munaajpi_index<_wikimyei->__horizon_munaajpi){
             glti(_wikimyei)->__pending_munaajpi=___CWCN_TRUE;

@@ -568,20 +568,16 @@ void entropycosa_print(void *_ec){
     ((__cauchy_pdf_t *)((__entropycosa_t *)_ec)->__cosa[1])->__print(((__cauchy_pdf_t *)((__entropycosa_t *)_ec)->__cosa[1]));
 }
 void entropycosa_forward(void *_ec, __cwcn_type_t *_param_vect){
-    printf("waka suspect pointer 1: %p\n",_param_vect);
     __cwcn_type_t _ec_delta;
     __cwcn_type_t *c_param=malloc(0x0F*sizeof(__cwcn_type_t)); // #FIXME might overflow
-    printf("waka suspect pointer 2: %p\n",_param_vect);
     _ec_delta=0x00;
     while(0x01){
         c_param[0]=_param_vect[0]+_ec_delta;
         c_param[1]=_param_vect[1]+_ec_delta;
         ((__beta_pdf_t *)((__entropycosa_t *)_ec)->__cosa[0])->__forward(((__entropycosa_t *)_ec)->__cosa[0], c_param[0],c_param[1]);
-    printf("waka suspect pointer 3: %p [%.2f,%.2f]\n",_param_vect, c_param[0], c_param[1]);
         if(!((__beta_pdf_t *)((__entropycosa_t *)_ec)->__cosa[0])->__is_nan){break;}
         _ec_delta+=0.05;
     }
-    printf("waka suspect pointer 4: %p\n",_param_vect);
     _ec_delta=0x00;
     while(0x01){
         c_param[2]=_param_vect[2]+_ec_delta;
@@ -589,14 +585,11 @@ void entropycosa_forward(void *_ec, __cwcn_type_t *_param_vect){
 	    ((__cauchy_pdf_t *)((__entropycosa_t *)_ec)->__cosa[1])->__forward(((__entropycosa_t *)_ec)->__cosa[1], c_param[2], c_param[3]);
         if(!((__cauchy_pdf_t *)((__entropycosa_t *)_ec)->__cosa[1])->__is_nan){break;}
         _ec_delta+=0.01;
-    printf("waka suspect pointer 5: %p\n",_param_vect);
     }
-    printf("waka suspect pointer 6: %p\n",_param_vect);
     ((__entropycosa_t *)_ec)->__entropy=(((__beta_pdf_t *)((__entropycosa_t *)_ec)->__cosa[0])->__entropy+((__cauchy_pdf_t *)((__entropycosa_t *)_ec)->__cosa[1])->__entropy)/2;
     entropycosa_tsane(_ec);
     free(c_param);
     c_param=NULL;
-    printf("waka suspect pointer 7: %p\n",_param_vect);
 }
 __entropycosa_t *entropycosa_fabric(unsigned int _d_res, unsigned int _n_tsane){
     __entropycosa_t *new_ec = malloc(sizeof(__entropycosa_t));

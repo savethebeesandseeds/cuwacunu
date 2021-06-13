@@ -12,14 +12,16 @@
 #define COLOR_WARNING "\033[0;31m"
 #define COLOR_UWAABO "\x1B[0;35m"
 #define COLOR_JKIMYEI "\x1B[0;32m"
+#define COLOR_HEALT "\033[0;31m"
 // #define DEBUG_LINEAR_EXPERIMENT
 // #define TSINUU_DEBUG
 #define WIKIMYEI_DEBUG
 #define WIKIMYEI_DEBUG_v2
 #define WIKIMYEI_DEBUG_v3
-#define WIKIMYEI_DEBUG_v4
-#define WIKIMYEI_DEBUG_v5
-// #define DEBUG_DUURUVA
+#define WIKIMYEI_DEBUG_ALOCATION_CLEANING
+// #define WIKIMYEI_DEBUG_LOAD
+// #define WIKIMYEI_DEBUG_HEALT
+// #define DUURUVA_DEBUG
 // #define JKIMYEI_DEBUG
 // #define JKIMYEI_DEBUG_v2
 // #define MUNAAJPI_DEBUG
@@ -32,6 +34,7 @@
 typedef _Bool (___cwcn_bool_t);
 #define ___CWCN_TRUE (___cwcn_bool_t) 0b1
 #define ___CWCN_FALSE (___cwcn_bool_t) 0b0
+#define print_cwcn_bool(a)((!!a == !!___CWCN_TRUE)?"TRUE":"FALSE")
 typedef float (__cwcn_type_t);
 #define __cwcn_type_size sizeof(__cwcn_type_t) // #FIXME not in use
 typedef __cwcn_type_t (*__function_pointer_t)(__cwcn_type_t);
@@ -85,8 +88,8 @@ typedef struct __jkimyei {
 } __jkimyei_t;
 typedef struct __load_queue { // load is a chain of pointers
     __trayectory_t *__trayectory_item;
-    struct __load_queue *__down;
-    struct __load_queue *__up;
+    struct __load_queue **__down;
+    struct __load_queue **__up;
 } __load_queue_t;
 #include "cwcn_cajtucu_piaabo.h"
 #include "cwcn_ujcamei_piaabo.h"
@@ -99,9 +102,9 @@ typedef struct __load_queue { // load is a chain of pointers
 typedef struct __wikimyei {
     int __load_index;
     int __load_size;
-    __load_queue_t *__load_down;
-    __load_queue_t *__load_up;
     __load_queue_t *__load_head;
+    // __load_queue_t **__load_down; // these two are redundant (on NON_C.__load_queue_t*[(_down)__load_head]) but usefull
+    // __load_queue_t **__load_up; // these two are redundant (on NON_C.__load_queue_t*[(_up)__load_head]) but usefull
     unsigned int __jk_size;
     unsigned int __horizon_munaajpi;
     unsigned int __direct_resolution;
@@ -153,12 +156,13 @@ __wikimyei_t *wikimyei_fabric(
         __cwcn_type_t _uwaabo_waapajco_potency,
         __cwcn_type_t _munaajpi_waapajco_potency,
         ___cwcn_bool_t _take_tsane);
+__load_queue_t *queue_item_fabric(__trayectory_t *_trayectory);
 int load_go_up(__wikimyei_t *_wikimyei);
 int load_go_down(__wikimyei_t *_wikimyei);
 void load_to_start(__wikimyei_t *_wikimyei);
 void load_to_end(__wikimyei_t *_wikimyei);
 void load_to_index(__wikimyei_t *_wikimyei, int _index);
-int load_enqueue_trayectory(__wikimyei_t *_wikimyei, __trayectory_t *_new_trayectory);
+int yield_next_trayectory(__wikimyei_t *_wikimyei);
 __trayectory_t *get_load_trayectory_item(__wikimyei_t *_wikimyei);
 __trayectory_t *glti(__wikimyei_t *_wikimyei);
 __trayectory_t *get_load_trayectory_item_from_index(__wikimyei_t *_wikimyei, int _index, ___cwcn_bool_t _rneturn); // #FIXME stabilize the non unsigned (needed by load/jk fabrics)
@@ -167,12 +171,16 @@ __load_queue_t *load_fabric(__wikimyei_t *_wikimyei);
 void load_print_up_trayectory_pointers(__wikimyei_t *_wikimyei);
 void load_print_up_trayectory_queue(__wikimyei_t *_wikimyei);
 void load_print_down_trayectory_queue(__wikimyei_t *_wikimyei);
+void empty_queue_on_last(__wikimyei_t *_wikimyei);
 void kill_load(__wikimyei_t *_wikimyei);
-// void kill_queue_item(__load_queue_t *_load_head); // #FIXME if needed
+void kill_queue(__load_queue_t *_queue);
 void kill_trayectory(__trayectory_t *_trayectory);
 void destroy_wikimyei(__wikimyei_t *_wikimyei);
 ___cwcn_bool_t all_duuruva_ready(__wikimyei_t *_wikimyei);
+___cwcn_bool_t load_on_noob(__wikimyei_t *_wikimyei);
+___cwcn_bool_t load_on_end(__wikimyei_t *_wikimyei);
+___cwcn_bool_t load_on_start(__wikimyei_t *_wikimyei);
+___cwcn_bool_t load_is_healty(__wikimyei_t *_wikimyei);
 ___cwcn_bool_t load_is_empty(__wikimyei_t *_wikimyei);
-void empty_load(__wikimyei_t *_wikimyei);
 void printflags(__wikimyei_t *_wikimyei);
 #endif
