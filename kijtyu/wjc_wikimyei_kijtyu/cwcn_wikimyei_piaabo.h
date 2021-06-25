@@ -4,6 +4,9 @@
 #define COLOR_MUNAAJPI "\x1B[0;33m"
 #define COLOR_B_MUNAAJPI "\x1B[1;33m"
 #define COLOR_GAE "\033[0;32m"
+#define COLOR_L_GOOD "\033[0;32m"
+#define COLOR_ALOCATION_ADD "\033[0;32m"
+#define COLOR_ALOCATION_KIL "\033[0;31m"
 #define COLOR_GOOD "\033[1;32m"
 #define COLOR_DANGER "\033[0;31m"
 #define COLOR_ALLIU "\x1B[0;36m"
@@ -15,10 +18,10 @@
 #define COLOR_HEALT "\033[0;31m"
 // #define DEBUG_LINEAR_EXPERIMENT
 // #define TSINUU_DEBUG
-#define WIKIMYEI_DEBUG
-#define WIKIMYEI_DEBUG_v2
-#define WIKIMYEI_DEBUG_v3
-#define WIKIMYEI_DEBUG_ALOCATION_CLEANING
+// #define WIKIMYEI_DEBUG
+// #define WIKIMYEI_DEBUG_v2
+// #define WIKIMYEI_DEBUG_v3
+// #define ALOCATION_DEBUG
 // #define WIKIMYEI_DEBUG_LOAD
 // #define WIKIMYEI_DEBUG_HEALT
 // #define DUURUVA_DEBUG
@@ -45,6 +48,16 @@ typedef __cwcn_type_t (*__function_pointer_t)(__cwcn_type_t);
 
 #define max(a,b)({__typeof__(a) _a=(a);__typeof__(b) _b=(b);_a > _b ? _a : _b;})
 #define min(a,b)({__typeof__(a) _a=(a);__typeof__(b) _b=(b);_a < _b ? _a : _b;})
+#ifdef ALOCATION_DEBUG
+#define ALOCATION_DEBUG_SIZE (int) 1000 // max size of traked allocations
+typedef struct __alocation_bunddle { // Debug item
+    unsigned int __alb_count;
+} __alocation_bunddle_t;
+// typedef enum {
+//     ALB_WIKIMYEI.__load_head
+//     ALB_WIKIMYEI.,
+// } __ALB_map_t;
+#endif
 typedef struct __wk_flags {
     ___cwcn_bool_t __done;
     ___cwcn_bool_t __nonuwaabo_alliu_done;
@@ -136,6 +149,9 @@ typedef struct __wikimyei {
     ___cwcn_bool_t __take_tsane;
     __wk_flags_t *__flags;
     __cwcn_type_t *__munaajpi_base_w_state; // the temporal base hold in wikimyei struct of a redundant concatenated vector
+    #ifdef ALOCATION_DEBUG
+    __alocation_bunddle_t *__alocation_bunddle;
+    #endif
 }__wikimyei_t;
 #include "cwcn_munaajpi_piaabo.h"
 #include "cwcn_jkimyei_nebajke.h"
@@ -156,13 +172,13 @@ __wikimyei_t *wikimyei_fabric(
         __cwcn_type_t _uwaabo_waapajco_potency,
         __cwcn_type_t _munaajpi_waapajco_potency,
         ___cwcn_bool_t _take_tsane);
-__load_queue_t *queue_item_fabric(__trayectory_t *_trayectory);
 int load_go_up(__wikimyei_t *_wikimyei);
 int load_go_down(__wikimyei_t *_wikimyei);
 void load_to_start(__wikimyei_t *_wikimyei);
 void load_to_end(__wikimyei_t *_wikimyei);
 void load_to_index(__wikimyei_t *_wikimyei, int _index);
 int yield_next_trayectory(__wikimyei_t *_wikimyei);
+__load_queue_t *queue_item_fabric(__wikimyei_t *_wikimyei,__trayectory_t *_trayectory);
 __trayectory_t *get_load_trayectory_item(__wikimyei_t *_wikimyei);
 __trayectory_t *glti(__wikimyei_t *_wikimyei);
 __trayectory_t *get_load_trayectory_item_from_index(__wikimyei_t *_wikimyei, int _index, ___cwcn_bool_t _rneturn); // #FIXME stabilize the non unsigned (needed by load/jk fabrics)
@@ -172,6 +188,9 @@ void load_print_up_trayectory_pointers(__wikimyei_t *_wikimyei);
 void load_print_up_trayectory_queue(__wikimyei_t *_wikimyei);
 void load_print_down_trayectory_queue(__wikimyei_t *_wikimyei);
 void empty_queue_on_last(__wikimyei_t *_wikimyei);
+#ifdef ALOCATION_DEBUG
+void test_load_alocation(__wikimyei_t *_wikimyei);
+#endif
 void kill_load(__wikimyei_t *_wikimyei);
 void kill_queue(__load_queue_t *_queue);
 void kill_trayectory(__trayectory_t *_trayectory);

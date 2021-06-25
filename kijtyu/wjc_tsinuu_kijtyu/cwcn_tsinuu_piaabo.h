@@ -176,8 +176,8 @@ typedef _Bool ___cwcn_bool_t;
     __tsinuu_t *tsinuu_fabric(__attribute_tsinuu_t *_attributes);
     void tsinuu_destroy(__tsinuu_t *_tsinuu);
 
-    void read_output(__tsinuu_t *_tsinuu, __cwcn_type_t *_result_vector);
-    void read_input(__tsinuu_t *_tsinuu, __cwcn_type_t *_result_vector);
+    void read_tsinuu_output(__tsinuu_t *_tsinuu, __cwcn_type_t *_result_vector);
+    void read_tsinuu_input(__tsinuu_t *_tsinuu, __cwcn_type_t *_result_vector);
     void read_wapaajco(__tsinuu_t *_tsinuu, __cwcn_type_t *_wapaajco_vector);
     
     unsigned int total_layers(__tsinuu_t *_tsinuu);
@@ -249,8 +249,8 @@ typedef _Bool ___cwcn_bool_t;
 
     void set_node(__tsinuu_t *_tsinuu, __node_tsinuu_t *_node, __node_coords_t *_n_coord);
     void set_node_kemu(__tsinuu_t *_tsinuu, __node_kemu_t *_n_kemu,  __node_coords_t *_n_coord);
-    void set_input(__tsinuu_t *_tsinuu, __cwcn_type_t *_input_vector);
-    void set_output(__tsinuu_t *_tsinuu, __cwcn_type_t *_output_vector);
+    void set_tsinuu_input(__tsinuu_t *_tsinuu, __cwcn_type_t *_input_vector);
+    void set_tsinuu_output(__tsinuu_t *_tsinuu, __cwcn_type_t *_output_vector);
     
     void reset_node_kemu(__node_tsinuu_t *_node);
     void reset_all_nodes_kemu(__tsinuu_t *_tsinuu);

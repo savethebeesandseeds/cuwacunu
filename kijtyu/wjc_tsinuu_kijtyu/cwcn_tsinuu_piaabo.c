@@ -618,13 +618,13 @@ void read_layer_value_as_vector_from_stack_coord(__tsinuu_t *_tsinuu, __layer_st
 
 */
 
-void read_output(__tsinuu_t *_tsinuu, __cwcn_type_t *_result_vector){
+void read_tsinuu_output(__tsinuu_t *_tsinuu, __cwcn_type_t *_result_vector){
     #ifdef TSINUU_DEBUG
         fprintf(stdout, ">>>> request <read_ouput_value>\n");
     #endif
     read_layer_value_as_vector_from_stack_coord(_tsinuu, layer_index_to_layer_stack_coord(_tsinuu, output_layer_index(_tsinuu)), _result_vector); 
 }
-void read_input(__tsinuu_t *_tsinuu, __cwcn_type_t *_result_vector){
+void read_tsinuu_input(__tsinuu_t *_tsinuu, __cwcn_type_t *_result_vector){
     #ifdef TSINUU_DEBUG
         fprintf(stdout, ">>>> request <read_input_value>\n");
     #endif
@@ -638,9 +638,9 @@ void read_wapaajco(__tsinuu_t *_tsinuu, __cwcn_type_t *_wapaajco_vector){
 /*
 
 */
-void set_input(__tsinuu_t *_tsinuu, __cwcn_type_t *_input_vector){
+void set_tsinuu_input(__tsinuu_t *_tsinuu, __cwcn_type_t *_input_vector){
     for(unsigned int idx_n=0;idx_n<layer_size_from_layer_stack_index(_tsinuu, 0x00);idx_n++){
-        node_kemu(_tsinuu, node_index_to_node_coord(_tsinuu, 0x00, idx_n))->__value = _input_vector[idx_n]; // #FIXME no assert for input vector size.
+        node_kemu(_tsinuu, node_index_to_node_coord(_tsinuu, 0x00, idx_n))->__value = _input_vector[idx_n]; // #FIXME no assert for input vector size. & #FIXME add function for input_layer_index
         node(_tsinuu, node_index_to_node_coord(_tsinuu, 0x00, idx_n))->__nbp->__is_reset=___CWCN_FALSE;
         #ifdef TSINUU_FORWARD
             dist_node(_tsinuu, node(_tsinuu, node_index_to_node_coord(_tsinuu, 0x00, idx_n)));
@@ -654,7 +654,7 @@ void set_input(__tsinuu_t *_tsinuu, __cwcn_type_t *_input_vector){
         fprintf(stdout, ">>>> suspect element value _ %f  must be equal to _ %f\n",node_kemu(_tsinuu, node_index_to_node_coord(_tsinuu, 0x00, 0x00))->__value, _input_vector[0x00]);
     #endif
 }
-void set_output(__tsinuu_t *_tsinuu, __cwcn_type_t *_output_vector){
+void set_tsinuu_output(__tsinuu_t *_tsinuu, __cwcn_type_t *_output_vector){
     for(unsigned int idx_n=0;idx_n<layer_size_from_layer_stack_index(_tsinuu, output_layer_index(_tsinuu));idx_n++){
         node_kemu(_tsinuu, node_index_to_node_coord(_tsinuu, output_layer_index(_tsinuu), idx_n))->__value = _output_vector[idx_n]; // #FIXME no assert for output vector size.
         node(_tsinuu, node_index_to_node_coord(_tsinuu, output_layer_index(_tsinuu), idx_n))->__nbp->__is_reset=___CWCN_FALSE;
@@ -1083,8 +1083,8 @@ void print_results(__tsinuu_t *_tsinuu){
     __cwcn_type_t c_wapaajco_vector[output_size(_tsinuu)];
     __cwcn_type_t c_input_vector[input_size(_tsinuu)];
     __cwcn_type_t c_output_vector[output_size(_tsinuu)];
-    read_output(_tsinuu, c_output_vector);
-    read_input(_tsinuu, c_input_vector);
+    read_tsinuu_output(_tsinuu, c_output_vector);
+    read_tsinuu_input(_tsinuu, c_input_vector);
     read_wapaajco(_tsinuu, c_wapaajco_vector);
     for(unsigned int idx_n=0x00;idx_n<max(output_size(_tsinuu),input_size(_tsinuu));idx_n++){
         if(idx_n<output_size(_tsinuu)){

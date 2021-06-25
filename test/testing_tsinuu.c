@@ -124,7 +124,7 @@ int main(void){
             // fprintf(stdout, " --- --- ---epoch:[ %d ] data:[ %d ] --- --- --- --- --- START ---\t",ctx_epoch,ctx_p);
             // uwaabo
             // fprintf(stdout, "%f -> %f\n",c_input_vector[rand_idx][0x00],c_correct_output[rand_idx][0x00]);
-            set_input(c_tsinuu, c_input_vector[rand_idx]);
+            set_tsinuu_input(c_tsinuu, c_input_vector[rand_idx]);
             tsinuu_direct_uwaabo_full_parametric(c_tsinuu);
             wapaajco_bydifference(c_tsinuu, c_correct_output[rand_idx]);
             // fprintf(stdout, "--------->(RESULTS) epoch:[ %d ] data:[ %d ]<---------\n",ctx_epoch,ctx_p);

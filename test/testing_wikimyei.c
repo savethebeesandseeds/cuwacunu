@@ -1,28 +1,29 @@
 #include "cwcn_wikimyei_piaabo.h"
 int main(){
+    printf("sizeofVoid: %ld \n",sizeof(void));
     clock_t begin;
     clock_t end;
     #ifndef DEBUG_LINEAR_EXPERIMENT
-    __alliu_source_t c_alliu_source=SINE_as_alliu;
-    #else
     __alliu_source_t c_alliu_source=UNIT_as_alliu;
+    #else
+    __alliu_source_t c_alliu_source=SINE_as_alliu;
     #endif
     unsigned int c_alliu_size=0x01;
     unsigned int c_tsane_size=0x02;
     unsigned int c_direct_resolution=0x10;
     unsigned int c_horizon_munaajpi=0x03;
-    int c_jk_size=0x01;
+    int c_jk_size=0x02;
     __cwcn_type_t c_gae_gamma=0.99;
     __cwcn_type_t c_gae_lambda=0.95;
     __cwcn_type_t c_clip_param=0.2;
     __cwcn_type_t c_uwaabo_beta=0.01;
     __cwcn_type_t c_munaajpi_beta=0.01;
     __cwcn_type_t c_entropy_beta=0.01;
-    __cwcn_type_t c_uwaabo_waapajco_potency=0.2;
-    __cwcn_type_t c_munaajpi_waapajco_potency=0.2;
+    __cwcn_type_t c_uwaabo_waapajco_potency=0.02;
+    __cwcn_type_t c_munaajpi_waapajco_potency=0.02;
     ___cwcn_bool_t c_take_tsane=___CWCN_FALSE;
-    int c_size_of_load=10;
-    unsigned int c_epochs=1;
+    int c_size_of_load=100;
+    unsigned int c_epochs=10;
 
     __wikimyei_t *c_wikimyei=wikimyei_fabric(
         c_alliu_source,
@@ -43,31 +44,31 @@ int main(){
     fprintf(stdout,">> > ... waka0x00 empty_load: load size: %d load index: %d\n",c_wikimyei->__load_size,c_wikimyei->__load_index);
     
     // load_print_up_trayectory_queue(c_wikimyei);
-    for(unsigned int f_ctx=0x00;f_ctx<2;f_ctx++){
-        printf("%s ENTER TO LIVE LOAD:%s\n",COLOR_GOOD,COLOR_REGULAR);
+    for(unsigned int f_ctx=0x00;f_ctx<3;f_ctx++){
+        printf("%s ENTER TO LIVE LOAD:%s",COLOR_GOOD,COLOR_REGULAR);
         getchar();
         begin=clock();
         wikimyei_live_load(c_wikimyei, c_size_of_load);
         end=clock();
         printf("%s exe time [wikimyei_live_load] %f:%s\n", COLOR_DANGER, (double)(end-begin)/CLOCKS_PER_SEC,COLOR_REGULAR);
         // wikimyei_live_load(c_wikimyei, 1);
-        printf("%s ENTER TO JKIMYEI:%s\n",COLOR_GOOD,COLOR_REGULAR);
+        printf("%s ENTER TO JKIMYEI:%s",COLOR_GOOD,COLOR_REGULAR);
         getchar();
         begin=clock();
         wikimyei_jkimyei(c_wikimyei, c_epochs);
         end=clock();
         printf("%s exe time [wikimyei_jkimyei] %f:%s\n", COLOR_DANGER, (double)(end-begin)/CLOCKS_PER_SEC,COLOR_REGULAR);
-        printf("%s ENTER TO PRINT TRAYECOTRY:%s\n",COLOR_GOOD,COLOR_REGULAR);
-        getchar();
-        load_print_up_trayectory_queue(c_wikimyei);
-        printf("%s ENTER TO PRINT TRAYECOTRY POINTERS:%s\n",COLOR_GOOD,COLOR_REGULAR);
-        getchar();
-        load_print_up_trayectory_pointers(c_wikimyei);
-        printf("%s ENTER TO PRINT MUNAAJPI REPORT:%s\n",COLOR_GOOD,COLOR_REGULAR);
+        // printf("%s ENTER TO PRINT TRAYECOTRY:%s\n",COLOR_GOOD,COLOR_REGULAR);
+        // getchar();
+        // load_print_up_trayectory_queue(c_wikimyei);
+        // printf("%s ENTER TO PRINT TRAYECOTRY POINTERS:%s\n",COLOR_GOOD,COLOR_REGULAR);
+        // getchar();
+        // load_print_up_trayectory_pointers(c_wikimyei);
+        printf("%s ENTER TO PRINT MUNAAJPI REPORT:%s",COLOR_GOOD,COLOR_REGULAR);
         getchar();
         print_report_munaajpi(c_wikimyei);
         // kill_load(c_wikimyei);
-        printf("%s ENTER TO LIVE LOAD AGAIN:%s\n",COLOR_GOOD,COLOR_REGULAR);
+        printf("%s ENTER TO LIVE LOAD AGAIN:%s",COLOR_GOOD,COLOR_REGULAR);
         getchar();
     }
     printf("%s waka dao %s\n",COLOR_GOOD,COLOR_REGULAR);
@@ -103,7 +104,7 @@ int main(){
     //         // getchar();
     //     }
     // }
-    printf("%s waka tao %s\n",COLOR_GOOD,COLOR_REGULAR);
     destroy_wikimyei(c_wikimyei);
+    printf("%s waka tao %s\n",COLOR_GOOD,COLOR_REGULAR);
     // FORGETIT FIRST TEST THE QUEUE
 }

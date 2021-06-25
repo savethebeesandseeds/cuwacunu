@@ -82,7 +82,7 @@ void copy_c_cwcn_blocks_from_b_to_a(__cwcn_type_t *_a, __cwcn_type_t *_b, unsign
 void GAE(__wikimyei_t *_wikimyei){
     // assumes __imibajcho_munaajpi_state has been computed
     #ifdef JKIMYEI_DEBUG
-        fprintf(stdout,"%s>> > ... request GAE\n",COLOR_GAE);
+    fprintf(stdout,"%s>> > ... request GAE\n",COLOR_GAE);
     #endif
     int c_index=_wikimyei->__load_index;
     __cwcn_type_t *delta=malloc(0x01*sizeof(__cwcn_type_t));
@@ -91,7 +91,9 @@ void GAE(__wikimyei_t *_wikimyei){
     load_to_index(_wikimyei, _wikimyei->__load_size-_wikimyei->__horizon_munaajpi-0x01);
     do{
         if(!glti(_wikimyei)->__pending_munaajpi){
+            #ifdef JKIMYEI_DEBUG
             fprintf(stdout,"%s>> > ... ---- ---- ... ---- ----\n",COLOR_GAE);
+            #endif
             for(unsigned int idx=0x00;idx<_wikimyei->__uwaabo_state_size;idx++){
                 load_go_up(_wikimyei);
                 aux[0x00]=_wikimyei->__gae_gamma*glti(_wikimyei)->__munaajpi_state[idx];
@@ -105,7 +107,9 @@ void GAE(__wikimyei_t *_wikimyei){
                 glti(_wikimyei)->__uwaabo_adventage[idx]=glti(_wikimyei)->__uwaabo_returns[idx]-glti(_wikimyei)->__munaajpi_state[idx];
                 // fprintf(stdout,">> > ... [%d] :: [%d], gae: %.4f, delta: %.4f, imibajcho_munaajpi_state: %.4f\n",_wikimyei->__load_index,idx,gae[idx],delta[0x00],glti(_wikimyei)->__imibajcho_munaajpi_state[0x00]);
                 // fprintf(stdout,">> > ... [%d] :: [%d], uwaabo_adventage: %.4f, uwaabo_returns: %.4f, munaajpi_state:%.4f\n",_wikimyei->__load_index,idx,glti(_wikimyei)->__uwaabo_adventage[idx],glti(_wikimyei)->__uwaabo_returns[idx],glti(_wikimyei)->__munaajpi_state[idx]);
+                #ifdef JKIMYEI_DEBUG
                 fprintf(stdout,"%s>> > ... [%d] :: [%d], %s uwaabo_adventage: %s%.4f,%s uwaabo_returns: %s%.4f, %s munaajpi_state:%s%.4f\n",COLOR_GAE,_wikimyei->__load_index,idx,COLOR_UWAABO,COLOR_REGULAR,glti(_wikimyei)->__uwaabo_adventage[idx],COLOR_UWAABO,COLOR_REGULAR,glti(_wikimyei)->__uwaabo_returns[idx],COLOR_MUNAAJPI,COLOR_REGULAR,glti(_wikimyei)->__munaajpi_state[idx]);
+                #endif
             }
             set_duuruva_value(_wikimyei->__adventage_duuruva, glti(_wikimyei)->__uwaabo_adventage);
             dist_duuruva(_wikimyei->__adventage_duuruva);
@@ -145,23 +149,23 @@ void jkimyei_one(void *_wikimyei,
     __cwcn_type_t _munaajpi_loss_handler;
     __cwcn_type_t _entropy_loss_handler;
     #ifdef JKIMYEI_DEBUG
-        fprintf(stdout,"%s>> > ... --- --- --- --- --- ---%s\n",COLOR_DANGER,COLOR_REGULAR);
-        fprintf(stdout,"%s>> request jkimyei_one%s\n",COLOR_JKIMYEI,COLOR_REGULAR);
+    fprintf(stdout,"%s>> > ... --- --- --- --- --- ---%s\n",COLOR_DANGER,COLOR_REGULAR);
+    fprintf(stdout,"%s>> request jkimyei_one%s\n",COLOR_JKIMYEI,COLOR_REGULAR);
     #endif
     #ifdef JKIMYEI_DEBUG
-        fprintf(stdout,"%sENTER TO STEP JIKIMYEI:%s",COLOR_GOOD,COLOR_REGULAR);
-        // getchar();
-        fprintf(stdout," %s",COLOR_JKIMYEI);
+    fprintf(stdout,"%sENTER TO STEP JIKIMYEI:%s",COLOR_GOOD,COLOR_REGULAR);
+    // getchar();
+    fprintf(stdout," %s",COLOR_JKIMYEI);
     #endif
     do{
         load_to_index(((__wikimyei_t *)_wikimyei), jk_rand_index(((__wikimyei_t *)_wikimyei)));
     }while(glti(((__wikimyei_t *)_wikimyei))->__pending_munaajpi);
-    #ifdef JKIMYEI_DEBUG
     // fprintf(stdout,"%s>> > ... (rand idx: [%d] start as:) uwaabo_state: [ ",COLOR_UWAABO,((__wikimyei_t*)_wikimyei)->__load_index);
     // for(unsigned int idx=0x00;idx<((__wikimyei_t *)_wikimyei)->__uwaabo_state_size;idx++){
     //     fprintf(stdout," %.4f,",glti((__wikimyei_t *)_wikimyei)->__uwaabo_state[idx]);
     // }
     // fprintf(stdout," ]%s\n",COLOR_REGULAR);
+    #ifdef JKIMYEI_DEBUG
     fprintf(stdout,"%s>> > ... (rand idx: [%d] start as:) alliu_state: [ ",COLOR_ALLIU,((__wikimyei_t*)_wikimyei)->__load_index);
     for(unsigned int idx=0x00;idx<((__wikimyei_t *)_wikimyei)->__alliu_state_size;idx++){
         fprintf(stdout," %.4f,",glti((__wikimyei_t *)_wikimyei)->__alliu_state[idx]);
@@ -220,11 +224,11 @@ void jkimyei_one(void *_wikimyei,
             _uwaabo_loss_handler=((__wikimyei_t *)_wikimyei)->__uwaabo_beta*min(surr1_handler[0x00],surr2_handler[0x00]) - _entropy_loss_handler;
             _munaajpi_loss_handler=((__wikimyei_t *)_wikimyei)->__munaajpi_beta*pow(glti(((__wikimyei_t *)_wikimyei))->__uwaabo_returns[idx]-glti(((__wikimyei_t *)_wikimyei))->__munaajpi_state[idx],2) - _entropy_loss_handler;
             #ifdef JKIMYEI_DEBUG_v2
-                fprintf(stdout,"%s>> > ... jkimyei_one: set_uwaabo:\t(uw_beta*min(sur1,sur2)-h_beta*H)%s\n",COLOR_JKIMYEI,COLOR_REGULAR);
-                fprintf(stdout,"%s>> > ... jkimyei_one: munaajpi_loss:\t(mjpi_beta*(uw_returns-mjpi_state)^2-h_beta*H)%s\n",COLOR_JKIMYEI,COLOR_REGULAR);
+            fprintf(stdout,"%s>> > ... jkimyei_one: set_uwaabo:\t(uw_beta*min(sur1,sur2)-h_beta*H)%s\n",COLOR_JKIMYEI,COLOR_REGULAR);
+            fprintf(stdout,"%s>> > ... jkimyei_one: munaajpi_loss:\t(mjpi_beta*(uw_returns-mjpi_state)^2-h_beta*H)%s\n",COLOR_JKIMYEI,COLOR_REGULAR);
             #endif
             #ifdef JKIMYEI_DEBUG
-                fprintf(stdout,"%s>> > ... UWAABO INDEX: [%d] %s _entropy_loss: %f, \t %s_uwaabo_loss: %f, \t %s_munaajpi_loss: %f%s\n",COLOR_JKIMYEI,idx,COLOR_ENTROPY,_entropy_loss_handler,COLOR_UWAABO,_uwaabo_loss_handler,COLOR_MUNAAJPI,_munaajpi_loss_handler,COLOR_JKIMYEI);
+            fprintf(stdout,"%s>> > ... UWAABO INDEX: [%d] %s _entropy_loss: %f, \t %s_uwaabo_loss: %f, \t %s_munaajpi_loss: %f%s\n",COLOR_JKIMYEI,idx,COLOR_ENTROPY,_entropy_loss_handler,COLOR_UWAABO,_uwaabo_loss_handler,COLOR_MUNAAJPI,_munaajpi_loss_handler,COLOR_JKIMYEI);
             #endif
             set_wapaajco_index_eq(\
                 ((__wikimyei_t *)_wikimyei)->__uwaabo, \

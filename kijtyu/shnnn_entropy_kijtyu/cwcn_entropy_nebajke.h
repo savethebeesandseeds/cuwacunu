@@ -42,8 +42,8 @@ typedef struct beta_pdf{
     __cwcn_type_t __max_eta;
     __cwcn_type_t __max_lambda;
     __cwcn_type_t __gamma_res;
-    double __entropy;
-    double __max_known_entropy;
+    __cwcn_type_t __entropy;
+    __cwcn_type_t __max_known_entropy;
     __cwcn_type_t __beta_kemu;
     __cwcn_type_t __beta_input;
     __cwcn_type_t *__direct_map;

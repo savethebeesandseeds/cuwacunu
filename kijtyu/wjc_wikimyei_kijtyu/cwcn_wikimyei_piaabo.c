@@ -17,9 +17,7 @@ __trayectory_t *trayectory_fabric(__wikimyei_t *_wikimyei){
     new_trayectory->__uwaabo_state=malloc(_wikimyei->__uwaabo_state_size*sizeof(__cwcn_type_t));
     new_trayectory->__uwaabo_returns=malloc(_wikimyei->__uwaabo_state_size*sizeof(__cwcn_type_t));
     new_trayectory->__uwaabo_adventage=malloc(_wikimyei->__uwaabo_state_size*sizeof(__cwcn_type_t));
-    printf("wakaaa dao!!!!!!!\n");
     new_trayectory->__tsane_state=malloc(_wikimyei->__tsane_state_size*sizeof(__cwcn_type_t));
-    printf("wakaaa din!!!!!!! %d --- %ld\n",_wikimyei->__munaajpi_state_size,sizeof(__cwcn_type_t));
     new_trayectory->__imibajcho_munaajpi_duuruva_state=malloc(_wikimyei->__imibajcho_munaajpi_duuruva_state_size*sizeof(__cwcn_type_t));
     new_trayectory->__munaajpi_state=malloc(_wikimyei->__munaajpi_state_size*sizeof(__cwcn_type_t));
     new_trayectory->__imibajcho_munaajpi_state=malloc(0x01*sizeof(__cwcn_type_t)); // #FIXME, is one
@@ -35,23 +33,37 @@ __trayectory_t *trayectory_fabric(__wikimyei_t *_wikimyei){
     for(unsigned int idx=0x00;idx<_wikimyei->__imibajcho_munaajpi_duuruva_state_size;idx++){new_trayectory->__imibajcho_munaajpi_duuruva_state[idx]=0x00;}
     for(unsigned int idx=0x00;idx<_wikimyei->__uwaabo_state_size;idx++){new_trayectory->__uwaabo_adventage[idx]=0x00;}
     for(unsigned int idx=0x00;idx<_wikimyei->__uwaabo_state_size;idx++){new_trayectory->__uwaabo_returns[idx]=0x00;}
-    
-    printf("wakaaa tao!!!!!!!\n");
+    #ifdef ALOCATION_DEBUG
+    fprintf(stdout,"%s     +++ [trayectory_fabric]:\n%s",COLOR_ALOCATION_ADD,COLOR_REGULAR);
+    fprintf(stdout,"%s\t __alliu_state: %s%p:\n",COLOR_ALOCATION_ADD,COLOR_REGULAR,new_trayectory->__alliu_state);
+    fprintf(stdout,"%s\t __nonuwaabo_alliu_state: %s%p:\n",COLOR_ALOCATION_ADD,COLOR_REGULAR,new_trayectory->__nonuwaabo_alliu_state);
+    fprintf(stdout,"%s\t __alliu_duuruva_state: %s%p:\n",COLOR_ALOCATION_ADD,COLOR_REGULAR,new_trayectory->__alliu_duuruva_state);
+    fprintf(stdout,"%s\t __uwaabo_state: %s%p:\n",COLOR_ALOCATION_ADD,COLOR_REGULAR,new_trayectory->__uwaabo_state);
+    fprintf(stdout,"%s\t __uwaabo_returns: %s%p:\n",COLOR_ALOCATION_ADD,COLOR_REGULAR,new_trayectory->__uwaabo_returns);
+    fprintf(stdout,"%s\t __uwaabo_adventage: %s%p:\n",COLOR_ALOCATION_ADD,COLOR_REGULAR,new_trayectory->__uwaabo_adventage);
+    fprintf(stdout,"%s\t __tsane_state: %s%p:\n",COLOR_ALOCATION_ADD,COLOR_REGULAR,new_trayectory->__tsane_state);
+    fprintf(stdout,"%s\t __imibajcho_munaajpi_duuruva_state: %s%p:\n",COLOR_ALOCATION_ADD,COLOR_REGULAR,new_trayectory->__imibajcho_munaajpi_duuruva_state);
+    fprintf(stdout,"%s\t __munaajpi_state: %s%p:\n",COLOR_ALOCATION_ADD,COLOR_REGULAR,new_trayectory->__munaajpi_state);
+    fprintf(stdout,"%s\t __imibajcho_munaajpi_state: %s%p:\n",COLOR_ALOCATION_ADD,COLOR_REGULAR,new_trayectory->__imibajcho_munaajpi_state);
+    #endif
     return new_trayectory;
 }
-__load_queue_t *queue_item_fabric(__trayectory_t *_trayectory){
+__load_queue_t *queue_item_fabric(__wikimyei_t *_wikimyei,__trayectory_t *_trayectory){
     __load_queue_t *new_queue_item=malloc(sizeof(__load_queue_t));
     new_queue_item->__trayectory_item=NULL; // #FIXME, queue_fabric seems unstable by allowing ty_item null
     new_queue_item->__up=malloc(sizeof(__load_queue_t*));
     new_queue_item->__down=malloc(sizeof(__load_queue_t*));
     #ifdef WIKIMYEI_DEBUG_LOAD
-    fprintf(stdout,"\t +++ [queue fabric]: \t\t [head:]%p, [up:]%p, [down:]%p\n",new_queue_item,*new_queue_item->__up,*new_queue_item->__down);
+    fprintf(stdout,">> > ... request to queue_item_fabric\n");
+    #endif
+    new_queue_item->__trayectory_item=_trayectory;
+    #ifdef ALOCATION_DEBUG
+    fprintf(stdout,"     +++ [queue [%d] fabric]: \t %s[head:]%p,%s [up:]%p, [down:]%p, [ty:]%p\n",_wikimyei->__load_index,COLOR_ALOCATION_ADD,new_queue_item,COLOR_REGULAR,*new_queue_item->__up,*new_queue_item->__down,new_queue_item->__trayectory_item);
     #endif
     assert(new_queue_item!=NULL);
     assert(new_queue_item->__up!=NULL);
     assert(new_queue_item->__down!=NULL);
     
-    new_queue_item->__trayectory_item=_trayectory;
     
     return new_queue_item;
 }
@@ -65,8 +77,10 @@ __load_queue_t *load_fabric(__wikimyei_t *_wikimyei){
     #if defined(WIKIMYEI_DEBUG) || defined(WIKIMYEI_DEBUG_LOAD)
         fprintf(stdout,">> > ... request to [load_fabric], at load_index: %d\n",_wikimyei->__load_index);
     #endif
-    __load_queue_t *new_head=queue_item_fabric(trayectory_fabric(_wikimyei));
-    
+    __load_queue_t *new_head=queue_item_fabric(_wikimyei,trayectory_fabric(_wikimyei));
+    #ifdef ALOCATION_DEBUG
+    fprintf(stdout,"\t load_fabric %s[new head alocation:]%p%s\n",COLOR_L_GOOD,new_head,COLOR_REGULAR);
+    #endif
     _wikimyei->__load_index=0x00;
     _wikimyei->__load_size=0x01;
     _wikimyei->__flags->__endhead_empty_alliu=___CWCN_TRUE;
@@ -90,13 +104,19 @@ __wikimyei_t *wikimyei_fabric(
         __cwcn_type_t _munaajpi_waapajco_potency,
         ___cwcn_bool_t _take_tsane){
     #ifdef WIKIMYEI_DEBUG
-        fprintf(stdout,">> > ... wikimyei_fabric\n");
+    fprintf(stdout,">> > ... wikimyei_fabric\n");
+    #endif
+    #ifdef ALOCATION_DEBUG
+    fprintf(stdout,">> > ... wikimyei_fabric [#FIXME alocation cleaning]\n");
     #endif
     __wikimyei_t *new_wikimyei=malloc(sizeof(__wikimyei_t));
     if(!new_wikimyei){
         fprintf(stderr,"ERROR, unable to allocate new wikimyei\n");
         assert(0x00);
     } // declaration WIKIMYEI FABRIC order is set, do not shuffle.
+    #ifdef ALOCATION_DEBUG
+    new_wikimyei->__alocation_bunddle=malloc(sizeof(__alocation_bunddle_t));
+    #endif
     new_wikimyei->__take_tsane=_take_tsane;
     new_wikimyei->__jk_size=_jk_size; // jk_size is times each load item is jk
     new_wikimyei->__horizon_munaajpi=_horizon_munaajpi;
@@ -160,8 +180,11 @@ __wikimyei_t *wikimyei_fabric(
     #else
     new_wikimyei->__flags->__norm_stand=0x00;
     #endif
-    new_wikimyei->__load_head=malloc(sizeof(__load_queue_t));
+    // new_wikimyei->__load_head=malloc(sizeof(__load_queue_t)); // DO NOT USE
     new_wikimyei->__load_head=NULL;//load_fabric(new_wikimyei);
+    #ifdef ALOCATION_DEBUG
+    new_wikimyei->__alocation_bunddle->__alb_count++; // __load_queue_t
+    #endif
     // new_wikimyei->__load_up=malloc(sizeof(*__load_queue_t));
     // new_wikimyei->__load_down=malloc(sizeof(*__load_queue_t));
     // assert(new_wikimyei->__load_up!=NULL);
@@ -178,7 +201,7 @@ __wikimyei_t *wikimyei_fabric(
 }
 ___cwcn_bool_t all_duuruva_ready(__wikimyei_t *_wikimyei){
     #if defined(JKIMYEI_DEBUG) || defined(DUURUVA_DEBUG)
-        fprintf(stdout,"\x1B[0;35m>> > adventage_duuruva_ready: %d, munaajpi_duuruva_ready: %d, alliu_duuruva_ready: %d %s\n",_wikimyei->__flags->__adventage_duuruva_ready, _wikimyei->__flags->__munaajpi_duuruva_ready,_wikimyei->__flags->__alliu_duuruva_ready,COLOR_REGULAR);
+        fprintf(stdout,"%s>> > adventage_duuruva_ready: %d, munaajpi_duuruva_ready: %d, alliu_duuruva_ready: %d %s\n",COLOR_DUURUVA,_wikimyei->__flags->__adventage_duuruva_ready, _wikimyei->__flags->__munaajpi_duuruva_ready,_wikimyei->__flags->__alliu_duuruva_ready,COLOR_REGULAR);
     #endif
     return  _wikimyei->__flags->__adventage_duuruva_ready&&\
             _wikimyei->__flags->__munaajpi_duuruva_ready &&\
@@ -282,7 +305,7 @@ int yield_next_trayectory(__wikimyei_t *_wikimyei){
         *_wikimyei->__load_head->__up=NULL;
     }else{
         load_to_end(_wikimyei);
-        __load_queue_t *new_head=queue_item_fabric(trayectory_fabric(_wikimyei));
+        __load_queue_t *new_head=queue_item_fabric(_wikimyei,trayectory_fabric(_wikimyei));
         *new_head->__down=_wikimyei->__load_head;
         *new_head->__up=NULL;
         *_wikimyei->__load_head->__up=new_head;
@@ -291,15 +314,14 @@ int yield_next_trayectory(__wikimyei_t *_wikimyei){
         _wikimyei->__load_size+=0x01;
         _wikimyei->__flags->__endhead_empty_alliu=___CWCN_TRUE;
         _wikimyei->__flags->__nonuwaabo_alliu_done=___CWCN_FALSE;
-        fprintf(stdout,"   .     load index: [%d] :: head: %p, \tup: %p, \tdown: %p \ttryty: %p\n", _wikimyei->__load_index, _wikimyei->__load_head, *_wikimyei->__load_head->__up, *_wikimyei->__load_head->__down, _wikimyei->__load_head->__trayectory_item);
     }
     #ifdef WIKIMYEI_DEBUG_LOAD
     fprintf(stdout,"\t +++ [trayectory enqueued]: \t [head:] %p, \t [up:] %p, \t [down:] %p, \t [trayectory:] %p\n",_wikimyei->__load_head,*_wikimyei->__load_head->__up,*_wikimyei->__load_head->__down, _wikimyei->__load_head->__trayectory_item);
     #endif
-
-    #ifdef WIKIMYEI_DEBUG_LOAD
-    fprintf(stdout,"\t [enque (head) (up==NULL)] trayectory in load index: %d address: %p\n",_wikimyei->__load_index,_wikimyei->__load_head->__trayectory_item);
-    #endif
+    // #ifdef ALOCATION_DEBUG
+    // fprintf(stdout,"\t[yield_next_trayectory:]\n");
+    // load_print_up_trayectory_pointers(_wikimyei);
+    // #endif
     #ifdef WIKIMYEI_DEBUG_v2
     fprintf(stdout,">> > ... yield_next_trayectory, c_load_index:%d, c_load_size:%d\n", _wikimyei->__load_index, _wikimyei->__load_size);
     #endif
@@ -336,7 +358,8 @@ void load_print_up_trayectory_pointers(__wikimyei_t *_wikimyei){
         int c_index=_wikimyei->__load_index;
         load_to_start(_wikimyei);
         if(!load_is_empty(_wikimyei)){do{
-            fprintf(stdout,"   .     load index: [%d] :: head: %p, \tup: %p, \tdown: %p \ttryty: %p\n", _wikimyei->__load_index, _wikimyei->__load_head, *_wikimyei->__load_head->__up, *_wikimyei->__load_head->__down, _wikimyei->__load_head->__trayectory_item);
+            fprintf(stdout,"   .     [%d] :: %s[head:]%p,%s \t[up:]%p, \t[down:]%p \t[ty:]%p\n", _wikimyei->__load_index, COLOR_L_GOOD,_wikimyei->__load_head, COLOR_REGULAR, _wikimyei->__load_head->__up, _wikimyei->__load_head->__down, _wikimyei->__load_head->__trayectory_item);
+            fprintf(stdout,"   .     [%d] :: [*head]\t\t, \t%s[*up]%p,%s \t%s[*down]%p,%s \t[*ty]\t\t\n",_wikimyei->__load_index, COLOR_L_GOOD,*_wikimyei->__load_head->__up, COLOR_REGULAR, COLOR_L_GOOD,*_wikimyei->__load_head->__down,COLOR_REGULAR);
         }while(load_go_up(_wikimyei)!=-1);}
         load_to_index(_wikimyei, c_index);
     }
@@ -348,7 +371,7 @@ void load_print_up_trayectory_queue(__wikimyei_t *_wikimyei){
         int c_index=_wikimyei->__load_index;
         load_to_start(_wikimyei);
         if(!load_is_empty(_wikimyei)){do{
-            fprintf(stdout,"\t load index: [%d] :: alliu_state[0]: %.2f, imibajcho_munaajpi_state: %.2f, pending_munaajpi: %d, entropy: %.2f\n", _wikimyei->__load_index, glti(_wikimyei)->__alliu_state[0x00], glti(_wikimyei)->__imibajcho_munaajpi_state[0x00], glti(_wikimyei)->__pending_munaajpi, glti(_wikimyei)->__entropy);
+            fprintf(stdout,"   |     [index:]%d :: alliu[0]: %.2f, imibajcho_munaajpi: %.2f, pending_munaajpi: %d, entropy: %.2f\n", _wikimyei->__load_index, glti(_wikimyei)->__alliu_state[0x00], glti(_wikimyei)->__imibajcho_munaajpi_state[0x00], glti(_wikimyei)->__pending_munaajpi, glti(_wikimyei)->__entropy);
         }while(load_go_up(_wikimyei)!=-1);}
         load_to_index(_wikimyei, c_index);
     }
@@ -518,28 +541,31 @@ void kill_trayectory(__trayectory_t *_trayectory){
     free(_trayectory->__munaajpi_state);                    _trayectory->__munaajpi_state=NULL;
 }
 void kill_queue(__load_queue_t *_queue){
-    #ifdef WIKIMYEI_DEBUG_ALOCATION_CLEANING
-    fprintf(stdout,">> > --- [killin queue] \t address: (pass)[head:]%p, (kill)[up:]%p (kill)[down:]%p (kill)[ty:]%p\n",\
+    #ifdef ALOCATION_DEBUG
+    fprintf(stdout,">> > --- [killin queue] \n\t(pass)[head:]%p, (kill)[up:]%p (kill)[down:]%p (kill)[ty:]%p\n",\
                     _queue,\
                     _queue->__up,\
                     _queue->__down,\
                     _queue->__trayectory_item);
     #endif
     kill_trayectory(_queue->__trayectory_item);
-    free(_queue->__trayectory_item);                        _queue->__trayectory_item=NULL;
-    free(_queue->__down);                                   _queue->__down=NULL;
-    free(_queue->__up);                                     _queue->__up=NULL;
+    free(_queue->__trayectory_item);    _queue->__trayectory_item=NULL;
+    free(_queue->__down);               _queue->__down=NULL;
+    free(_queue->__up);                 _queue->__up=NULL;
 }
 void empty_queue_on_last(__wikimyei_t *_wikimyei){
     assert(load_is_healty(_wikimyei));
     load_to_end(_wikimyei);
     if(_wikimyei->__load_size>=0x02){
         load_go_down(_wikimyei); // head is null
-        #if defined(WIKIMYEI_DEBUG) || defined(WIKIMYEI_DEBUG_ALOCATION_CLEANING)
+        #if defined(WIKIMYEI_DEBUG) || defined(ALOCATION_DEBUG)
         fprintf(stdout,"\t [killing load in]: [%d]->__up (load size: %d)\n",_wikimyei->__load_index,_wikimyei->__load_size);
         #endif
         assert(!load_on_end(_wikimyei));
         kill_queue(*_wikimyei->__load_head->__up);
+        #ifdef ALOCATION_DEBUG
+        fprintf(stdout,">> > --- [killin *up] \n\t(kill)[*head->__up:]%p",*_wikimyei->__load_head->__up);
+        #endif
         free(*_wikimyei->__load_head->__up);
         *_wikimyei->__load_head->__up=NULL;
         assert(_wikimyei->__load_head->__up!=NULL);
@@ -549,13 +575,16 @@ void empty_queue_on_last(__wikimyei_t *_wikimyei){
         _wikimyei->__load_size--;
         assert(load_is_healty(_wikimyei));
     } else if(_wikimyei->__load_size==1){
-        #if defined(WIKIMYEI_DEBUG) || defined(WIKIMYEI_DEBUG_ALOCATION_CLEANING)
+        #if defined(WIKIMYEI_DEBUG) || defined(ALOCATION_DEBUG)
         #endif
-        #if defined(WIKIMYEI_DEBUG) || defined(WIKIMYEI_DEBUG_ALOCATION_CLEANING)
+        #if defined(WIKIMYEI_DEBUG) || defined(ALOCATION_DEBUG)
         fprintf(stdout,"\t [killing last queue]: [%d] with (load size: %d)\n",_wikimyei->__load_index,_wikimyei->__load_size);
         #endif
         assert(load_on_start(_wikimyei) && load_on_end(_wikimyei));
         kill_queue(_wikimyei->__load_head);
+        #ifdef ALOCATION_DEBUG
+        fprintf(stdout,">> > --- [killin head] \n\t(kill)[head:]%p",_wikimyei->__load_head);
+        #endif
         free(_wikimyei->__load_head);
         _wikimyei->__load_head=NULL;
         _wikimyei->__load_size--;
@@ -563,25 +592,30 @@ void empty_queue_on_last(__wikimyei_t *_wikimyei){
         assert(load_is_empty(_wikimyei));
         assert(load_is_healty(_wikimyei)); // #FIXME an empty load is a healty load?
     }
-    #ifdef WIKIMYEI_DEBUG_ALOCATION_CLEANING
+    #ifdef ALOCATION_DEBUG
     else{fprintf(stdout,">> > /// [skippin up queue] \t(item found to be NULL)\t at load index: [%d]\t with address: %p\n",_wikimyei->__load_index,_wikimyei->__load_head->__up);}
     #endif
 }
+#ifdef ALOCATION_DEBUG
+void test_load_alocation(__wikimyei_t *_wikimyei){
+    assert(load_is_empty(_wikimyei));
+}
+#endif
 void kill_load(__wikimyei_t *_wikimyei){
-    #if defined(WIKIMYEI_DEBUG) || defined(WIKIMYEI_DEBUG_ALOCATION_CLEANING)
+    #if defined(WIKIMYEI_DEBUG) || defined(ALOCATION_DEBUG)
     fprintf(stdout,">> > ... request to kill_load\n");
     #endif
     if(load_is_empty(_wikimyei)){
-        #if defined(WIKIMYEI_DEBUG)  || defined(WIKIMYEI_DEBUG_ALOCATION_CLEANING)
+        #if defined(WIKIMYEI_DEBUG)  || defined(ALOCATION_DEBUG)
         fprintf(stdout, "\t [found empty load]\n");
         #endif
     } else {
         do{
             empty_queue_on_last(_wikimyei);
-            #ifdef WIKIMYEI_DEBUG_ALOCATION_CLEANING
-            printf("\t [current queue pointer state:]\n");
-            load_print_up_trayectory_pointers(_wikimyei);
-            #endif
+            // #ifdef ALOCATION_DEBUG
+            // printf("\t [current queue pointer state:]\n");
+            // load_print_up_trayectory_pointers(_wikimyei);
+            // #endif
         }while(!load_is_empty(_wikimyei));
     }
     assert(load_is_empty(_wikimyei));
@@ -592,8 +626,8 @@ void kill_load(__wikimyei_t *_wikimyei){
 */
 void destroy_wikimyei(__wikimyei_t *_wikimyei){
     // #FIXME end it
-    #if defined(WIKIMYEI_DEBUG) || defined(WIKIMYEI_DEBUG_ALOCATION_CLEANING)
-        fprintf(stdout,">> > ... destroy_wikimyei\n");
+    #if defined(WIKIMYEI_DEBUG) || defined(ALOCATION_DEBUG)
+        fprintf(stdout,">> > ... destroy_wikimyei [#FIXME alocation cleaning]\n");
     #endif
     free(_wikimyei->__munaajpi_base_w_state);
     kill_load(_wikimyei);

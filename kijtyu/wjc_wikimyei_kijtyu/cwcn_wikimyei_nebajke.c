@@ -10,6 +10,9 @@ void ___alliu_hash(__wikimyei_t *_wikimyei){
     getnext_alliu(_wikimyei->__alliu);
     _wikimyei->__flags->__endhead_empty_alliu=___CWCN_FALSE;
     copy_c_cwcn_blocks_from_b_to_a(glti(_wikimyei)->__alliu_state, _wikimyei->__alliu->__source_value, _wikimyei->__alliu->__source_size);
+    #ifdef ALOCATION_DEBUG
+    printf("> >>> . ALB (debug): __alliu_state: [%p] %f,  alliu_source: [%p] %f\n",glti(_wikimyei)->__alliu_state,glti(_wikimyei)->__alliu_state[0x00], _wikimyei->__alliu->__source_value, _wikimyei->__alliu->__source_value[0x00]);
+    #endif
     #ifdef WIKIMYEI_DEBUG
         fprintf(stdout,"%s>> > load_index: [%d] ... ___alliu_hash\t [",COLOR_ALLIU,_wikimyei->__load_index);
         for(unsigned int idx=0x00;idx<_wikimyei->__alliu_state_size;idx++){
@@ -47,9 +50,9 @@ void ___uwaabo_hash(__wikimyei_t *_wikimyei){
 	/*	tsinuu */
 	/*	 */
     // #FIXME add assertions
-    set_input(_wikimyei->__uwaabo, glti(_wikimyei)->__alliu_duuruva_state);
+    set_tsinuu_input(_wikimyei->__uwaabo, glti(_wikimyei)->__alliu_duuruva_state);
 	tsinuu_direct_uwaabo_full_parametric(_wikimyei->__uwaabo);
-	read_output(_wikimyei->__uwaabo, glti(_wikimyei)->__uwaabo_state);
+	read_tsinuu_output(_wikimyei->__uwaabo, glti(_wikimyei)->__uwaabo_state);
     #ifdef WIKIMYEI_DEBUG
         fprintf(stdout,"%s>> > load_index: [%d] ... request uwaabo_hash\t uwaabo_state: [",COLOR_UWAABO,_wikimyei->__load_index);
         for(unsigned int idx=0x00;idx<_wikimyei->__uwaabo_state_size;idx++){
@@ -65,20 +68,20 @@ void ___entropy_hash(__wikimyei_t *_wikimyei){
     _wikimyei->__ec->__forward(_wikimyei->__ec, glti(_wikimyei)->__uwaabo_state);
     glti(_wikimyei)->__entropy=_wikimyei->__ec->__entropy;
     #ifdef WIKIMYEI_DEBUG
-        fprintf(stdout,">> > load_index: [%d] ... ___entropy_hash,\tentropy:%f\n",_wikimyei->__load_index,glti(_wikimyei)->__entropy);
+    fprintf(stdout,">> > load_index: [%d] ... ___entropy_hash,\tentropy:%f\n",_wikimyei->__load_index,glti(_wikimyei)->__entropy);
     #endif
 }
 void ___tsane_dehash(__wikimyei_t *_wikimyei){
 	/*  entropy */
 	/*	 */
     // #FIXME add assertions
-    glti(_wikimyei)->__tsane_state=_wikimyei->__ec->__tsane;
     __cwcn_type_t c_sum=0x00;
     unsigned int idx;
     unsigned int ctx=0x00;
     __cwcn_type_t _bern_dude=0x00;
     __cwcn_type_t *c_tsane_nondecimal=malloc(_wikimyei->__tsane_state_size*sizeof(__cwcn_type_t));
     for(idx=0x00;idx<_wikimyei->__tsane_state_size;idx++){
+        glti(_wikimyei)->__tsane_state[idx]=_wikimyei->__ec->__tsane[idx];
         c_tsane_nondecimal[idx]=glti(_wikimyei)->__tsane_state[idx]/0.01;
     }
     for(idx=0x00;idx<_wikimyei->__tsane_state_size;idx++){
@@ -116,9 +119,9 @@ void ___munaajpi_hash(__wikimyei_t *_wikimyei){
 	/*	 */
     // #FIXME add assertions
     read_munaajpi_w_base(_wikimyei);
-    set_input(_wikimyei->__munaajpi, _wikimyei->__munaajpi_base_w_state);
+    set_tsinuu_input(_wikimyei->__munaajpi, _wikimyei->__munaajpi_base_w_state);
 	tsinuu_direct_uwaabo_full_parametric(_wikimyei->__munaajpi);
-    read_output(_wikimyei->__munaajpi, glti(_wikimyei)->__munaajpi_state);
+    read_tsinuu_output(_wikimyei->__munaajpi, glti(_wikimyei)->__munaajpi_state);
     #ifdef WIKIMYEI_DEBUG
         fprintf(stdout,"%s>> > load_index: [%d] ... request munaajpi_hash:\n",COLOR_MUNAAJPI,_wikimyei->__load_index);
         fprintf(stdout,">> > load_index: [%d] ... munaajpi_state: [",_wikimyei->__load_index);
@@ -199,7 +202,6 @@ void wikimyei_live_one(__wikimyei_t *_wikimyei){
     fprintf(stdout,">> > ... load_index: [%d] ... starting with flags:\n",_wikimyei->__load_index);
     printflags(_wikimyei);
     #endif
-    printf(">> > ... load_index: [%d] ... request to enqueue...\n",_wikimyei->__load_index);
     assert(!yield_next_trayectory(_wikimyei));
     _wikimyei->__flags->__done=___CWCN_FALSE;
     // clock_t begin;

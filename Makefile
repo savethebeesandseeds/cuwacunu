@@ -1,5 +1,6 @@
 CC=/usr/bin/gcc
 ROOT=/home/work/cuwacunu
+TEST_SEGMENTATION_FAULT=-g -O0 -v -da -Q
 
 KIJTYU=$(ROOT)/kijtyu
 CONFIGURATIONS=$(ROOT)/configurations
