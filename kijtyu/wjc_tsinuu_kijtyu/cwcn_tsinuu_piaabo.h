@@ -14,6 +14,8 @@
 // #ifdef TSINUU_BACKWARD
 // #define TSINUU_BACKWARD
 // #endif
+// #define TSINUU_DEBUG
+// #define TSINUU_DEBUG_v2
 typedef _Bool ___cwcn_bool_t;
 #define ___CWCN_TRUE (___cwcn_bool_t) 0b1
 #define ___CWCN_FALSE (___cwcn_bool_t) 0b0

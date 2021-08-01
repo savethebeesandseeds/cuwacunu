@@ -262,7 +262,6 @@ void jkimyei_tsinuu_bydirectNABLA(__tsinuu_t *_tsinuu){ // #FIXME make function 
         }
     */
     // #FIXME check if each node __has_value
-    
     __line_tsinuu_t *c_line;
     __node_tsinuu_t *c_node_to;
     __node_tsinuu_t *c_node_from;
@@ -288,7 +287,7 @@ void jkimyei_tsinuu_bydirectNABLA(__tsinuu_t *_tsinuu){ // #FIXME make function 
             assert(0x00);
         }
         c_node_from->__n_kemu->__nabla=c_wapaajco_vector[idx_n_from]*c_node_from->__n_kemu->__nodeactivation_grad;
-        #ifdef TSINUU_VERBOSE_2
+        #ifdef TSINUU_DEBUG_v2
             fprintf(stdout,"\033[0;35m");
             fprintf(stdout,"NODE:[%d][%d]:  <<Nabla = _wapaajco*biasGrad.>>\t\t\tNabla:%2.5f   biasGrad:%2.3f   \033[0;32m_wapaajco[%d]\033[0m:%2.3f\n",output_layer_index(_tsinuu),idx_n_from,c_node_from->__n_kemu->__nabla,c_node_from->__n_kemu->__nodeactivation_grad,idx_n_from,c_wapaajco_vector[idx_n_from]);
             fprintf(stdout,"\033[0m");
@@ -309,7 +308,7 @@ void jkimyei_tsinuu_bydirectNABLA(__tsinuu_t *_tsinuu){ // #FIXME make function 
                 c_line=_tsinuu->__lines[_tsinuu->__attributes->__backward_ln_index_list[ln_ctx]];
                 c_node_to = node(_tsinuu, node_index_to_node_coord(_tsinuu, idx_l_from+0x01, idx_n_to));
                 c_sum+=nat_signedsigmoid_direct(c_line->__ln_kemu->__weight*c_node_to->__n_kemu->__nabla); // #FIXME here is a problem, vanishing gradient
-                #ifdef TSINUU_VERBOSE_2
+                #ifdef TSINUU_DEBUG_v2
                     fprintf(stdout,"\033[0;35m\t");
                     print_line_by_coord(_tsinuu, line_index_to_line_coord(_tsinuu,_tsinuu->__attributes->__backward_ln_index_list[ln_ctx]));
                     fprintf(stdout,"\t c_sum:%f\n",c_sum);
@@ -329,7 +328,7 @@ void jkimyei_tsinuu_bydirectNABLA(__tsinuu_t *_tsinuu){ // #FIXME make function 
                 if(idx_n_to==0){break;}
             }
             c_node_from->__n_kemu->__nabla=c_sum*c_node_from->__n_kemu->__nodeactivation_grad;
-            #ifdef TSINUU_VERBOSE_2
+            #ifdef TSINUU_DEBUG_v2
                 fprintf(stdout,"\033[0;35m");
                 fprintf(stdout,"NODE :(from):[%d][%d]: <<Nabla = c_sum*biasGrad.>>\t\t\t\tNabla:%2.5f   biasGrad:%2.3f   c_sum:%2.3f\n",idx_l_from,idx_n_from,c_node_from->__n_kemu->__nabla,c_node_from->__n_kemu->__nodeactivation_grad,c_sum);
                 fprintf(stdout,"\033[0m");
@@ -360,7 +359,7 @@ void jkimyei_tsinuu_bydirectNABLA(__tsinuu_t *_tsinuu){ // #FIXME make function 
                     c_node_to->__n_kemu->__bias_delta = _tsinuu->__attributes->__omega*c_node_to->__n_kemu->__bias_delta;
                     c_node_to->__n_kemu->__bias+=c_node_to->__n_kemu->__bias_delta;
                     clamp_bias(_tsinuu, c_node_to->__n_kemu);
-                    #ifdef TSINUU_VERBOSE_2
+                    #ifdef TSINUU_DEBUG_v2
                         fprintf(stdout,"\033[0;34m");
                         // fprintf(stdout,"NODE:[%d][%d]:<<biasDelta[k] = __eta * Nabla + alpha * biasDelta[k-1].>>\n\t\t\t__eta:%2.3f * Nabla:%9.3f + __alpha:%2.3f * biasDelta:%2.3f\n",idx_l_to,idx_n_to,_tsinuu->__attributes->__eta,c_node_to->__n_kemu->__nabla,_tsinuu->__attributes->__alpha,c_node_to->__n_kemu->__bias_delta);
                         fprintf(stdout,"NODE:[%d][%d]:<<biasDelta[k] = omega * phi(omgStiff * (__eta * Nabla + alpha * biasDelta[k-1])).>>\n\t\t\t__omega: %2.3f __eta:%2.3f  Nabla:%9.3f  __alpha:%2.3f biasDelta:%2.3f\n",idx_l_to,idx_n_to,_tsinuu->__attributes->__omega, _tsinuu->__attributes->__eta,c_node_to->__n_kemu->__nabla,_tsinuu->__attributes->__alpha,c_node_to->__n_kemu->__bias_delta);
@@ -392,7 +391,7 @@ void jkimyei_tsinuu_bydirectNABLA(__tsinuu_t *_tsinuu){ // #FIXME make function 
                     if(!c_line->__lnbp->__pardon_grad){
                         c_node_from = node(_tsinuu, node_index_to_node_coord(_tsinuu, idx_l_to-0x01, idx_n_from));
                         c_line->__ln_kemu->__weight_delta=nat_signedsigmoid_direct(_tsinuu->__attributes->__eta*c_node_from->__n_kemu->__value*c_node_to->__n_kemu->__nabla)+nat_signedsigmoid_direct(_tsinuu->__attributes->__alpha*c_line->__ln_kemu->__weight_delta);
-                        #ifdef TSINUU_VERBOSE_2
+                        #ifdef TSINUU_DEBUG_v2
                             fprintf(stdout,"\033[0;32m");
                             fprintf(stdout,"\tLINE:[%d]:<<weightDelta[k] = __eta * nodeValue[%d][%d] * Nabla[%d][%d] + __alpha * weightDelta[k-1]>>\n\t\t\t__eta:%2.3f * __value: %2.3f * __weight_nabla:%2.3f + __alpha:%2.3f * __weight_delta:%2.3f\n\t",ln_ctx,idx_l_to-0x01, idx_n_from, idx_l_to, idx_n_to,_tsinuu->__attributes->__eta,c_node_from->__n_kemu->__value,c_node_to->__n_kemu->__nabla,_tsinuu->__attributes->__alpha,c_line->__ln_kemu->__weight_delta);
                             print_line_by_coord(_tsinuu, line_index_to_line_coord(_tsinuu, ln_ctx));
@@ -426,7 +425,7 @@ void jkimyei_tsinuu_bydirectNABLA(__tsinuu_t *_tsinuu){ // #FIXME make function 
 /*
 
 */
-void wapaajco_bydifference(__tsinuu_t *_tsinuu, __cwcn_type_t *_correct_output){
+void wapaajco_bydifference(__tsinuu_t *_tsinuu, __cwcn_type_t *_correct_output){ // #FIXME, mkae it better, differnece square and those things
     __cwcn_type_t *_c_output=malloc(layer_size_from_layer_stack_index(_tsinuu,output_layer_index(_tsinuu))*sizeof(__cwcn_type_t));
     read_tsinuu_output(_tsinuu,_c_output);
     for(unsigned int idx_n=0x00;idx_n<layer_size_from_layer_stack_index(_tsinuu,output_layer_index(_tsinuu));idx_n++){

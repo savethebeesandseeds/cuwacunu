@@ -13,12 +13,10 @@ __trayectory_t *trayectory_fabric(__wikimyei_t *_wikimyei){
     new_trayectory->__pending_munaajpi=___CWCN_TRUE;
     new_trayectory->__alliu_state=malloc(_wikimyei->__alliu_state_size*sizeof(__cwcn_type_t));
     new_trayectory->__nonuwaabo_alliu_state=malloc(_wikimyei->__alliu_state_size*sizeof(__cwcn_type_t));
-    new_trayectory->__alliu_duuruva_state=malloc(_wikimyei->__alliu_duuruva_state_size*sizeof(__cwcn_type_t));
     new_trayectory->__uwaabo_state=malloc(_wikimyei->__uwaabo_state_size*sizeof(__cwcn_type_t));
     new_trayectory->__uwaabo_returns=malloc(_wikimyei->__uwaabo_state_size*sizeof(__cwcn_type_t));
     new_trayectory->__uwaabo_adventage=malloc(_wikimyei->__uwaabo_state_size*sizeof(__cwcn_type_t));
     new_trayectory->__tsane_state=malloc(_wikimyei->__tsane_state_size*sizeof(__cwcn_type_t));
-    new_trayectory->__imibajcho_munaajpi_duuruva_state=malloc(_wikimyei->__imibajcho_munaajpi_duuruva_state_size*sizeof(__cwcn_type_t));
     new_trayectory->__munaajpi_state=malloc(_wikimyei->__munaajpi_state_size*sizeof(__cwcn_type_t));
     new_trayectory->__imibajcho_munaajpi_state=malloc(0x01*sizeof(__cwcn_type_t)); // #FIXME, is one
     for(unsigned int idx=0x00;idx<_wikimyei->__alliu_state_size;idx++){new_trayectory->__alliu_state[idx]=0x00;}
@@ -26,25 +24,35 @@ __trayectory_t *trayectory_fabric(__wikimyei_t *_wikimyei){
     new_trayectory->__imibajcho_munaajpi_state[0x00]=0x00; // this is J, varies while pending_munaajpi_index
     new_trayectory->__entropy=0x00;
     new_trayectory->__uwaabo_mask=0x01; // #FIXME
-    for(unsigned int idx=0x00;idx<_wikimyei->__alliu_duuruva_state_size;idx++){new_trayectory->__alliu_duuruva_state[idx]=0x00;}
     for(unsigned int idx=0x00;idx<_wikimyei->__uwaabo_state_size;idx++){new_trayectory->__uwaabo_state[idx]=0x00;}
     for(unsigned int idx=0x00;idx<_wikimyei->__tsane_state_size;idx++){new_trayectory->__tsane_state[idx]=0x00;}
     for(unsigned int idx=0x00;idx<_wikimyei->__munaajpi_state_size;idx++){new_trayectory->__munaajpi_state[idx]=0x00;}
-    for(unsigned int idx=0x00;idx<_wikimyei->__imibajcho_munaajpi_duuruva_state_size;idx++){new_trayectory->__imibajcho_munaajpi_duuruva_state[idx]=0x00;}
+    #ifdef __EXPAND_ALLIU__DUURUVA__
+    new_trayectory->__alliu_duuruva_state=malloc(_wikimyei->__wajyu->__metric->__alliu_duuruva->__duuruva_vector_size*sizeof(__cwcn_type_t));
+    for(unsigned int idx=0x00;idx<_wikimyei->__wajyu->__metric->__alliu_duuruva->__duuruva_vector_size;idx++){new_trayectory->__alliu_duuruva_state[idx]=0x00;}
+    #endif
+    #ifdef __EXPAND_IMIBAJCHO_MUNAAJPI_DUURUVA__
+    new_trayectory->__imibajcho_munaajpi_duuruva_state=malloc(_wikimyei->__wajyu->__metric->__imibajcho_munaajpi_duuruva->__duuruva_vector_size*sizeof(__cwcn_type_t));
+    for(unsigned int idx=0x00;idx<_wikimyei->__wajyu->__metric->__imibajcho_munaajpi_duuruva->__duuruva_vector_size;idx++){new_trayectory->__imibajcho_munaajpi_duuruva_state[idx]=0x00;}
+    #endif
     for(unsigned int idx=0x00;idx<_wikimyei->__uwaabo_state_size;idx++){new_trayectory->__uwaabo_adventage[idx]=0x00;}
     for(unsigned int idx=0x00;idx<_wikimyei->__uwaabo_state_size;idx++){new_trayectory->__uwaabo_returns[idx]=0x00;}
-    #ifdef ALOCATION_DEBUG
+    #ifdef ALOCATION_DEBUG // #FIXME this is only used here!
     fprintf(stdout,"%s     +++ [trayectory_fabric]:\n%s",COLOR_ALOCATION_ADD,COLOR_REGULAR);
     fprintf(stdout,"%s\t __alliu_state: %s%p:\n",COLOR_ALOCATION_ADD,COLOR_REGULAR,new_trayectory->__alliu_state);
+    fprintf(stdout,"%s\t __tsane_state: %s%p:\n",COLOR_ALOCATION_ADD,COLOR_REGULAR,new_trayectory->__tsane_state);
+    fprintf(stdout,"%s\t __munaajpi_state: %s%p:\n",COLOR_ALOCATION_ADD,COLOR_REGULAR,new_trayectory->__munaajpi_state);
     fprintf(stdout,"%s\t __nonuwaabo_alliu_state: %s%p:\n",COLOR_ALOCATION_ADD,COLOR_REGULAR,new_trayectory->__nonuwaabo_alliu_state);
-    fprintf(stdout,"%s\t __alliu_duuruva_state: %s%p:\n",COLOR_ALOCATION_ADD,COLOR_REGULAR,new_trayectory->__alliu_duuruva_state);
     fprintf(stdout,"%s\t __uwaabo_state: %s%p:\n",COLOR_ALOCATION_ADD,COLOR_REGULAR,new_trayectory->__uwaabo_state);
     fprintf(stdout,"%s\t __uwaabo_returns: %s%p:\n",COLOR_ALOCATION_ADD,COLOR_REGULAR,new_trayectory->__uwaabo_returns);
     fprintf(stdout,"%s\t __uwaabo_adventage: %s%p:\n",COLOR_ALOCATION_ADD,COLOR_REGULAR,new_trayectory->__uwaabo_adventage);
-    fprintf(stdout,"%s\t __tsane_state: %s%p:\n",COLOR_ALOCATION_ADD,COLOR_REGULAR,new_trayectory->__tsane_state);
-    fprintf(stdout,"%s\t __imibajcho_munaajpi_duuruva_state: %s%p:\n",COLOR_ALOCATION_ADD,COLOR_REGULAR,new_trayectory->__imibajcho_munaajpi_duuruva_state);
-    fprintf(stdout,"%s\t __munaajpi_state: %s%p:\n",COLOR_ALOCATION_ADD,COLOR_REGULAR,new_trayectory->__munaajpi_state);
+    #ifdef __EXPAND_ALLIU__DUURUVA__
+    fprintf(stdout,"%s\t __alliu_duuruva_state: %s%p:\n",COLOR_ALOCATION_ADD,COLOR_REGULAR,new_trayectory->__alliu_duuruva_state);
+    #endif
     fprintf(stdout,"%s\t __imibajcho_munaajpi_state: %s%p:\n",COLOR_ALOCATION_ADD,COLOR_REGULAR,new_trayectory->__imibajcho_munaajpi_state);
+    #ifdef __EXPAND_IMIBAJCHO_MUNAAJPI_DUURUVA__
+    fprintf(stdout,"%s\t __imibajcho_munaajpi_duuruva_state: %s%p:\n",COLOR_ALOCATION_ADD,COLOR_REGULAR,new_trayectory->__imibajcho_munaajpi_duuruva_state);
+    #endif
     #endif
     return new_trayectory;
 }
@@ -117,9 +125,9 @@ __wikimyei_t *wikimyei_fabric(
     #ifdef ALOCATION_DEBUG
     new_wikimyei->__alocation_bunddle=malloc(sizeof(__alocation_bunddle_t));
     #endif
-    new_wikimyei->__take_tsane=_take_tsane;
-    new_wikimyei->__jk_size=_jk_size; // jk_size is times each load item is jk
-    new_wikimyei->__horizon_munaajpi=_horizon_munaajpi;
+    new_wikimyei->__take_tsane=__TAKE_TSANE__;
+    new_wikimyei->__jk_size=__JK_SIZE__; // jk_size is times each load item is jk
+    new_wikimyei->__horizon_munaajpi=__HORIZON_MUNAAJPI__;
     new_wikimyei->__gae_gamma=_gae_gamma;
     new_wikimyei->__gae_lambda=_gae_lambda;
     new_wikimyei->__clip_param=_clip_param;
@@ -129,38 +137,37 @@ __wikimyei_t *wikimyei_fabric(
     
     new_wikimyei->__load_index=-1; // redundant (due to fabric load)
     new_wikimyei->__load_size=0x00; // redundant (due to fabric load)
-    new_wikimyei->__alliu_state_size=_alliu_size;
-    new_wikimyei->__tsane_state_size=_tsane_size;
-    new_wikimyei->__direct_resolution=_direct_resolution;
+    new_wikimyei->__alliu_state_size=__ALLIU_SIZE__;
+    new_wikimyei->__tsane_state_size=__TSANE_SIZE__;
+    new_wikimyei->__direct_resolution=__DIRECT_RESOLUTION__;
 
-    set_seed();
+    set_seed(); // woooooooo! frikin better set it correct
     
-    new_wikimyei->__jkimyei=jkimyei_fabric(_jk_size);
-    new_wikimyei->__alliu=alliu_fabric(_alliu_source, _alliu_size);
-    new_wikimyei->__tsane=tsane_fabric(___CWCN_FALSE, _tsane_size);
-	new_wikimyei->__ec=entropycosa_fabric(_direct_resolution, _tsane_size);
+    new_wikimyei->__jkimyei=jkimyei_fabric(new_wikimyei);
+    new_wikimyei->__alliu=alliu_fabric(__ALLIU_SOURCE__, new_wikimyei);
+    new_wikimyei->__tsane=tsane_fabric(__TAKE_TSANE__, new_wikimyei);
+    new_wikimyei->__wayju
+	new_wikimyei->__ec=entropycosa_fabric(__DIRECT_RESOLUTION__, new_wikimyei);
     new_wikimyei->__uwaabo_state_size=new_wikimyei->__ec->__total_cosa_params; // do not play with position
     
-
-    new_wikimyei->__alliu_duuruva=duuruva_fabric(_alliu_size);
-    new_wikimyei->__munaajpi_duuruva=duuruva_fabric(0x01); // #FIXME later, onedimensional J
-    new_wikimyei->__adventage_duuruva=duuruva_fabric(new_wikimyei->__uwaabo_state_size);
-    reset_duuruva(new_wikimyei->__alliu_duuruva);
-    reset_duuruva(new_wikimyei->__munaajpi_duuruva);
-    reset_duuruva(new_wikimyei->__adventage_duuruva);
-    new_wikimyei->__alliu_duuruva_state_size=new_wikimyei->__alliu_duuruva->__duuruva_vector_size;
-    new_wikimyei->__munaajpi_duuruva_state_size=new_wikimyei->__munaajpi_duuruva->__duuruva_vector_size;
-    new_wikimyei->__adventage_duuruva_state_size=new_wikimyei->__adventage_duuruva->__duuruva_vector_size;
-
-    new_wikimyei->__uwaabo_base_size=new_wikimyei->__alliu_duuruva_state_size;
-
-    new_wikimyei->__imibajcho_munaajpi_duuruva_state_size=new_wikimyei->__munaajpi_duuruva_state_size;
+    #ifdef __EXPAND_ALLIU__DUURUVA__
+    new_wikimyei->__uwaabo_base_size=new_wikimyei->__wajyu->__metric->__alliu_duuruva->__duuruva_vector_size;
+    #else 
+    new_wikimyei->__uwaabo_base_size=new_wikimyei->__alliu_state_size
+    #endif 
+    #ifdef __EXPAND_IMIBAJCHO_MUNAAJPI_DUURUVA__
+    new_wikimyei->__munaajpi->__imibajcho_munaajpi_duuruva_state_size=\
+        new_wikimyei->__wajyu->__metric->__munaajpi_duuruva->__duuruva_vector_size;
+    #else
+    new_wikimyei->__munaajpi->__imibajcho_munaajpi_duuruva_state_size=0x01; // #FIXME unidimensional J
+    #endif
     new_wikimyei->__munaajpi_base_size=\
-        new_wikimyei->__tsane_state_size+\
-        new_wikimyei->__uwaabo_state_size+\
-        new_wikimyei->__alliu_state_size+\
-        new_wikimyei->__alliu_duuruva_state_size+\
-        new_wikimyei->__imibajcho_munaajpi_duuruva_state_size;
+        new_wikimyei->__tsane_state_size\
+        +new_wikimyei->__uwaabo_state_size\
+        +new_wikimyei->__uwaabo_base_size\
+        +new_wikimyei->__wajyu->__metric->__alliu_duuruva->__duuruva_vector_size\
+        +new_wikimyei->__munaajpi->__imibajcho_munaajpi_duuruva_state_size\
+        +new_wikimyei->__wajyu->__metric->__imibajcho_munaajpi_duuruva->__duuruva_vector_size;
     new_wikimyei->__munaajpi_state_size=new_wikimyei->__uwaabo_state_size;
 
     new_wikimyei->__uwaabo=uwaabo_fabric(new_wikimyei->__uwaabo_base_size, new_wikimyei->__uwaabo_state_size);
@@ -170,11 +177,7 @@ __wikimyei_t *wikimyei_fabric(
     
     new_wikimyei->__flags=malloc(sizeof(__wk_flags_t));
     new_wikimyei->__flags->__done=___CWCN_FALSE;
-    new_wikimyei->__flags->__nonuwaabo_alliu_done=___CWCN_FALSE;
-    new_wikimyei->__flags->__endhead_empty_alliu=___CWCN_TRUE;
-    new_wikimyei->__flags->__alliu_duuruva_ready=___CWCN_FALSE;
-    new_wikimyei->__flags->__munaajpi_duuruva_ready=___CWCN_FALSE;
-    new_wikimyei->__flags->__adventage_duuruva_ready=___CWCN_FALSE;
+    new_wikimyei->__flags->__wajyu_ready;
     #ifndef DEBUG_LINEAR_EXPERIMENT
     new_wikimyei->__flags->__norm_stand=_DEFAULT_NORM_STAND_;
     #else
@@ -182,15 +185,15 @@ __wikimyei_t *wikimyei_fabric(
     #endif
     // new_wikimyei->__load_head=malloc(sizeof(__load_queue_t)); // DO NOT USE
     new_wikimyei->__load_head=NULL;//load_fabric(new_wikimyei);
-    #ifdef ALOCATION_DEBUG
-    new_wikimyei->__alocation_bunddle->__alb_count++; // __load_queue_t
-    #endif
+
+    /* load on wikimyei was deprecated, load_head has all the props */
     // new_wikimyei->__load_up=malloc(sizeof(*__load_queue_t));
     // new_wikimyei->__load_down=malloc(sizeof(*__load_queue_t));
     // assert(new_wikimyei->__load_up!=NULL);
     // assert(new_wikimyei->__load_down!=NULL);
     // new_wikimyei->__load_up=NULL;
     // new_wikimyei->__load_down=NULL;
+    /* load on wikimyei was deprecated, load_head has all the props */
     
     assert(load_is_healty(new_wikimyei));
     assert(load_is_empty(new_wikimyei));
@@ -199,11 +202,11 @@ __wikimyei_t *wikimyei_fabric(
 
     return new_wikimyei;
 }
-___cwcn_bool_t all_duuruva_ready(__wikimyei_t *_wikimyei){
+___cwcn_bool_t all_...wajyu_duuruva_ready(__wikimyei_t *_wikimyei){
     #if defined(JKIMYEI_DEBUG) || defined(DUURUVA_DEBUG)
-        fprintf(stdout,"%s>> > adventage_duuruva_ready: %d, munaajpi_duuruva_ready: %d, alliu_duuruva_ready: %d %s\n",COLOR_DUURUVA,_wikimyei->__flags->__adventage_duuruva_ready, _wikimyei->__flags->__munaajpi_duuruva_ready,_wikimyei->__flags->__alliu_duuruva_ready,COLOR_REGULAR);
+        fprintf(stdout,"%s>> > adventage_duuruva_ready: %d, munaajpi_duuruva_ready: %d, alliu_duuruva_ready: %d %s\n",COLOR_DUURUVA,_wikimyei->__flags->__uwaabo_adventage_duuruva_ready, _wikimyei->__flags->__munaajpi_duuruva_ready,_wikimyei->__flags->__alliu_duuruva_ready,COLOR_REGULAR);
     #endif
-    return  _wikimyei->__flags->__adventage_duuruva_ready&&\
+    return  _wikimyei->__flags->__uwaabo_adventage_duuruva_ready&&\
             _wikimyei->__flags->__munaajpi_duuruva_ready &&\
             _wikimyei->__flags->__alliu_duuruva_ready;
 }
@@ -294,6 +297,7 @@ void load_to_index(__wikimyei_t *_wikimyei, int _index){
     #endif
 }
 int yield_next_trayectory(__wikimyei_t *_wikimyei){
+    // #FIXME do something when with int 
     #ifdef WIKIMYEI_DEBUG
     fprintf(stdout,">> > ... request to yield_next_trayectory\n");
     #endif
@@ -531,14 +535,18 @@ void kill_trayectory(__trayectory_t *_trayectory){
     #endif
     free(_trayectory->__alliu_state);                       _trayectory->__alliu_state=NULL;
     free(_trayectory->__nonuwaabo_alliu_state);             _trayectory->__nonuwaabo_alliu_state=NULL;
-    free(_trayectory->__alliu_duuruva_state);               _trayectory->__alliu_duuruva_state=NULL;
     free(_trayectory->__uwaabo_state);                      _trayectory->__uwaabo_state=NULL;
     free(_trayectory->__uwaabo_returns);                    _trayectory->__uwaabo_returns=NULL;
     free(_trayectory->__uwaabo_adventage);                  _trayectory->__uwaabo_adventage=NULL;
     free(_trayectory->__imibajcho_munaajpi_state);          _trayectory->__imibajcho_munaajpi_state=NULL;
-    free(_trayectory->__imibajcho_munaajpi_duuruva_state);  _trayectory->__imibajcho_munaajpi_duuruva_state=NULL;
     free(_trayectory->__tsane_state);                       _trayectory->__tsane_state=NULL;
     free(_trayectory->__munaajpi_state);                    _trayectory->__munaajpi_state=NULL;
+    #ifdef __EXPAND_ALLIU__DUURUVA__
+    free(_trayectory->__alliu_duuruva_state);               _trayectory->__alliu_duuruva_state=NULL;
+    #endif
+    #ifdef __EXPAND_IMIBAJCHO_MUNAAJPI_DUURUVA__
+    free(_trayectory->__imibajcho_munaajpi_duuruva_state);  _trayectory->__imibajcho_munaajpi_duuruva_state=NULL;
+    #endif
 }
 void kill_queue(__load_queue_t *_queue){
     #ifdef ALOCATION_DEBUG
@@ -596,11 +604,6 @@ void empty_queue_on_last(__wikimyei_t *_wikimyei){
     else{fprintf(stdout,">> > /// [skippin up queue] \t(item found to be NULL)\t at load index: [%d]\t with address: %p\n",_wikimyei->__load_index,_wikimyei->__load_head->__up);}
     #endif
 }
-#ifdef ALOCATION_DEBUG
-void test_load_alocation(__wikimyei_t *_wikimyei){
-    assert(load_is_empty(_wikimyei));
-}
-#endif
 void kill_load(__wikimyei_t *_wikimyei){
     #if defined(WIKIMYEI_DEBUG) || defined(ALOCATION_DEBUG)
     fprintf(stdout,">> > ... request to kill_load\n");
@@ -634,7 +637,8 @@ void destroy_wikimyei(__wikimyei_t *_wikimyei){
     free(_wikimyei->__load_head);
     alliu_destroy(_wikimyei->__alliu);
     duuruva_destroy(_wikimyei->__alliu_duuruva);
-    duuruva_destroy(_wikimyei->__munaajpi_duuruva);
+    ...__EXPAND_IMIBAJCHO_MUNAAJPI_DUURUVA__
+    duuruva_destroy(_wikimyei->__wayju->__metric->__munaajpi_duuruva);
     duuruva_destroy(_wikimyei->__adventage_duuruva);
     tsane_destroy(_wikimyei->__tsane);
     entropycosa_destroy(_wikimyei->__ec);
@@ -645,12 +649,12 @@ void destroy_wikimyei(__wikimyei_t *_wikimyei){
     // free(_wikimyei); // #FIXME assert me outside
 }
 
-void printflags(__wikimyei_t *_wikimyei){
+void print...flags(__wikimyei_t *_wikimyei){
     fprintf(stdout,">> > Wikimyei Flags:\n");
     fprintf(stdout,">> > ... done: %d \t\n",_wikimyei->__flags->__done);
     fprintf(stdout,">> > ... nonuwaabo_alliu_done: %d \t\n",_wikimyei->__flags->__nonuwaabo_alliu_done);
     fprintf(stdout,">> > ... endhead_empty_alliu: %d \t\n",_wikimyei->__flags->__endhead_empty_alliu);
     fprintf(stdout,">> > ... %salliu_duuruva_ready: %d %s\t\n",COLOR_ALLIU,_wikimyei->__flags->__alliu_duuruva_ready,COLOR_REGULAR);
     fprintf(stdout,">> > ... %smunaajpi_duuruva_ready: %d %s\t\n",COLOR_MUNAAJPI, _wikimyei->__flags->__munaajpi_duuruva_ready,COLOR_REGULAR);
-    fprintf(stdout,">> > ... adventage_duuruva_ready: %d \t\n",_wikimyei->__flags->__adventage_duuruva_ready);
+    fprintf(stdout,">> > ... adventage_duuruva_ready: %d \t\n",_wikimyei->__flags->__uwaabo_adventage_duuruva_ready);
 }

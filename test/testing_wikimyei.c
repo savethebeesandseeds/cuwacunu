@@ -3,27 +3,23 @@ int main(){
     printf("sizeofVoid: %ld \n",sizeof(void));
     clock_t begin;
     clock_t end;
-    #ifndef DEBUG_LINEAR_EXPERIMENT
-    __alliu_source_t c_alliu_source=UNIT_as_alliu;
-    #else
-    __alliu_source_t c_alliu_source=SINE_as_alliu;
-    #endif
-    unsigned int c_alliu_size=0x01;
-    unsigned int c_tsane_size=0x02;
-    unsigned int c_direct_resolution=0x10;
-    unsigned int c_horizon_munaajpi=0x03;
-    int c_jk_size=0x02;
-    __cwcn_type_t c_gae_gamma=0.99;
-    __cwcn_type_t c_gae_lambda=0.95;
-    __cwcn_type_t c_clip_param=0.2;
-    __cwcn_type_t c_uwaabo_beta=0.01;
-    __cwcn_type_t c_munaajpi_beta=0.01;
-    __cwcn_type_t c_entropy_beta=0.01;
-    __cwcn_type_t c_uwaabo_waapajco_potency=0.02;
-    __cwcn_type_t c_munaajpi_waapajco_potency=0.02;
-    ___cwcn_bool_t c_take_tsane=___CWCN_FALSE;
-    int c_size_of_load=100;
-    unsigned int c_epochs=10;
+    __alliu_source_t c_alliu_source=__ALLIU_SOURCE__;
+    unsigned int c_alliu_size=__ALLIU_SIZE__;
+    unsigned int c_tsane_size=__TSANE_SIZE__;
+    unsigned int c_direct_resolution=__DIRECT_RESOLUTION__;
+    unsigned int c_horizon_munaajpi=__HORIZON_MUNAAJPI__;
+    __cwcn_type_t c_gae_gamma=__GAE_GAMMA__;
+    __cwcn_type_t c_gae_lambda=__GAE_LAMBDA__;
+    __cwcn_type_t c_clip_param=__CLIP_PARAM__;
+    __cwcn_type_t c_uwaabo_beta=__UWAABO_BETA__;
+    __cwcn_type_t c_munaajpi_beta=__MUNAAJPI_BETA__;
+    __cwcn_type_t c_entropy_beta=__ENTROPY_BETA__;
+    __cwcn_type_t c_uwaabo_waapajco_potency=__UWAABO_WAAPAJCO_POTENCY__;
+    __cwcn_type_t c_munaajpi_waapajco_potency=__MUNAAJPI_WAAPAJCO_POTENCY__;
+    ___cwcn_bool_t c_take_tsane=__TAKE_TSANE__;
+    int c_size_of_load=__SIZE_OF_LOAD__;
+    unsigned int c_epochs=__EPOCHS__;
+    unsigned int c_jk_size=__JK_SIZE__;
 
     __wikimyei_t *c_wikimyei=wikimyei_fabric(
         c_alliu_source,
@@ -46,30 +42,37 @@ int main(){
     // load_print_up_trayectory_queue(c_wikimyei);
     for(unsigned int f_ctx=0x00;f_ctx<3;f_ctx++){
         printf("%s ENTER TO LIVE LOAD:%s",COLOR_GOOD,COLOR_REGULAR);
-        getchar();
+        // getchar();
         begin=clock();
         wikimyei_live_load(c_wikimyei, c_size_of_load);
         end=clock();
         printf("%s exe time [wikimyei_live_load] %f:%s\n", COLOR_DANGER, (double)(end-begin)/CLOCKS_PER_SEC,COLOR_REGULAR);
         // wikimyei_live_load(c_wikimyei, 1);
         printf("%s ENTER TO JKIMYEI:%s",COLOR_GOOD,COLOR_REGULAR);
-        getchar();
+        // getchar();
         begin=clock();
         wikimyei_jkimyei(c_wikimyei, c_epochs);
         end=clock();
         printf("%s exe time [wikimyei_jkimyei] %f:%s\n", COLOR_DANGER, (double)(end-begin)/CLOCKS_PER_SEC,COLOR_REGULAR);
-        // printf("%s ENTER TO PRINT TRAYECOTRY:%s\n",COLOR_GOOD,COLOR_REGULAR);
+        printf("%s ENTER TO PRINT TRAYECOTRY:%s\n",COLOR_GOOD,COLOR_REGULAR);
         // getchar();
-        // load_print_up_trayectory_queue(c_wikimyei);
+        load_print_up_trayectory_queue(c_wikimyei);
         // printf("%s ENTER TO PRINT TRAYECOTRY POINTERS:%s\n",COLOR_GOOD,COLOR_REGULAR);
-        // getchar();
+        // // getchar();
         // load_print_up_trayectory_pointers(c_wikimyei);
         printf("%s ENTER TO PRINT MUNAAJPI REPORT:%s",COLOR_GOOD,COLOR_REGULAR);
-        getchar();
+        // getchar();
         print_report_munaajpi(c_wikimyei);
         // kill_load(c_wikimyei);
-        printf("%s ENTER TO LIVE LOAD AGAIN:%s",COLOR_GOOD,COLOR_REGULAR);
-        getchar();
+        printf("%s ENTER TO LIVE PRINT UWAABO LINES:%s",COLOR_GOOD,COLOR_REGULAR);
+        // getchar();
+        
+        // print_all_lines(c_wikimyei->__uwaabo);
+        // printf("%s ENTER TO LIVE PRINT UWAABO NODEX:%s",COLOR_GOOD,COLOR_REGULAR);
+        // // getchar();
+        // print_all_nodes(c_wikimyei->__uwaabo);
+        // printf("%s ENTER TO LIVE LOAD AGAIN:%s",COLOR_GOOD,COLOR_REGULAR);
+        // // getchar();
     }
     printf("%s waka dao %s\n",COLOR_GOOD,COLOR_REGULAR);
     printf("%s waka din %s\n",COLOR_GOOD,COLOR_REGULAR);
@@ -101,7 +104,7 @@ int main(){
     // for(unsigned int ctx_epoch=0x00;ctx_epoch<0x01;ctx_epoch++){
     //     for(unsigned int ctx_p=0x00;ctx_p<DATA_COUNT;ctx_p++){
     //         jkimyei_tsinuu_bydirectNABLA(c_tsinuu);
-    //         // getchar();
+    // //         // getchar();
     //     }
     // }
     destroy_wikimyei(c_wikimyei);

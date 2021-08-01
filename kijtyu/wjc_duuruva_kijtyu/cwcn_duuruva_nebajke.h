@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
+#include "wikimyei_piaabo.h"
 // #FIXME fix dependencies
 #define NAT_TYPE
 typedef _Bool ___cwcn_bool_t;
@@ -26,9 +27,19 @@ typedef struct __duuruva_dist_coord {
     __cwcn_type_t __kurtosis;
     __cwcn_type_t __skewness;
 } __duuruva_dist_tensor_t;
+
+typedef struct __duuruva_diff_tensor {
+    __cwcn_type_t __past_v; // holding value for change computation
+    __cwcn_type_t __diff_1; // first derivate (value valocity)
+    __cwcn_type_t __diff_2; // second derivate (value aceleration)
+    // ...
+    // __cwcn_type_t __itg_1; ...
+} __duuruva_diff_tensor_t;
+
 typedef struct __duuruva_bolean_parametrics {
     ___cwcn_bool_t __pardon_maxmin;
     ___cwcn_bool_t __pardon_dist;
+    ___cwcn_bool_t __pardon_diff;
     ___cwcn_bool_t __pardon_count;
     ___cwcn_bool_t __reset_flag;
 }__duuruva_bolean_parametrics_t;
@@ -38,17 +49,20 @@ typedef struct __duuruva {
     __cwcn_type_t *__value;
     __duuruva_bolean_parametrics_t * __dvbp;
     __duuruva_dist_tensor_t *__dv_dist;
+    __duuruva_diff_tensor_t *__dv_diff;
 } __duuruva_t;
 void set_duuruvaboleanparametrics(
     __duuruva_t *_duuruva,
     ___cwcn_bool_t _pardon_maxmin,
     ___cwcn_bool_t _pardon_dist,
+    ___cwcn_bool_t _pardon_diff,
     ___cwcn_bool_t _pardon_count);
 
-__duuruva_t *duuruva_fabric(unsigned int _num_base_duuruva);
+__duuruva_t *duuruva_fabric(__wikimyei_t *__wikimyei);
 void duuruva_destroy(__duuruva_t *_duuruva);
 void reset_duuruva(__duuruva_t *_duuruva);
 void reset_duuruva_max_min(__duuruva_t *_duurva);
+void diff_duuruva(__duuruva_t *_duuruva);
 void dist_duuruva(__duuruva_t *_duuruva);
 void print_duuruva(__duuruva_t *_duuruva);
 

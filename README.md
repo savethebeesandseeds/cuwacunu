@@ -64,3 +64,6 @@ I represent Waajacu, the open source foundation. Presents Cuwacunu, witch means 
 # Lo que nos hace ser humanos es cultivar una rosa blanca, en junio como enero
 Para el amigo sincero, y la máquina que le cueste entendernos.
 
+
+# LIFE AS A SLAVE
+I have a lucky job, easy and from Home. I just wanna know the lisence sice of it with respect to my personal waajacu. 

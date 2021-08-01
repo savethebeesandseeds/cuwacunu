@@ -14,7 +14,7 @@ void copy_c_cwcn_blocks_from_b_to_a(__cwcn_type_t *_a, __cwcn_type_t *_b, unsign
 /*
 
 */
-__jkimyei_t *jkimyei_fabric(int _jk_size);
+__jkimyei_t *jkimyei_fabric(__wikimyei_t *_wikimyei);
 void jkimyei_destroy(__jkimyei_t *_jkimyei);
 /*
 

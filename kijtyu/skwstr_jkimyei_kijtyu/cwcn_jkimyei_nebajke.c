@@ -111,19 +111,19 @@ void GAE(__wikimyei_t *_wikimyei){
                 fprintf(stdout,"%s>> > ... [%d] :: [%d], %s uwaabo_adventage: %s%.4f,%s uwaabo_returns: %s%.4f, %s munaajpi_state:%s%.4f\n",COLOR_GAE,_wikimyei->__load_index,idx,COLOR_UWAABO,COLOR_REGULAR,glti(_wikimyei)->__uwaabo_adventage[idx],COLOR_UWAABO,COLOR_REGULAR,glti(_wikimyei)->__uwaabo_returns[idx],COLOR_MUNAAJPI,COLOR_REGULAR,glti(_wikimyei)->__munaajpi_state[idx]);
                 #endif
             }
-            set_duuruva_value(_wikimyei->__adventage_duuruva, glti(_wikimyei)->__uwaabo_adventage);
-            dist_duuruva(_wikimyei->__adventage_duuruva);
-            _wikimyei->__flags->__adventage_duuruva_ready=is_duuruva_ready(_wikimyei->__adventage_duuruva);
+            set_duuruva_value(_wikimyei->__uwaabo_adventage_duuruva, glti(_wikimyei)->__uwaabo_adventage);
+            dist_duuruva(_wikimyei->__uwaabo_adventage_duuruva);
+            _wikimyei->__flags->...__adventage_duuruva_ready=is_duuruva_ready(_wikimyei->__uwaabo_adventage_duuruva);
         }
     }while(load_go_down(_wikimyei)!=-1);
     do{
-        duuruva_normalize(_wikimyei->__adventage_duuruva, glti(_wikimyei)->__uwaabo_adventage);
+        duuruva_normalize(_wikimyei->__uwaabo_adventage_duuruva, glti(_wikimyei)->__uwaabo_adventage);
         // normalize_duuruva_value(_wikimyei->__alliu_duuruva);
     }while(load_go_up(_wikimyei)!=-1 && _wikimyei->__load_index<_wikimyei->__load_size-_wikimyei->__horizon_munaajpi-0x01);
     #ifdef DEBUG_DUURUVA
     fprintf(stdout,"%d",COLOR_REGULAR);
     fprintf(stdout,">> > ... UWAABO ADVENTAGE DUURUVA:\n");
-    print_duuruva(_wikimyei->__adventage_duuruva);
+    print_duuruva(_wikimyei->__uwaabo_adventage_duuruva);
     #endif
     load_to_index(_wikimyei, c_index);
     free(gae);
@@ -228,7 +228,7 @@ void jkimyei_one(void *_wikimyei,
             fprintf(stdout,"%s>> > ... jkimyei_one: munaajpi_loss:\t(mjpi_beta*(uw_returns-mjpi_state)^2-h_beta*H)%s\n",COLOR_JKIMYEI,COLOR_REGULAR);
             #endif
             #ifdef JKIMYEI_DEBUG
-            fprintf(stdout,"%s>> > ... UWAABO INDEX: [%d] %s _entropy_loss: %f, \t %s_uwaabo_loss: %f, \t %s_munaajpi_loss: %f%s\n",COLOR_JKIMYEI,idx,COLOR_ENTROPY,_entropy_loss_handler,COLOR_UWAABO,_uwaabo_loss_handler,COLOR_MUNAAJPI,_munaajpi_loss_handler,COLOR_JKIMYEI);
+            fprintf(stdout,"%s>> > [%d] UWAABO INDEX: [%d] %s _entropy_loss: %f, \t %s_uwaabo_loss: %f, \t %s_munaajpi_loss: %f%s\n",COLOR_JKIMYEI,((__wikimyei_t *)_wikimyei)->__load_index,idx,COLOR_ENTROPY,_entropy_loss_handler,COLOR_UWAABO,_uwaabo_loss_handler,COLOR_MUNAAJPI,_munaajpi_loss_handler,COLOR_JKIMYEI);
             #endif
             set_wapaajco_index_eq(\
                 ((__wikimyei_t *)_wikimyei)->__uwaabo, \
@@ -238,17 +238,22 @@ void jkimyei_one(void *_wikimyei,
             ((__wikimyei_t *)_wikimyei)->__munaajpi, \
                 _munaajpi_loss_handler,
                 idx);
+            #ifdef WAJYU_INCLUDED
+            #endif
         }
         jkimyei_tsinuu_bydirectNABLA(((__wikimyei_t *)_wikimyei)->__uwaabo);
         jkimyei_tsinuu_bydirectNABLA(((__wikimyei_t *)_wikimyei)->__munaajpi);
-        // print_results(((__wikimyei_t *)_wikimyei)->__uwaabo);
-        // print_results(((__wikimyei_t *)_wikimyei)->__munaajpi);
+
+        #ifdef TSINUU_DEBUG
+        fprintf(stdout,"%sUWAABO:\n",COLOR_UWAABO);print_results(((__wikimyei_t *)_wikimyei)->__uwaabo);
+        fprintf(stdout,"%sMUNAAJPI:\n",COLOR_MUNAAJPI);print_results(((__wikimyei_t *)_wikimyei)->__munaajpi);
+        #endif
         #ifdef JKIMYEI_DEBUG
-            fprintf(stdout,">> > jkimyei_one, jkimyei ready for load index %d\n",((__wikimyei_t *)_wikimyei)->__load_index);
+        fprintf(stdout,">> > jkimyei_one, jkimyei ready for load index %d\n",((__wikimyei_t *)_wikimyei)->__load_index);
         #endif
     }else{
         #ifdef JKIMYEI_DEBUG
-            fprintf(stdout,">> > jkimyei_one, skip jkimyei; duuruva not ready for load index %d\n",((__wikimyei_t *)_wikimyei)->__load_index);
+        fprintf(stdout,">> > jkimyei_one, skip jkimyei; duuruva not ready for load index %d\n",((__wikimyei_t *)_wikimyei)->__load_index);
         #endif
     }
     #ifdef JKIMYEI_DEBUG
@@ -298,9 +303,9 @@ void wikimyei_jkimyei(__wikimyei_t *_wikimyei, unsigned int _epochs){ // Asumes 
 /*
 
 */
-__jkimyei_t *jkimyei_fabric(int _jk_size){ // #FIXME assertme arr[i*M+j] yilds arr[j][j]
+__jkimyei_t *jkimyei_fabric(__wikimyei_t *_wikimyei){ // #FIXME assertme arr[i*M+j] yilds arr[j][j]
     __jkimyei_t *new_jkimyei=malloc(sizeof(__jkimyei_t));
-    new_jkimyei->__jk_size=_jk_size;
+    new_jkimyei->__jk_size=__JK_SIZE__;
     // new_jkimyei->__jk_index=-1;
     // new_jkimyei->__jk_batch_head=jk_queue_fabric(new_jkimyei);
     new_jkimyei->__jk_one=&jkimyei_one;

@@ -740,7 +740,7 @@ void tsinuu_initialize_bias_fixed(__tsinuu_t *_tsinuu, __cwcn_type_t _v_fixed){
     }
     #ifdef TSINUU_DEBUG
         fprintf(stderr, ">>>> request <tsinuu_initialize_bias_fixed>\n");
-        fprintf(stderr, ">>>> suspect element bias values [%f, %f... %f] must be eq\n",_tsinuu->__layers[0x00]->__nodes[idx_n]->__n_kemu->__bias, _tsinuu->__layers[0x01]->__nodes[idx_n]->__n_kemu->__bias, _tsinuu->__layers[total_layers(_tsin->__nodes[idx_n]uu)-0x01]->__n_kemu->__bias);
+        fprintf(stderr, ">>>> suspect element bias values [%f, %f... %f] must be eq\n",_tsinuu->__layers[0x00]->__nodes[0x00]->__n_kemu->__bias, _tsinuu->__layers[0x01]->__nodes[0x00]->__n_kemu->__bias, _tsinuu->__layers[total_layers(_tsinuu)-0x01]->__nodes[0x00]->__n_kemu->__bias);
     #endif
 }
 void tsinuu_initialize_bias_random(__tsinuu_t *_tsinuu, __cwcn_type_t _v_max, __cwcn_type_t _v_min){
@@ -754,7 +754,7 @@ void tsinuu_initialize_bias_random(__tsinuu_t *_tsinuu, __cwcn_type_t _v_max, __
     }
     #ifdef TSINUU_DEBUG
         fprintf(stderr, ">>>> request <tsinuu_initialize_bias_random>\n");
-        fprintf(stderr, ">>>> suspect element bias values [%f, %f... %f] must be random\n",_tsinuu->__layers[0x00]->__nodes[idx_n]->__n_kemu->__bias, _tsinuu->__layers[0x01]->__nodes[idx_n]->__n_kemu->__bias, _tsinuu->__layers[total_layers(_tsin->__nodes[idx_n]uu)-0x01]->__n_kemu->__bias);
+        fprintf(stderr, ">>>> suspect element bias values [%f, %f... %f] must be random\n",_tsinuu->__layers[0x00]->__nodes[0x00]->__n_kemu->__bias, _tsinuu->__layers[0x01]->__nodes[0x00]->__n_kemu->__bias, _tsinuu->__layers[total_layers(_tsinuu)-0x01]->__nodes[0x00]->__n_kemu->__bias);
     #endif
 }
 
@@ -766,7 +766,7 @@ void tsinuu_initialize_bias_zero(__tsinuu_t *_tsinuu){
     }
     #ifdef TSINUU_DEBUG
         fprintf(stderr, ">>>> request <tsinuu_initialize_bias_zero>\n");
-        fprintf(stderr, ">>>> suspect element bias values [%f, %f... %f] must be zero\n",_tsinuu->__layers[0x00]->__nodes[idx_n]->__n_kemu->__bias, _tsinuu->__layers[0x01]->__nodes[idx_n]->__n_kemu->__bias, _tsinuu->__layers[total_layers(_tsin->__nodes[idx_n]uu)-0x01]->__n_kemu->__bias);
+        fprintf(stderr, ">>>> suspect element bias values [%f, %f... %f] must be zero\n",_tsinuu->__layers[0x00]->__nodes[0x00]->__n_kemu->__bias, _tsinuu->__layers[0x01]->__nodes[0x00]->__n_kemu->__bias, _tsinuu->__layers[total_layers(_tsinuu)-0x01]->__nodes[0x00]->__n_kemu->__bias);
     #endif
 }
 /*

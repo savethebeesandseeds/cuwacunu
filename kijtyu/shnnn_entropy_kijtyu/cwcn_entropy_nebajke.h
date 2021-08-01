@@ -7,9 +7,9 @@
 #include <assert.h>
 #include <stdbool.h>
 // #FIXME fix dependencies
-// #FIXME duuruva instead of entropy dist 
-// #define ENTROPY_DEBUG
-#define BUGGER_ENTROPYCOSA_SIZE (unsigned int) 2 // cauchy + beta=2
+// #FIXME duuruva instead of entropy dist (what!)
+// #define ENTROPY_DEBUG 
+#define BUGGER_ENTROPYCOSA_SIZE (unsigned int) 3 // cauchy +beta +normal =3
 #define GAMMA_SCALE (__cwcn_type_t) 1
 #define clrscr() printf("\e[1;1H\e[2J")
 typedef _Bool ___cwcn_bool_t;
@@ -24,16 +24,16 @@ typedef __cwcn_type_t (*__function_pointer_t)(__cwcn_type_t);
 #define min(a,b)({__typeof__(a) _a=(a);__typeof__(b) _b=(b);_a < _b ? _a : _b;})
 
 /*
-    UTILS
+    GENEAL UTILS
 */
 __cwcn_type_t GAMMA(__cwcn_type_t input, __cwcn_type_t gamma_res);
 __cwcn_type_t DIGAMMA(__cwcn_type_t input);
-__cwcn_type_t B_fun(__cwcn_type_t alpha, __cwcn_type_t beta, __cwcn_type_t gamma_res, _Bool allow_div);
+__cwcn_type_t B_fun(__cwcn_type_t alpha, __cwcn_type_t beta, __cwcn_type_t gamma_res, _Bool allow_div); // b -not- like in beta
 /*
-    BETA distribution
+    BETA
 */
 typedef void (*__beta_forward_pointer_t)(void *_beta_pdf, __cwcn_type_t _beta_lambda, __cwcn_type_t _beta_eta);
-typedef void (*__beta_general_pointer_t)(void *_beta_pdf);
+typedef void (*__beta_print_pointer_t)(void *_beta_pdf, int _print_lvel);
 typedef struct beta_pdf{
     int __eta_index; // #FIXME
     int __lambda_index; // #FIXME
@@ -54,13 +54,16 @@ typedef struct beta_pdf{
     unsigned int __direct_resolution;
     unsigned int __num_params; // lambda + eta = 2
     __beta_forward_pointer_t __forward;
-    __beta_general_pointer_t __print;
+    __beta_print_pointer_t __print;
     ___cwcn_bool_t __is_nan;
 } __beta_pdf_t;
 __beta_pdf_t *_ipivye_beta_pdf(unsigned int _d_res, unsigned int _n_tsane);
 
+/*
+    Cauchy
+*/
 typedef void (*__cauchy_forward_pointer_t)(void *_cauchy_pdf, __cwcn_type_t _cauchy_a, __cwcn_type_t _cauchy_b);
-typedef void (*__cauchy_general_pointer_t)(void *_cauchy_pdf);
+typedef void (*__cauchy_print_pointer_t)(void *_cauchy_pdf, int _print_lvel);
 typedef struct cauchy_pdf{
     __cwcn_type_t *__direct_map;
 	__cwcn_type_t *__tsane_map;
@@ -80,14 +83,45 @@ typedef struct cauchy_pdf{
     unsigned int __num_tsane;
     unsigned int __direct_resolution;
     __cauchy_forward_pointer_t __forward;
-    __cauchy_general_pointer_t __print;
+    __cauchy_print_pointer_t __print;
     unsigned int __num_params;
     ___cwcn_bool_t __is_nan;
 } __cauchy_pdf_t;
 __cauchy_pdf_t *_ipivye_cauchy_pdf(unsigned int _d_res, unsigned int _n_tsane);
 
+/*
+    Normal
+*/
+typedef void (*__normal_forward_pointer_t)(void *_normal_pdf, __cwcn_type_t _normal_a, __cwcn_type_t _normal_b);
+typedef void (*__normal_print_pointer_t)(void *_normal_pdf, int _print_lvel);
+typedef struct normal_pdf{
+    __cwcn_type_t *__direct_map;
+	__cwcn_type_t *__tsane_map;
+    __cwcn_type_t __entropy;
+    __cwcn_type_t __max_known_entropy;
+    __cwcn_type_t __normal_kemu;
+    __cwcn_type_t __normal_input;
+    __cwcn_type_t __normal_a;
+    __cwcn_type_t __normal_b;
+    __cwcn_type_t __normal_mean;
+    __cwcn_type_t __normal_a_max;
+    __cwcn_type_t __normal_b_max;
+    __cwcn_type_t __normal_a_min;
+    __cwcn_type_t __normal_input_max;
+    __cwcn_type_t __normal_input_min;
+    unsigned int __normal_a_tsinuu_index;
+    unsigned int __normal_b_tsinuu_index;
+    unsigned int __num_tsane;
+    unsigned int __direct_resolution;
+    __normal_forward_pointer_t __forward;
+    __normal_print_pointer_t __print;
+    unsigned int __num_params;
+    ___cwcn_bool_t __is_nan;
+} __normal_pdf_t;
+__normal_pdf_t *_ipivye_normal_pdf(unsigned int _d_res, unsigned int _n_tsane);
+
 typedef void (*__entropycosa_forward_pointer_t)(void *_ec, __cwcn_type_t *_param_vect);
-typedef void (*__entropycosa_general_pointer_t)(void *_ec);
+typedef void (*__entropycosa_print_pointer_t)(void *_ec, int _print_lvel);
 typedef struct __entropycosa{
     void **__cosa;
     unsigned int __total_cosa_params;
@@ -96,13 +130,15 @@ typedef struct __entropycosa{
     __cwcn_type_t *__tsane;
     __cwcn_type_t __entropy;
     __entropycosa_forward_pointer_t __forward;
-    __entropycosa_general_pointer_t __print;
+    __entropycosa_print_pointer_t __print;
 }__entropycosa_t;
 __entropycosa_t *entropycosa_fabric(unsigned int _d_res, unsigned int _n_tsane);
 void entropycosa_tsane(void *_ec);
 void entropycosa_destroy(__entropycosa_t *_ec);
 void entropycosa_forward(void *_ec, __cwcn_type_t *_param_vect);
-void entropycosa_print(void *_ec);
+void entropycosa_print(void *_ec, int _print_lvel);
+void entropycosa_plot_tsane(void *_ec);
+void entropycosa_plot_statistics(void *_ec);
 /*
     MAIN ENTROPY FUNCS
 */
@@ -124,7 +160,7 @@ void set_beta_input(__beta_pdf_t *_beta_pdf, __cwcn_type_t _input);
 void set_beta_num_tsane(__beta_pdf_t *_beta_pdf, unsigned int _n_tsane);
 void set_beta_direct_resolution(__beta_pdf_t *_beta_pdf, unsigned int _d_res);
 void beta_forward(void *_beta_pdf, __cwcn_type_t _beta_lambda, __cwcn_type_t _beta_eta);
-void beta_print(void *_beta_pdf);
+void beta_print(void *_beta_pdf, int _print_lvel);
 // // CAUCHY 
 void set_cauchy_a(__cauchy_pdf_t *_cauchy_pdf, __cwcn_type_t _cauchy_a);
 void set_cauchy_b(__cauchy_pdf_t *_cauchy_pdf, __cwcn_type_t _cauchy_b);
@@ -139,8 +175,23 @@ void cauchy_plot_direct_resolution(__cauchy_pdf_t *_cauchy_pdf);
 void cauchy_plot_tsane(__cauchy_pdf_t *_cauchy_pdf);
 void cauchy_plot_statistics(__cauchy_pdf_t *_cauchy_pdf);
 void cauchy_forward(void *_cauchy_pdf, __cwcn_type_t _cauchy_a, __cwcn_type_t _cauchy_b);
-void cauchy_print(void *_cauchy_pdf);
-
+void cauchy_print(void *_cauchy_pdf, int _print_lvel);
+// // NORMAL
+void set_normal_a(__normal_pdf_t *_normal_pdf, __cwcn_type_t _normal_a);
+void set_normal_b(__normal_pdf_t *_normal_pdf, __cwcn_type_t _normal_b);
+void set_normal_mean(__normal_pdf_t *_normal_pdf, __cwcn_type_t _normal_mean);
+void set_normal_input(__normal_pdf_t *_normal_pdf, __cwcn_type_t _input);
+void set_normal_num_tsane(__normal_pdf_t *_normal_pdf, unsigned int _n_tsane);
+void set_normal_direct_resolution(__normal_pdf_t *_normal_pdf, unsigned int _d_res);
+void normal_probability_density(__normal_pdf_t *_normal_pdf);
+void normal_direct_density(__normal_pdf_t *_normal_pdf);
+void normal_difference_entropy(__normal_pdf_t *_normal_pdf, _Bool _in_nats);
+void normal_map_tsane(__normal_pdf_t *_normal_pdf);
+void normal_plot_direct_resolution(__normal_pdf_t *_normal_pdf);
+void normal_plot_tsane(__normal_pdf_t *_normal_pdf);
+void normal_plot_statistics(__normal_pdf_t *_normal_pdf);
+void normal_forward(void *_normal_pdf, __cwcn_type_t _normal_a, __cwcn_type_t _normal_b);
+void normal_print(void *_normal_pdf, int _print_lvel);
 
 // // CHI
 // __cwcn_type_t chi_n(__cwcn_type_t input);

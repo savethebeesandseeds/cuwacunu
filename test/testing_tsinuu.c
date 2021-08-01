@@ -4,8 +4,8 @@
 #include "cwcn_tsinuu_nebajke.h"
 #define INPUT_SIZE (unsigned int) 1
 #define OUTPUT_SIZE (unsigned int) 1
-#define TOTAL_LAYERS (unsigned int) 4
-#define NUM_EPOCHS (unsigned int) 1000
+#define TOTAL_LAYERS (unsigned int) 6
+#define NUM_EPOCHS (unsigned int) 100
 #define DATA_COUNT (unsigned int) 100
 /*
     LINEAR: (alpha=0.1, eta=0.1, omega=1.0, w_potency=2)
@@ -17,8 +17,8 @@ int main(void){
     printf("\n------->------\n");
     set_seed();
     // Configure tsinuu
-    unsigned int c_layers_sizes[TOTAL_LAYERS] = {INPUT_SIZE,5,5,OUTPUT_SIZE};
-    __list_activations_t c_activations_iho[TOTAL_LAYERS] = {LINEAR, LINEAR, LINEAR, LINEAR};
+    unsigned int c_layers_sizes[TOTAL_LAYERS] = {INPUT_SIZE,5,15,15,5,OUTPUT_SIZE};
+    __list_activations_t c_activations_iho[TOTAL_LAYERS] = {LINEAR, LINEAR, LINEAR, LINEAR, LINEAR, LINEAR};
     // Fabric tsinuu
     __attribute_tsinuu_t *c_attribute_tsinuu = malloc(sizeof(__attribute_tsinuu_t));
     c_attribute_tsinuu->__NUM_TOTAL_LAYERS=TOTAL_LAYERS;
@@ -34,7 +34,7 @@ int main(void){
     c_attribute_tsinuu->__alpha=0.0; // alpha assert negative, is a mesure for resisting change; is if you kguht the friction of the learning; required to create new tsinuu
     c_attribute_tsinuu->__eta=1; // eta is the error impulse, required to create new tsinuu
     c_attribute_tsinuu->__omega=0.1; // required to create new tsinuu
-    c_attribute_tsinuu->__wapaajco_potency=1.0; // the potency of the wapaajco
+    c_attribute_tsinuu->__wapaajco_potency=0.1; // the potency of the wapaajco
     c_attribute_tsinuu->__omega_stiffess=1.0; // #FIXME not in use
     c_attribute_tsinuu->__weight_limits=malloc(sizeof(__limits_t));
     c_attribute_tsinuu->__weight_limits->__max=5.0;
@@ -112,7 +112,9 @@ int main(void){
     __cwcn_type_t c_correct_output[DATA_COUNT][OUTPUT_SIZE];
     for(unsigned int ctx_p=0x00;ctx_p<DATA_COUNT;ctx_p++){
         for(unsigned int idx_v=0x00;idx_v<INPUT_SIZE;idx_v++){
-            c_correct_output[ctx_p][idx_v]=0.5*sin(2*3.141592*c_input_vector[ctx_p][idx_v])+1;
+            // c_correct_output[ctx_p][idx_v]=0.5*sin(2*3.141592*1.0*c_input_vector[ctx_p][idx_v])+1;
+            c_correct_output[ctx_p][idx_v]=0.5*tanh(2*3.141592*1.0*c_input_vector[ctx_p][idx_v])+1;
+            // c_correct_output[ctx_p][idx_v]=0.5*sin(2*3.141592*1.0*c_input_vector[ctx_p][idx_v])/(2*3.141592*1.0*c_input_vector[ctx_p][idx_v])+1;
             fprintf(stdout, "%f -> %f\n",c_input_vector[ctx_p][idx_v],c_correct_output[ctx_p][idx_v]);
         }
     }
