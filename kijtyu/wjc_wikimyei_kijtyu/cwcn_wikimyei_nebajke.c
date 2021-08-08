@@ -10,60 +10,68 @@ void ___alliu_hash(__wikimyei_t *_wikimyei){
     getnext_alliu(_wikimyei->__alliu);
     _wikimyei->__flags->__endhead_empty_alliu=___CWCN_FALSE;
     copy_c_cwcn_blocks_from_b_to_a(glti(_wikimyei)->__alliu_state, _wikimyei->__alliu->__source_value, _wikimyei->__alliu->__source_size);
-    #ifdef ALOCATION_DEBUG
-    printf("> >>> . ALB (debug): __alliu_state: [%p] %f,  alliu_source: [%p] %f\n",glti(_wikimyei)->__alliu_state,glti(_wikimyei)->__alliu_state[0x00], _wikimyei->__alliu->__source_value, _wikimyei->__alliu->__source_value[0x00]);
-    #endif
     #ifdef WIKIMYEI_DEBUG
         fprintf(stdout,"%s>> > load_index: [%d] ... ___alliu_hash\t [",COLOR_ALLIU,_wikimyei->__load_index);
-        for(unsigned int idx=0x00;idx<_wikimyei->__alliu_state_size;idx++){
+        for(unsigned int idx=0x00;idx<_wikimyei->__alliu->__source_size;idx++){
             fprintf(stdout," %.2f",glti(_wikimyei)->__alliu_state[idx]);
         }
         fprintf(stdout," ]%s\n",COLOR_REGULAR);
     #endif
 }
 void ___alliu_duuruva_hash(__wikimyei_t *_wikimyei){
-	/*	duuruva */
-	/*	 */
-    // #FIXME add assertions
-    set_duuruva_value(_wikimyei->__alliu_duuruva,glti(_wikimyei)->__alliu_state);
-	diff_duuruva(_wikimyei->__alliu_duuruva);
-	dist_duuruva(_wikimyei->__alliu_duuruva);
-    if(_wikimyei->__flags->__norm_stand){
-        fprintf(stdout,"%s",COLOR_MUNAAJPI);
-        duuruva_normalize(_wikimyei->__alliu_duuruva,glti(_wikimyei)->__alliu_state);
-        fprintf(stdout,"%s",COLOR_REGULAR);
-    }
-    read_duuruva_vector(_wikimyei->__alliu_duuruva,glti(_wikimyei)->__alliu_duuruva_state,_wikimyei->__flags->__norm_stand);
-    _wikimyei->__flags->__alliu_duuruva_ready=is_duuruva_ready(_wikimyei->__alliu_duuruva);
+	/* duuruva */
+	// #FIXME add assertions
+    #if defined(__PROPAGATE_ALLIU_DUURUVA__) && !defined(__EXPEND_ALLIU_DUURUVA__)
+    fprintf(stderr,"BAD CONFIGURATION: if defined __PROPAGATE_ALLIU_DUURUVA__ then define also __EXPEND_ALLIU_DUURUVA__")
+    #endif
+    #if defined(__EXPEND_ALLIU_DUURUVA__)
+    set_duuruva_value(_wikimyei->__wajyu->__metric->__alliu_duuruva,glti(_wikimyei)->__alliu_state);
+	diff_duuruva(_wikimyei->__wajyu->__metric->__alliu_duuruva);
+	dist_duuruva(_wikimyei->__wajyu->__metric->__alliu_duuruva);
+    #if defined(_DUURUVA_NORM_STAND_ALLIU_)
+    fprintf(stdout,"%s",COLOR_MUNAAJPI);
+    duuruva_normalize(_wikimyei->__wajyu->__metric->__alliu_duuruva,glti(_wikimyei)->__alliu_state);
+    fprintf(stdout,"%s",COLOR_REGULAR);
+    #endif
+    #if defined(__PROPAGATE_ALLIU_DUURUVA__)
+    #if defined(_DUURUVA_NORM_STAND_ALLIU_)
+    read_duuruva_vector(_wikimyei->__wajyu->__metric->__alliu_duuruva,glti(_wikimyei)->__alliu_duuruva_state,0x01);
+    #else
+    read_duuruva_vector(_wikimyei->__wajyu->__metric->__alliu_duuruva,glti(_wikimyei)->__alliu_duuruva_state,0x00);
+    #endif
     for(unsigned int idx=0x00; idx<BUGGER_SIZE_DUURUVA; idx++){ // apply uwaabo mask
         glti(_wikimyei)->__alliu_duuruva_state[idx]=\
-            _UWABO_DUURUVA_MASK_[idx]*glti(_wikimyei)->__alliu_duuruva_state[idx];
+            _ALLIU_DUURUVA_MASK_[idx]*glti(_wikimyei)->__alliu_duuruva_state[idx];
     }
-    #ifdef DUURUVA_DEBUG
-	fprintf(stdout,"%s>> > load_index: [%d] ... request ___alliu_duuruva_hash:\n",COLOR_ALLIU,_wikimyei->__load_index);
-    print_duuruva(_wikimyei->__alliu_duuruva);
-    #endif
     #if defined(WIKIMYEI_DEBUG) || defined(UWAABO_DEBUG)
     fprintf(stdout,"%s>> > load_index: [%d] ... alliu duuruva state: [",COLOR_ALLIU,_wikimyei->__load_index);
-    for(unsigned int idx=0x00;idx<_wikimyei->__alliu_duuruva_state_size;idx++){
+    for(unsigned int idx=0x00;idx<_wikimyei->__wajyu->__metric->__alliu_duuruva->__duuruva_vector_size;idx++){
         fprintf(stdout," %.2f",glti(_wikimyei)->__alliu_duuruva_state[idx]);
     }
     fprintf(stdout," ]%s\n",COLOR_REGULAR);
     #endif
+    #endif
+    #endif
 }
 void ___uwaabo_hash(__wikimyei_t *_wikimyei){
-	/*	tsinuu */
-	/*	 */
+    /*	tsinuu */
+    /*	 */
     // #FIXME add assertions
-    set_tsinuu_input(_wikimyei->__uwaabo, glti(_wikimyei)->__alliu_duuruva_state);
-	tsinuu_direct_uwaabo_full_parametric(_wikimyei->__uwaabo);
-	read_tsinuu_output(_wikimyei->__uwaabo, glti(_wikimyei)->__uwaabo_state);
+    read_uwaabo_w_base(_wikimyei);
+    set_tsinuu_input(_wikimyei->__uwaabo->__uwaabo_tsinuu, _wikimyei->__uwaabo->__uwaabo_w_base);
+    tsinuu_direct_uwaabo_full_parametric(_wikimyei->__uwaabo->__uwaabo_tsinuu);
+    read_tsinuu_output(_wikimyei->__uwaabo->__uwaabo_tsinuu, glti(_wikimyei)->__uwaabo_state);
+    #if defined(__EXPEND_UWABO_DUURUVA__)
+    set_duuruva_value(_wikimyei->__wajyu->__metric->__uwaabo_duuruva,glti(_wikimyei)->__uwaabo_state);
+	diff_duuruva(_wikimyei->__wajyu->__metric->__uwaabo_duuruva);
+	dist_duuruva(_wikimyei->__wajyu->__metric->__uwaabo_duuruva);
+    #endif
     #if defined(WIKIMYEI_DEBUG) || defined(UWAABO_DEBUG)
-        fprintf(stdout,"%s>> > load_index: [%d] ... request uwaabo_hash\t uwaabo_state: [",COLOR_UWAABO,_wikimyei->__load_index);
-        for(unsigned int idx=0x00;idx<_wikimyei->__uwaabo_state_size;idx++){
-            fprintf(stdout," %.2f",glti(_wikimyei)->__uwaabo_state[idx]);
-        }
-        fprintf(stdout," ]%s\n",COLOR_REGULAR);
+    fprintf(stdout,"%s>> > load_index: [%d] ... request uwaabo_hash\t uwaabo_state: [",COLOR_UWAABO,_wikimyei->__load_index);
+    for(unsigned int idx=0x00;idx<_wikimyei->__uwaabo->__uwaabo_state_size;idx++){
+        fprintf(stdout," %.2f",glti(_wikimyei)->__uwaabo_state[idx]);
+    }
+    fprintf(stdout," ]%s\n",COLOR_REGULAR);
     #endif
 }
 void ___entropy_hash(__wikimyei_t *_wikimyei){
@@ -71,9 +79,14 @@ void ___entropy_hash(__wikimyei_t *_wikimyei){
 	/*	 */
     // #FIXME add assertions
     _wikimyei->__ec->__forward(_wikimyei->__ec, glti(_wikimyei)->__uwaabo_state);
-    glti(_wikimyei)->__entropy=_wikimyei->__ec->__entropy;
+    glti(_wikimyei)->__entropy_state[0x00]=_wikimyei->__ec->__entropy; // #FIXME asigment is safe for now cus' entropy is scalar
+    #if defined(__EXPEND_ENTROPY_DUURUVA__)
+    set_duuruva_value(_wikimyei->__wajyu->__metric->__entropy_duuruva,glti(_wikimyei)->__entropy_state);
+	diff_duuruva(_wikimyei->__wajyu->__metric->__entropy_duuruva);
+	dist_duuruva(_wikimyei->__wajyu->__metric->__entropy_duuruva);
+    #endif
     #ifdef WIKIMYEI_DEBUG
-    fprintf(stdout,">> > load_index: [%d] ... ___entropy_hash,\tentropy:%f\n",_wikimyei->__load_index,glti(_wikimyei)->__entropy);
+    fprintf(stdout,">> > load_index: [%d] ... ___entropy_hash,\tentropy:%f\n",_wikimyei->__load_index,glti(_wikimyei)->__entropy_state[0x00]);
     #endif
 }
 void ___tsane_dehash(__wikimyei_t *_wikimyei){
@@ -84,14 +97,19 @@ void ___tsane_dehash(__wikimyei_t *_wikimyei){
     unsigned int idx;
     unsigned int ctx=0x00;
     __cwcn_type_t _bern_dude=0x00;
-    __cwcn_type_t *c_tsane_nondecimal=malloc(_wikimyei->__tsane_state_size*sizeof(__cwcn_type_t));
-    for(idx=0x00;idx<_wikimyei->__tsane_state_size;idx++){
+    __cwcn_type_t *c_tsane_nondecimal=malloc(_wikimyei->__tsane->__tsane_size*sizeof(__cwcn_type_t));
+    for(idx=0x00;idx<_wikimyei->__tsane->__tsane_size;idx++){
         glti(_wikimyei)->__tsane_state[idx]=_wikimyei->__ec->__tsane[idx];
         c_tsane_nondecimal[idx]=glti(_wikimyei)->__tsane_state[idx]/0.01;
     }
-    for(idx=0x00;idx<_wikimyei->__tsane_state_size;idx++){
+    #if defined(__EXPEND_TSANE_DUURUVA__)
+    set_duuruva_value(_wikimyei->__wajyu->__metric->__tsane_duuruva,glti(_wikimyei)->__tsane_state);
+	diff_duuruva(_wikimyei->__wajyu->__metric->__tsane_duuruva);
+	dist_duuruva(_wikimyei->__wajyu->__metric->__tsane_duuruva);
+    #endif
+    for(idx=0x00;idx<_wikimyei->__tsane->__tsane_size;idx++){
         // glti(_wikimyei)->__tsane_log_prob=log(glti(_wikimyei)->__tsane_state[idx]); // #FIXME not, is uwaabo state instead
-        c_sum+=c_tsane_nondecimal[idx];//*_wikimyei->__tsane_state_size; //#FIXME
+        c_sum+=c_tsane_nondecimal[idx];//*_wikimyei->__tsane->__tsane_size; //#FIXME
     }
     idx=0x00;
     while(0x01){ // #FIXME, save the action
@@ -102,13 +120,13 @@ void ___tsane_dehash(__wikimyei_t *_wikimyei){
         #endif
         if(c_tsane_nondecimal[idx]>_bern_dude){break;}
         else{idx++;}
-        if(idx>=_wikimyei->__tsane_state_size){idx=0x00;}// undependent bernouly or whatever
+        if(idx>=_wikimyei->__tsane->__tsane_size){idx=0x00;}// undependent bernouly or whatever
     }
     // #FIXME ... include take_tsane bool setence
     #if defined(WIKIMYEI_DEBUG) || defined(ENTROPY_DEBUG)
         fprintf(stdout,"%s>> > load_index: [%d] ... ___tsane_dehash\n",COLOR_TSANE,_wikimyei->__load_index);
         fprintf(stdout,"-- - tsane selected==%d, found in ctx: %d, with sum: %d and tsane values:\t[",idx, ctx,(int)c_sum);
-        for(unsigned int idx=0x00;idx<_wikimyei->__tsane_state_size;idx++){
+        for(unsigned int idx=0x00;idx<_wikimyei->__tsane->__tsane_size;idx++){
             fprintf(stdout," %.2f",glti(_wikimyei)->__tsane_state[idx]);
         }
         fprintf(stdout," ]%s\n",COLOR_REGULAR);
@@ -122,53 +140,67 @@ void ___tsane_dehash(__wikimyei_t *_wikimyei){
     #endif
     free(c_tsane_nondecimal);
 }
-void ___munaajpi_hash(__wikimyei_t *_wikimyei){
+void ___jkimyei_uwaabo_munaajpi_hash(__wikimyei_t *_wikimyei){
 	/*	tsinuu (entropy) */
 	/*	tsinuu */
 	/*	 */
     // #FIXME add assertions
-    ...read_munaajpi_w_base(_wikimyei);
-    set_tsinuu_input(_wikimyei->__munaajpi, _wikimyei->__munaajpi_base_w_state);
-	tsinuu_direct_uwaabo_full_parametric(_wikimyei->__munaajpi);
-    read_tsinuu_output(_wikimyei->__munaajpi, glti(_wikimyei)->__munaajpi_state);
+    read_munaajpi_w_base(_wikimyei);
+    set_tsinuu_input(_wikimyei->__munaajpi->__munaajpi_tsinuu, _wikimyei->__munaajpi->__munaajpi_w_base);
+	tsinuu_direct_uwaabo_full_parametric(_wikimyei->__munaajpi->__munaajpi_tsinuu);
+    read_tsinuu_output(_wikimyei->__munaajpi->__munaajpi_tsinuu, glti(_wikimyei)->__jkimyei_uwaabo_munaajpi_state);
     #ifdef WIKIMYEI_DEBUG
-        fprintf(stdout,"%s>> > load_index: [%d] ... request munaajpi_hash:\n",COLOR_MUNAAJPI,_wikimyei->__load_index);
-        fprintf(stdout,">> > load_index: [%d] ... munaajpi_state: [",_wikimyei->__load_index);
-        for(unsigned int idx=0x00;idx<_wikimyei->__munaajpi_state_size;idx++){
-            fprintf(stdout," %.2f",glti(_wikimyei)->__munaajpi_state[idx]);
+        fprintf(stdout,"%s>> > load_index: [%d] ... request jkimyei uwaabo munaajpi_hash:\n",COLOR_MUNAAJPI,_wikimyei->__load_index);
+        fprintf(stdout,">> > load_index: [%d] ... jkimyei uwaabo munaajpi_state: [",_wikimyei->__load_index);
+        for(unsigned int idx=0x00;idx<_wikimyei->__jkimyei_uwaabo_munaajpi_state_size;idx++){
+            fprintf(stdout," %.2f",glti(_wikimyei)->__jkimyei_uwaabo_munaajpi_state[idx]);
         }
         fprintf(stdout," ]%s\n",COLOR_REGULAR);
     #endif
 }
-void ___munaajpi_duuruva_hash(__wikimyei_t *_wikimyei){
+void ___jkimyei_uwaabo_munaajpi_duuruva_hash(__wikimyei_t *_wikimyei){
 	/*	duuruva */
 	/*	 */
     // #FIXME add assertions
-    set_duuruva_value(_wikimyei->__munaajpi_duuruva, glti(_wikimyei)->__imibajcho_munaajpi_state);
-    diff_duuruva(_wikimyei->__munaajpi_duuruva);
-    dist_duuruva(_wikimyei->__munaajpi_duuruva);
-    if(_wikimyei->__flags->__norm_stand){
-        fprintf(stdout,"%s",COLOR_MUNAAJPI);
-        duuruva_normalize(_wikimyei->__munaajpi_duuruva, glti(_wikimyei)->__imibajcho_munaajpi_state);
-        fprintf(stdout,"%s",COLOR_REGULAR);
-    }
-    read_duuruva_vector(_wikimyei->__munaajpi_duuruva, glti(_wikimyei)->__imibajcho_munaajpi_duuruva_state,_wikimyei->__flags->__norm_stand);
-    _wikimyei->__flags->__munaajpi_duuruva_ready=is_duuruva_ready(_wikimyei->__munaajpi_duuruva);
-    for(unsigned int idx=0x00; idx<BUGGER_SIZE_DUURUVA; idx++){ // apply uwaabo mask
-        glti(_wikimyei)->__imibajcho_munaajpi_duuruva_state[idx]=\
-            _IMIBAJCHO_MUNAAJPI_DUURUVA_MASK_[idx]*glti(_wikimyei)->__imibajcho_munaajpi_duuruva_state[idx];
-    }
-    #if defined(DUURUVA_DEBUG) || defined(MUNAAJPI_DEBUG)
-    fprintf(stdout,"%s>> > load_index: [%d] ... request munaajpi_duuruva_hash:\n",COLOR_MUNAAJPI,_wikimyei->__load_index);
-    fprintf(stdout,">> > load_index: [%d] ... MUNAAJPI DUURUVA STATE:\n",_wikimyei->__load_index);
-    print_duuruva(_wikimyei->__munaajpi_duuruva);
+    #if defined(__PROPAGATE_JKIMYEI_UWAABO_MUNAAJPI_DUURUVA__) && !defined(__EXPEND_IMIBAJCHO_MUNAAJPI_DUURUVA__)
+    fprintf(stderr,"BAD CONFIGURATION: if defined __PROPAGATE_JKIMYEI_UWAABO_MUNAAJPI_DUURUVA__ then define also __EXPEND_IMIBAJCHO_MUNAAJPI_DUURUVA__")
     #endif
+    #if defined(__EXPEND_IMIBAJCHO_MUNAAJPI_DUURUVA__)
+    set_duuruva_value(_wikimyei->__wajyu->__jkimyei_uwaabo_munaajpi_duuruva, glti(_wikimyei)->__jkimyei_uwaabo_munaajpi_state);
+    diff_duuruva(_wikimyei->__wajyu->__jkimyei_uwaabo_munaajpi_duuruva);
+    dist_duuruva(_wikimyei->__wajyu->__jkimyei_uwaabo_munaajpi_duuruva);
+    #if defined(_DUURUVA_NORM_STAND_JKIMYEI_UWAABO_)
+    fprintf(stdout,"%s",COLOR_MUNAAJPI);
+    duuruva_normalize(_wikimyei->__wajyu->__jkimyei_uwaabo_munaajpi_duuruva, glti(_wikimyei)->__jkimyei_uwaabo_munaajpi_state);
+    fprintf(stdout,"%s",COLOR_REGULAR);
+    #endif
+    #if defined(__PROPAGATE_JKIMYEI_UWAABO_MUNAAJPI_DUURUVA__)
+    #if defined(_DUURUVA_NORM_STAND_JKIMYEI_UWAABO_)
+    read_duuruva_vector(_wikimyei->__wajyu->__jkimyei_uwaabo_munaajpi_duuruva, glti(_wikimyei)->__jkimyei_uwaabo_munaajpi_duuruva_state,0x01);
+    #else
+    read_duuruva_vector(_wikimyei->__wajyu->__jkimyei_uwaabo_munaajpi_duuruva, glti(_wikimyei)->__jkimyei_uwaabo_munaajpi_duuruva_state,0x00);
+    #endif
+    for(unsigned int idx=0x00; idx<BUGGER_SIZE_DUURUVA; idx++){ // apply uwaabo mask
+        glti(_wikimyei)->__jkimyei_uwaabo_munaajpi_duuruva_state[idx]=\
+            _IMIBAJCHO_MUNAAJPI_DUURUVA_MASK_[idx]*glti(_wikimyei)->__jkimyei_uwaabo_munaajpi_duuruva_state[idx];
+    }
     #if defined(WIKIMYEI_DEBUG) || defined(MUNAAJPI_DEBUG)
         fprintf(stdout,"%s>> > load_index: [%d] ... munaajpi duuruva hash:\t [",COLOR_MUNAAJPI,_wikimyei->__load_index);
-        for(unsigned int idx=0x00;idx<_wikimyei->__munaajpi->__munaajpi_duuruva_state_size;idx++){
-            fprintf(stdout," %.2f",glti(_wikimyei)->__imibajcho_munaajpi_duuruva_state[idx]);
+        for(unsigned int idx=0x00;idx<_wikimyei->__uwaabo->__munaajpi_duuruva_state_size;idx++){
+            fprintf(stdout," %.2f",glti(_wikimyei)->__jkimyei_uwaabo_munaajpi_duuruva_state[idx]);
         }
         fprintf(stdout," ]%s\n",COLOR_REGULAR);
+    #endif
+    #endif
+    #endif
+}
+void ___imibajcho_munaajpi_hash(__wikimyei_t *_wikimyei){
+    compute_imibajcho_munaajpi(_wikimyei);
+    imibajcho_munaajpi_cajtucu_transformation(_wikimyei);
+    #if defined(__EXPEND_IMIBAJCHO_MUNAAJPI_DUURUVA__)
+    set_duuruva_value(_wikimyei->__wajyu->__metric->__imibajcho_munaajpi_duuruva,glti(_wikimyei)->__imibajcho_munaajpi_state);
+    diff_duuruva(_wikimyei->__wajyu->__metric->__imibajcho_munaajpi_duuruva);
+    dist_duuruva(_wikimyei->__wajyu->__metric->__imibajcho_munaajpi_duuruva);
     #endif
 }
 /*
@@ -188,7 +220,7 @@ void ___munaajpi_duuruva_hash(__wikimyei_t *_wikimyei){
 */
 
 /*
-
+    NEBAJKE ACTUAL FUNCTIONS
 */
 void wikimyei_relive_one(__wikimyei_t *_wikimyei){
     // #FIXME add assertions
@@ -199,7 +231,7 @@ void wikimyei_relive_one(__wikimyei_t *_wikimyei){
     fprintf(stdout,">> > ... load_index: [%d] ... wikimyei_relive_one\n",_wikimyei->__load_index);
     #endif
     _wikimyei->__flags->__done=___CWCN_FALSE;
-    ___alliu_duuruva_hash(_wikimyei); //for duuruva update porpouses
+    ___alliu_duuruva_hash(_wikimyei); //for duuruva update porpouses, must be defined activated
     ___uwaabo_hash(_wikimyei);
     ___entropy_hash(_wikimyei);
     ___tsane_dehash(_wikimyei); // #FIXME maybe one wants to keep track
@@ -216,12 +248,12 @@ void wikimyei_live_one(__wikimyei_t *_wikimyei){
     fprintf(stdout,">> > ... load_index: [%d] ... starting with flags:\n",_wikimyei->__load_index);
     printflags(_wikimyei);
     #endif
-    assert(!yield_next_trayectory(_wikimyei));
+    assert(!yield_next_trayectory(_wikimyei)); // mallocs the next item
     _wikimyei->__flags->__done=___CWCN_FALSE;
     // clock_t begin;
     // clock_t end;
     ___alliu_hash(_wikimyei);
-    ___alliu_duuruva_hash(_wikimyei);
+    ___alliu_duuruva_hash(_wikimyei); // defined activated
     ___uwaabo_hash(_wikimyei);
     ___entropy_hash(_wikimyei);
     ___tsane_dehash(_wikimyei);
@@ -232,7 +264,7 @@ void wikimyei_live_one(__wikimyei_t *_wikimyei){
     _wikimyei->__flags->__done=___CWCN_TRUE;
 }
 /*
-
+    WIKIMYEI ON LOADS
 */
 void wikimyei_live_load(__wikimyei_t *_wikimyei, int _size_of_load){
     // #FIXME add assertions

@@ -4,7 +4,7 @@ int main(){
     clock_t begin;
     clock_t end;
     __alliu_source_t c_alliu_source=__ALLIU_SOURCE__;
-    unsigned int c_alliu_size=__ALLIU_SIZE__;
+    unsigned int c_alliu_source_size=__ALLIU_SOURCE_SIZE__;
     unsigned int c_tsane_size=__TSANE_SIZE__;
     unsigned int c_direct_resolution=__DIRECT_RESOLUTION__;
     unsigned int c_horizon_munaajpi=__HORIZON_MUNAAJPI__;
@@ -22,20 +22,20 @@ int main(){
     unsigned int c_jk_size=__JK_SIZE__;
 
     __wikimyei_t *c_wikimyei=wikimyei_fabric(
-        c_alliu_source,
-        c_alliu_size,
-        c_tsane_size,
-        c_direct_resolution,
-        c_horizon_munaajpi,
-        c_jk_size,
-        c_gae_gamma,
-        c_gae_lambda,
-        c_clip_param,
-        c_uwaabo_beta,
-        c_munaajpi_beta,
-        c_entropy_beta,
-        c_uwaabo_waapajco_potency,
-        c_munaajpi_waapajco_potency,
+        c_alliu_source,\
+        c_alliu_source_size,\
+        c_tsane_size,\
+        c_direct_resolution,\
+        c_horizon_munaajpi,\
+        c_jk_size,\
+        c_gae_gamma,\
+        c_gae_lambda,\
+        c_clip_param,\
+        c_uwaabo_beta,\
+        c_munaajpi_beta,\
+        c_entropy_beta,\
+        c_uwaabo_waapajco_potency,\
+        c_munaajpi_waapajco_potency,\
         c_take_tsane);
     fprintf(stdout,">> > ... waka0x00 empty_load: load size: %d load index: %d\n",c_wikimyei->__load_size,c_wikimyei->__load_index);
     

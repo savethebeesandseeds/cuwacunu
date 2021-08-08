@@ -232,6 +232,8 @@ __beta_pdf_t *_ipivye_beta_pdf(unsigned int _d_res, unsigned int _n_tsane){
     new_beta_pdf->__num_params=0x02;
     new_beta_pdf->__is_nan=___CWCN_FALSE;
 
+    beta_GAMMA_RESOLUTION(new_beta_pdf);
+
 	return new_beta_pdf;
 }
 
@@ -620,6 +622,10 @@ void normal_forward(void *_normal_pdf, __cwcn_type_t _normal_a, __cwcn_type_t _n
     normal_difference_entropy(_normal_pdf, 0xFF);
     normal_map_tsane(_normal_pdf);
 }
+void normal_GAMMA_RESOLUTION(__normal_pdf_t *_normal_pdf){
+    _normal_pdf->__gamma_res = (__cwcn_type_t) (_normal_pdf->__normal_a_max + _normal_pdf->__normal_b_max);
+    // fprintf(stdout, ">> _normal_pdf->__gamma_res: %f\n", _normal_pdf->__gamma_res);
+}
 __normal_pdf_t *_ipivye_normal_pdf(unsigned int _d_res, unsigned int _n_tsane){
     fprintf(stdout, ">> _ipivye_normal_pdf\n");
 	__normal_pdf_t * new_normal_pdf = malloc(sizeof(__normal_pdf_t));
@@ -650,6 +656,8 @@ __normal_pdf_t *_ipivye_normal_pdf(unsigned int _d_res, unsigned int _n_tsane){
     new_normal_pdf->__print=&normal_print;
     new_normal_pdf->__num_params=0x03;
     new_normal_pdf->__is_nan=___CWCN_FALSE;
+
+    normal_GAMMA_RESOLUTION(new_normal_pdf);
 
 	return new_normal_pdf;
 }

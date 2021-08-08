@@ -130,9 +130,9 @@ int main(void){
             tsinuu_direct_uwaabo_full_parametric(c_tsinuu);
             wapaajco_bydifference(c_tsinuu, c_correct_output[rand_idx]);
             // fprintf(stdout, "--------->(RESULTS) epoch:[ %d ] data:[ %d ]<---------\n",ctx_epoch,ctx_p);
-            // fprintf(stdout, "--------->(JIKIMYEI) epoch:[ %d ] data:[ %d ]<---------\n",ctx_epoch,ctx_p);
+            // fprintf(stdout, "--------->(JKIMYEI) epoch:[ %d ] data:[ %d ]<---------\n",ctx_epoch,ctx_p);
             jkimyei_tsinuu_bydirectNABLA(c_tsinuu);
-            print_results(c_tsinuu);
+            print_tsninuu_jkimyei_results(c_tsinuu);
             // fprintf(stdout,"\n");
             // getchar();
         }

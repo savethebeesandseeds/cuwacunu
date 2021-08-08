@@ -1,6 +1,6 @@
 #ifndef UJCAMEI_PIABOO_INCLUDED
 #define UJCAMEI_PIABOO_INCLUDED
-#include "wikimyei.config.h"
+#include "wikimyei.config.h" // #FIXME
 #include <math.h>
 #include <assert.h>
 #include <stdlib.h>
@@ -17,7 +17,7 @@ typedef enum{
     INDEX_as_alliu,
     MARKET_as_alliu
 } __alliu_source_t; // not in use #FIXME
-typedef struct __alliu__ {
+typedef struct __alliu {
     __alliu_source_t __source_type;
     __cwcn_type_t *__source_value;
     unsigned int __source_size;

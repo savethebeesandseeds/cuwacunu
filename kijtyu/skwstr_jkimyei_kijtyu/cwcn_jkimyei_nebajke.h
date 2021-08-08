@@ -1,5 +1,6 @@
 #ifndef JKIMYEI_PIAABO_INCLUDED
 #define JKIMYEI_PIAABO_INCLUDED
+#include "cwcn_wajyu_piaabo.h"
 #include "cwcn_tsinuu_piaabo.h"
 #include "cwcn_wikimyei_piaabo.h"
 // #define JKIMYEI_DEBUG
@@ -14,7 +15,7 @@ void copy_c_cwcn_blocks_from_b_to_a(__cwcn_type_t *_a, __cwcn_type_t *_b, unsign
 /*
 
 */
-__jkimyei_t *jkimyei_fabric(__wikimyei_t *_wikimyei);
+__jkimyei_t *jkimyei_fabric(unsigned int _jk_size);
 void jkimyei_destroy(__jkimyei_t *_jkimyei);
 /*
 

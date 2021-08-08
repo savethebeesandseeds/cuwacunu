@@ -12,7 +12,7 @@ void set_duuruvaboleanparametrics(
     _duuruva->__dvbp->__pardon_count=_pardon_count;
 }
 void reset_duuruva(__duuruva_t *_duuruva){
-    for(unsigned int idx=0x00;idx<_duuruva->__num_base_duuruva;idx++){
+    for(unsigned int idx=0x00;idx<_duuruva->__duuruva_base_size;idx++){
         _duuruva->__value[idx]=0x00;
 
         _duuruva->__dv_diff[idx].__past_v=0x00;
@@ -32,7 +32,7 @@ void reset_duuruva(__duuruva_t *_duuruva){
     }
 }
 void reset_duuruva_max_min(__duuruva_t *_duuruva){
-    for(unsigned int idx=0x00;idx<_duuruva->__num_base_duuruva;idx++){
+    for(unsigned int idx=0x00;idx<_duuruva->__duuruva_base_size;idx++){
         _duuruva->__dv_dist[idx].__max=-__cwcn_infinite;
         _duuruva->__dv_dist[idx].__min=__cwcn_infinite;
     }
@@ -50,9 +50,9 @@ void diff_duuruva(__duuruva_t *_duuruva){
             __diff_2
         }
     */
-    __cwcn_type_t *aux_diff_1_holder=malloc(_duuruva->__num_base_duuruva*sizeof(__cwcn_type_t)); // for diff_2 calculation
+    __cwcn_type_t *aux_diff_1_holder=malloc(_duuruva->__duuruva_base_size*sizeof(__cwcn_type_t)); // for diff_2 calculation
     if(!_duuruva->__dvbp->__pardon_diff){
-        for(unsigned int idx=0x00;idx<_duuruva->__num_base_duuruva;idx++){
+        for(unsigned int idx=0x00;idx<_duuruva->__duuruva_base_size;idx++){
             aux_diff_1_holder[idx]=_duuruva->__dv_diff[idx].__diff_1;
             _duuruva->__dv_diff[idx].__diff_1=(_duuruva->__value[idx]-_duuruva->__dv_diff[idx].__past_v);
             _duuruva->__dv_diff[idx].__diff_2=(_duuruva->__dv_diff[idx].__diff_1-aux_diff_1_holder[idx]);
@@ -82,7 +82,7 @@ void dist_duuruva(__duuruva_t *_duuruva){ // #FIXME might be util to check for _
             __count
         }
     */
-    for(unsigned int idx=0x00;idx<_duuruva->__num_base_duuruva;idx++){
+    for(unsigned int idx=0x00;idx<_duuruva->__duuruva_base_size;idx++){
         if(!_duuruva->__dvbp->__pardon_count){
             _duuruva->__dv_dist[idx].__count ++;
         } if(!_duuruva->__dvbp->__pardon_maxmin){
@@ -119,12 +119,12 @@ __cwcn_type_t duuruva_normalize_inindex(__duuruva_t *_duuruva, __cwcn_type_t _va
     return (_value_scalar-_duuruva->__dv_dist[_idx].__mean) / (_duuruva->__dv_dist[_idx].__std+BUGGER_DUURUVA_MIN_STD);
 }
 void duuruva_standarize(__duuruva_t *_duuruva, __cwcn_type_t *_value_vect){
-    for(unsigned int _idx=0x00;_idx<_duuruva->__num_base_duuruva;_idx++){
+    for(unsigned int _idx=0x00;_idx<_duuruva->__duuruva_base_size;_idx++){
         _value_vect[_idx]=duuruva_standarize_inindex(_duuruva, _value_vect[_idx],_idx);
     }
 }
 void duuruva_normalize(__duuruva_t *_duuruva, __cwcn_type_t *_value_vect){
-    for(unsigned int _idx=0x00;_idx<_duuruva->__num_base_duuruva;_idx++){
+    for(unsigned int _idx=0x00;_idx<_duuruva->__duuruva_base_size;_idx++){
         _value_vect[_idx]=duuruva_normalize_inindex(_duuruva, _value_vect[_idx],_idx);
     }
 }
@@ -137,12 +137,12 @@ __cwcn_type_t duuruva_denormalize_inindex(__duuruva_t *_duuruva, __cwcn_type_t _
     return (_value_scalar) * (_duuruva->__dv_dist[_idx].__std+BUGGER_DUURUVA_MIN_STD)+_duuruva->__dv_dist[_idx].__mean;
 }
 void duuruva_destandarize(__duuruva_t *_duuruva, __cwcn_type_t *_value_vect){
-    for(unsigned int _idx=0x00;_idx<_duuruva->__num_base_duuruva;_idx++){
+    for(unsigned int _idx=0x00;_idx<_duuruva->__duuruva_base_size;_idx++){
         _value_vect[_idx]=duuruva_destandarize_inindex(_duuruva, _value_vect[_idx],_idx);
     }
 }
 void duuruva_denormalize(__duuruva_t *_duuruva, __cwcn_type_t *_value_vect){
-    for(unsigned int _idx=0x00;_idx<_duuruva->__num_base_duuruva;_idx++){
+    for(unsigned int _idx=0x00;_idx<_duuruva->__duuruva_base_size;_idx++){
         _value_vect[_idx]=duuruva_denormalize_inindex(_duuruva, _value_vect[_idx],_idx);
     }
 }
@@ -160,7 +160,7 @@ ___cwcn_bool_t is_duuruva_ready(__duuruva_t *_duuruva){
 */
 __duuruva_t *duuruva_fabric(unsigned int _num_base_duuruva){
     __duuruva_t* new_duuruva=malloc(sizeof(__duuruva_t));
-    new_duuruva->__num_base_duuruva=_num_base_duuruva;
+    new_duuruva->__duuruva_base_size=_num_base_duuruva;
     new_duuruva->__duuruva_vector_size=_num_base_duuruva*BUGGER_SIZE_DUURUVA;
     new_duuruva->__value=malloc(_num_base_duuruva*sizeof(__cwcn_type_t));
     new_duuruva->__dv_diff=malloc(_num_base_duuruva*sizeof(__duuruva_diff_tensor_t));
@@ -176,7 +176,7 @@ __duuruva_t *duuruva_fabric(unsigned int _num_base_duuruva){
 }
 
 void print_duuruva(__duuruva_t *_duuruva){
-    for(unsigned int _idx=0x00;_idx<_duuruva->__num_base_duuruva;_idx++){
+    for(unsigned int _idx=0x00;_idx<_duuruva->__duuruva_base_size;_idx++){
         fprintf(stdout, "PRINTING DUURUVA [ %d ]\t\t\t(actual)\t\t(regularized)\n",_idx);
         fprintf(stdout, "DUURUVA [ %d ] __value: \t\t\t%f\t\t%f \n",_idx,_duuruva->__value[_idx],duuruva_standarize_inindex(_duuruva, _duuruva->__value[_idx],_idx));
         fprintf(stdout, "DUURUVA [ %d ] __dv_dist __count: \t%f\n",_idx,_duuruva->__dv_dist[_idx].__count);
@@ -213,7 +213,7 @@ void read_duuruva_vector(__duuruva_t *_duuruva, __cwcn_type_t *_dvx, ___cwcn_boo
             [0xB] : __skewness
     */
     unsigned int ctx_check=0x00;
-    for(unsigned int _idx=0x00;_idx<_duuruva->__num_base_duuruva;_idx++){
+    for(unsigned int _idx=0x00;_idx<_duuruva->__duuruva_base_size;_idx++){
         // if(!isnan(_duuruva->__dv_dist[_idx].__count)){_dvx[_idx+0x01]=_duuruva->__dv_dist[_idx].__count;}else{_dvx[_idx+0x01]=0x00;}
         if(!isnan(_duuruva->__value[_idx])){
             if(_norm_or_standar){
@@ -253,12 +253,12 @@ void read_duuruva_vector(__duuruva_t *_duuruva, __cwcn_type_t *_dvx, ___cwcn_boo
         if(!isnan(_duuruva->__dv_dist[_idx].__skewness)){_dvx[_idx+0x0b]=_duuruva->__dv_dist[_idx].__skewness;}else{_dvx[_idx+0x0b]=0x00;}
         ctx_check++;
     }
-    assert(ctx_check==_duuruva->__num_base_duuruva);
+    assert(ctx_check==_duuruva->__duuruva_base_size);
     assert(BUGGER_SIZE_DUURUVA==0x0b+0x01); // ommited count and omited past_v
 }
 
 void set_duuruva_value(__duuruva_t *_duuruva, __cwcn_type_t *_set_vector){
-    for(unsigned int idx=0x00;idx<_duuruva->__num_base_duuruva;idx++){
+    for(unsigned int idx=0x00;idx<_duuruva->__duuruva_base_size;idx++){
         _duuruva->__value[idx]=_set_vector[idx];
     }
 }
@@ -267,7 +267,7 @@ __cwcn_type_t *get_duuruva_value(__duuruva_t *_duuruva){
 }
 
 void duuruva_destroy(__duuruva_t *_duuruva){
-    // for(unsigned int idx=0x00;idx<_duuruva->__num_base_duuruva;idx++){
+    // for(unsigned int idx=0x00;idx<_duuruva->__duuruva_base_size;idx++){
     // }
     free(_duuruva->__dv_dist);
     free(_duuruva->__dv_diff);

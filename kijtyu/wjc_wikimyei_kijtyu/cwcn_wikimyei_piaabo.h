@@ -1,8 +1,6 @@
 #ifndef WIKIMYEI_PIAABO_INCLUDED
 #define WIKIMYEI_PIAABO_INCLUDED
-
 /* MACRO UTILS */
-
 typedef _Bool (___cwcn_bool_t);
 #define ___CWCN_TRUE (___cwcn_bool_t) 0b1
 #define ___CWCN_FALSE (___cwcn_bool_t) 0b0
@@ -14,11 +12,8 @@ typedef __cwcn_type_t (*__function_pointer_t)(__cwcn_type_t);
 #define __cwcn_infinite (__cwcn_type_t) 0xFFFFFFFF
 #define max(a,b)({__typeof__(a) _a=(a);__typeof__(b) _b=(b);_a > _b ? _a : _b;})
 #define min(a,b)({__typeof__(a) _a=(a);__typeof__(b) _b=(b);_a < _b ? _a : _b;})
-
-/* GENERAL CONFIGURATIONS */
-
-// #define DEBUG_LINEAR_EXPERIMENT
-
+/* GENERAL CONFIGURATIONS */ // #FIXME unify the configuration file
+// #define DEBUG_LINEAR_EXPERIMENT // for constant input and unit transitions in all tsinuu
 #define COLOR_TSANE "\x1B[0;34m"
 #define COLOR_MUNAAJPI "\x1B[0;33m"
 #define COLOR_B_MUNAAJPI "\x1B[1;33m"
@@ -34,6 +29,7 @@ typedef __cwcn_type_t (*__function_pointer_t)(__cwcn_type_t);
 #define COLOR_DUURUVA "\033[0m"
 #define COLOR_WARNING "\033[0;31m"
 #define COLOR_UWAABO "\x1B[0;35m"
+#define COLOR_WAJYU "\x1B[0;37m"
 #define COLOR_JKIMYEI "\x1B[0;32m"
 #define COLOR_HEALT "\033[0;31m"
 // #define UWAABO_DEBUG
@@ -65,11 +61,12 @@ typedef __cwcn_type_t (*__function_pointer_t)(__cwcn_type_t);
 #define __MUNAAJPI_WAAPAJCO_POTENCY__ (__cwcn_type_t) 10.0
 
 #define __TAKE_TSANE__ (___cwcn_bool_t) ___CWCN_FALSE
-#define __TSANE_SIZE__ (usingied int) 0x02 
-#define __ALLIU_SIZE__ (unsigned int) 0x01 // vector dimension size
+#define __TSANE_SIZE__ (unsigned int) 0x02 
+#define __ALLIU_SOURCE_SIZE__ (unsigned int) 0x01 // vector dimension size
 #define __SIZE_OF_LOAD__ (int) 0x0A
 
-#define __NUM_BASE_DUURUVA__ (unsigned int) 0x11
+#define _TRAYECTORY_BUFFERS_NUM_ 0x09
+#define __NUM_BASE_DUURUVA__ (unsigned int) 0x11 // not configurable! == 0x11
 #define __HORIZON_MUNAAJPI__ (unsigned int) 0x02
 #define __DIRECT_RESOLUTION__ (unsigned int) 0x20
 
@@ -79,17 +76,72 @@ typedef __cwcn_type_t (*__function_pointer_t)(__cwcn_type_t);
 #define __ALLIU_SOURCE__ (__alliu_source_t) UNIT_as_alliu;
 #endif
 
-#define __EXPAND_ALLIU_DUURUVA__ // apply duuruva transformation to alliu 
-#define __EXPAND_IMIBAJCHO_MUNAAJPI_DUURUVA__ // apply duuruva transformation to imibacho munaajpi
+#define __EXPEND_ALLIU_DUURUVA__ // apply duuruva transformation to alliu 
+#define __EXPEND_IMIBAJCHO_MUNAAJPI_DUURUVA__ // apply duuruva transformation to imibacho munaajpi
 
-#define BUGGER_SIZE_DUURUVA (unsigned int) 12
-#define BUGGER_READY_DUURUVA_COUNT (unsigned int) 5
-#define BUGGER_MAX_DUURUVA_COUNT (__cwcn_type_t) 100.0
-#define BUGGER_DUURUVA_MIN_STD (float) 0.0001
+#define _ENTROPY_GAMMA_RESOLUTION_ (unsigned int) 1024
+#define _DUURUVA_NORM_STAND_JKIMYEI_UWAABO_ (___cwcn_bool_t) 0x0
+#define _DUURUVA_NORM_STAND_ALLIU_ (___cwcn_bool_t) 0x0
+// #define __NORM_STAND_DUURUVA_ADVENTAGE__ // try without it 
+/* set the expenses * expend is to compute, "to expend the computing effort"  */
 
-#define _DEFAULT_NORM_STAND_ (___cwcn_bool_t) 0x0
+#define __EXPEND_WAJYU_SIMPLE_VALUE_DUURUVA__
+#define __EXPEND_ALLIU_DUURUVA__
+#define __EXPEND_UWAABO_DUURUVA__
+#define __EXPEND_TSANE_DUURUVA__
+#define __EXPEND_ENTROPY_DUURUVA__
+#define __EXPEND_JKIMYEI_UWAABO_MUNAAJPI_DUURUVA__
+#define __EXPEND_IMIBAJCHO_MUNAAJPI_DUURUVA__
+#define __EXPEND_UWAABO_RETURNS_DUURUVA__ // #FIXME is it beeing used?
+#define __EXPEND_UWAABO_ADVENTAGE_DUURUVA__
+#define __EXPEND_UWAABO_LOSS_DUURUVA__
+#define __EXPEND_JKIMYEI_UWAABO_MUNAAJPI_LOSS_DUURUVA__
+#define __EXPEND_RATIO_HANDLER_DUURUVA__
+#define __EXPEND_SURR1_HANDLER_DUURUVA__
+#define __EXPEND_SURR2_HANDLER_DUURUVA__
+/* set the propg * propagate is to propagate (needed expend to propagate) to propagate includes duuruva vector in trayectoy */
+#if defined(__EXPEND_ALLIU_DUURUVA__)
+#define __PROPAGATE_ALLIU_DUURUVA__
+#endif
+#if defined(__EXPEND_IMIBAJCHO_MUNAAJPI_DUURUVA__)
+#define __PROPAGATE_JKIMYEI_UWAABO_MUNAAJPI_DUURUVA__
+#endif
+/* UAWABO_W_BASE
+BUILD ON : fixme
+        [0x0] : __IN_UWAABO_W_BASE_ALLIU_IS_INCLUDED__
+        [0x1] : __IN_UWAABO_W_BASE_ALLIU_DUURUVA_IS_INCLUDED__
+*/
+#if defined(__EXPEND_ALLIU_DUURUVA__) && defined(__PROPAGATE_ALLIU_DUURUVA__)
+#define __IN_UWAABO_W_BASE_ALLIU_DUURUVA_IS_INCLUDED__
+#endif
+#define __IN_UWAABO_W_BASE_ALLIU_IS_INCLUDED__
+/* MUNAAJPI_W_BASE
+BUILD ON : fixme
+    BASE_W_MUNAAJPI:
+        [0x0] : __IN_MUNAAJPI_W_BASE_ALLIU_IS_INCLUDED__
+        [0x1] : __IN_MUNAAJPI_W_BASE_ALLIU_DUURUVA_IS_INCLUDED__
+        [0x2] : __IN_MUNAAJPI_W_BASE_nonuwaaboALLIU_IS_INCLUDED__
+        [0x3] : __IN_MUNAAJPI_W_BASE_UAWAABO_IS_INCLUDED__
+        [0x5] : __IN_MUNAAJPI_W_BASE_TASNE_IS_INCLUDED__
+        [0x6] : __IN_MUNAAJPI_W_BASE_ENTROPY_IS_INCLUDED__
+        [0x7] : __IN_MUNAAJPI_W_BASE_IMIBAJCHO_MUNAAJPI_IS_INCLUDED__
+        [0x8] : __IN_MUNAAJPI_W_BASE_IMIBAJCHO_MUNAAJPI_DUURUVA_IS_INCLUDED__
+*/
+#if defined(__EXPEND_ALLIU_DUURUVA__) && defined(__PROPAGATE_ALLIU_DUURUVA__)
+#define __IN_MUNAAJPI_W_BASE_ALLIU_DUURUVA_IS_INCLUDED__
+#endif
+#if defined(__EXPEND_IMIBAJCHO_MUNAAJPI_DUURUVA__) && defined(__PROPAGATE_JKIMYEI_UWAABO_MUNAAJPI_DUURUVA__)
+#define __IN_MUNAAJPI_W_BASE_IMIBAJCHO_MUNAAJPI_DUURUVA_IS_INCLUDED__
+#endif
+#define __IN_MUNAAJPI_W_BASE_ALLIU_IS_INCLUDED__
+#define __IN_MUNAAJPI_W_BASE_nonuwaaboALLIU_IS_INCLUDED__
+#define __IN_MUNAAJPI_W_BASE_UAWAABO_IS_INCLUDED__
+#define __IN_MUNAAJPI_W_BASE_TASNE_IS_INCLUDED__
+#define __IN_MUNAAJPI_W_BASE_ENTROPY_IS_INCLUDED__
+#define __IN_MUNAAJPI_W_BASE_IMIBAJCHO_MUNAAJPI_IS_INCLUDED__
+/* set the masks for the trayectory */
 /*
-    UWAABO_DUURUVA: (use to set mask)
+    DUURUVA: (pay attention : this instruct how to set mask)
         [0x0] : value
         [0x1] : __diff_1
         [0x2] : __diff_2
@@ -103,8 +155,8 @@ typedef __cwcn_type_t (*__function_pointer_t)(__cwcn_type_t);
         [0xA] : __kurtosis
         [0xB] : __skewness
 */
-#ifdef __EXPAND_ALLIU_DUURUVA__
-#define _UWABO_DUURUVA_MASK_ (__cwcn_type_t[BUGGER_SIZE_DUURUVA]) {\ // to be use in trayectory
+#if defined(__EXPEND_ALLIU_DUURUVA__) && defined(__PROPAGATE_ALLIU_DUURUVA__)
+#define _ALLIU_DUURUVA_MASK_ (__cwcn_type_t[BUGGER_SIZE_DUURUVA]){\
         0x1, \
         0x1, \
         0x0, \
@@ -118,8 +170,8 @@ typedef __cwcn_type_t (*__function_pointer_t)(__cwcn_type_t);
         0x0, \
         0x0}
 #endif
-#ifdef __EXPAND_IMIBAJCHO_MUNAAJPI_DUURUVA__
-#define _IMIBAJCHO_MUNAAJPI_DUURUVA_MASK_ (__cwcn_type_t[BUGGER_SIZE_DUURUVA]) {\ // to be use in trayectory
+#if defined(__EXPEND_IMIBAJCHO_MUNAAJPI_DUURUVA__) && defined(__PROPAGATE_JKIMYEI_UWAABO_MUNAAJPI_DUURUVA__)
+#define _IMIBAJCHO_MUNAAJPI_MASK_ (__cwcn_type_t[BUGGER_SIZE_DUURUVA]){\
         0x1, \
         0x0, \
         0x0, \
@@ -133,65 +185,78 @@ typedef __cwcn_type_t (*__function_pointer_t)(__cwcn_type_t);
         0x0, \
         0x0}
 #endif
-
 /* WIKIMYEI DEFINITIONS */
-
 typedef struct __wk_flags {
     ___cwcn_bool_t __done;
     ___cwcn_bool_t __nonuwaabo_alliu_done;
     ___cwcn_bool_t __endhead_empty_alliu;
-    ___cwcn_bool_t ...__wajyu_duuruva_ready;
-    ___cwcn_bool_t __norm_stand; // 
+    ___cwcn_bool_t __wajyu_duuruva_ready;
+    ___cwcn_bool_t __norm_stand; // about norm & standarizing alliu and imibajcho munaajpi propagation results, valid if __EXPEND_* is defined
 } __wk_flags_t;
 typedef struct __trayectory { // #FIXME too many fields
-    __cwcn_type_t *__alliu_state;// ...
+    #if defined(__EXPEND_ALLIU_DUURUVA__) && defined(__PROPAGATE_ALLIU_DUURUVA__)
+    __cwcn_type_t *__alliu_state;
     __cwcn_type_t *__nonuwaabo_alliu_state;
-    __cwcn_type_t __uwaabo_mask; // #FIXME assert if is used
+    __cwcn_type_t *__alliu_duuruva_state;
+    #else
+    __cwcn_type_t *__alliu_state;
+    __cwcn_type_t *__nonuwaabo_alliu_state;
+    #endif
+    __cwcn_type_t __uwaabo_mask;
     __cwcn_type_t *__uwaabo_state;
     __cwcn_type_t *__uwaabo_returns;
     __cwcn_type_t *__uwaabo_adventage;
     __cwcn_type_t *__tsane_state;
-    __cwcn_type_t __entropy;
-    __cwcn_type_t *__munaajpi_state; //... these are the uwaabo waapajco parameteres, munaajpi wapaajco is imibajcho_munaajpi
-    ___cwcn_bool_t __pending_munaajpi;
-    __cwcn_type_t *__imibajcho_munaajpi_state;// this is J, varies while pending_munaajpi_index
+    __cwcn_type_t *__entropy_state;
+    #if defined(...__EXPEND_IMIBAJCHO_MUNAAJPI_DUURUVA__) && defined(__PROPAGATE_JKIMYEI_UWAABO_MUNAAJPI_DUURUVA__)
     unsigned int __pending_munaajpi_index;
-    #ifdef __EXPAND_ALLIU_DUURUVA__
-    __cwcn_type_t *__alliu_duuruva_state;
+    ___cwcn_bool_t __pending_munaajpi;
+    __cwcn_type_t *__jkimyei_uwaabo_munaajpi_state; //... these are the uwaabo waapajco parameteres, munaajpi wapaajco is imibajcho_munaajpi
+    __cwcn_type_t *__imibajcho_munaajpi_state;// this is J, varies while pending_munaajpi_index
+    __cwcn_type_t *__imibajcho_munaajpi_duuruva_state;// this is J, varies while pending_munaajpi_index
+    #else
+    unsigned int __pending_munaajpi_index;
+    ___cwcn_bool_t __pending_munaajpi;
+    __cwcn_type_t *__jkimyei_uwaabo_munaajpi_state; //... these are the uwaabo waapajco parameteres, munaajpi wapaajco is imibajcho_munaajpi
+    __cwcn_type_t *__imibajcho_munaajpi_state;// this is J, varies while pending_munaajpi_index
     #endif
-    #ifdef __EXPAND_IMIBAJCHO_MUNAAJPI_DUURUVA__
-    __cwcn_type_t *__imibajcho_munaajpi_duuruva_state;
-    #endif
-} __trayectory_t;
+}__trayectory_t;
 // typedef struct __jk_queue { // jk is but a regular queue
 //     __trayectory_t *__trayectory_item;
 //     struct __jk_queue *__next;
 // } __jk_queue_t;
-typedef void (*__jk_function_pointer_t)(
-        void*,
-        __cwcn_type_t*,
-        __cwcn_type_t*,
-        __cwcn_type_t*,
-        __cwcn_type_t*);
+typedef void (*__void_function_pointer_t)(void*);
+#include "cwcn_cajtucu_piaabo.h"
+#include "cwcn_ujcamei_piaabo.h"
+#include "cwcn_entropy_nebajke.h"
+#include "cwcn_duuruva_nebajke.h"
+#include "cwcn_tsinuu_piaabo.h"
+#include "cwcn_tsinuu_nebajke.h"
+#include "cwcn_wajyu_piaabo.h"
+#include "cwcn_kemu_piaabo.h"
 typedef struct __jkimyei {
     // __jk_queue_t *__jk_batch_head;
     // int __jk_index;
     int __jk_size;
-    __jk_function_pointer_t __jk_one;
+    __void_function_pointer_t __jk_one;
 } __jkimyei_t;
+typedef struct __uwaabo {
+    unsigned int __uwaabo_base_w_size;
+    unsigned int __uwaabo_state_size;
+    __cwcn_type_t *__uwaabo_w_base;
+    __tsinuu_t *__uwaabo_tsinuu;
+}__uwaabo_t;
+typedef struct __munaajpi {
+    unsigned int __munaajpi_base_w_size;
+    unsigned int __jkimyei_uwaabo_munaajpi_state_size;
+    __cwcn_type_t *__munaajpi_w_base;
+    __tsinuu_t *__munaajpi_tsinuu;
+}__munaajpi_t;
 typedef struct __load_queue { // load is a chain of pointers
     __trayectory_t *__trayectory_item;
     struct __load_queue **__down;
     struct __load_queue **__up;
 } __load_queue_t;
-#include "cwcn_cajtucu_piaabo.h"
-#include "cwcn_ujcamei_piaabo.h"
-#include "cwcn_entropy_nebajke.h"
-#include "cwcn_duuruva_nebajke.h"
-#include "cwcn_kemu_piaabo.h"
-#include "cwcn_tsinuu_piaabo.h"
-#include "cwcn_tsinuu_nebajke.h"
-#include "cwcn_uwaabo_piaabo.h"
 typedef struct __wikimyei {
     int __load_index;
     int __load_size;
@@ -201,37 +266,28 @@ typedef struct __wikimyei {
     unsigned int __jk_size;
     unsigned int __horizon_munaajpi;
     unsigned int __direct_resolution;
-    unsigned int __alliu_state_size;
-    unsigned int __uwaabo_base_size;
-    unsigned int __uwaabo_state_size;
-    unsigned int __tsane_state_size;
-    unsigned int __munaajpi_base_size;
-    unsigned int __munaajpi_state_size;
-    #ifdef __EXPAND_ALLIU_DUURUVA_
-    unsigned int ...__alliu_duuruva_state_size;
-    #endif
-    __wajyu_t *__wajyu;
     __cwcn_type_t __gae_gamma;
     __cwcn_type_t __gae_lambda;
     __cwcn_type_t __clip_param;
     __cwcn_type_t __uwaabo_beta;
     __cwcn_type_t __munaajpi_beta;
     __cwcn_type_t __entropy_beta;
+    __wk_flags_t *__flags;
+    __wajyu_t *__wajyu;
     __jkimyei_t *__jkimyei;
     __entropycosa_t *__ec;
     __alliu_t *__alliu;
-    __uwaabo_t *__uwaabo;
     __tsane_t *__tsane;
-    ___cwcn_bool_t __take_tsane;
-    __wk_flags_t *__flags;
-    __cwcn_type_t *__munaajpi_base_w_state; // the temporal base hold in wikimyei struct of a redundant concatenated vector (what?)
+    __uwaabo_t *__uwaabo;
+    __munaajpi_t *__munaajpi;
 }__wikimyei_t;
+#include "cwcn_uwaabo_piaabo.h"
 #include "cwcn_munaajpi_piaabo.h"
 #include "cwcn_jkimyei_nebajke.h"
 #include "cwcn_wikimyei_nebajke.h"
 __wikimyei_t *wikimyei_fabric(
         __alliu_source_t _alliu_source,
-        unsigned int _alliu_size,
+        unsigned int _alliu_source_size,
         unsigned int _tsane_size,
         unsigned int _direct_resolution,
         unsigned int _horizon_munaajpi,

@@ -264,7 +264,7 @@ typedef _Bool ___cwcn_bool_t;
     void print_node_by_coord_with_argument(__tsinuu_t *_tsinuu, __node_coords_t *_n_coord, __cwcn_type_t _arg);
     void print_line_by_coord(__tsinuu_t *_tsinuu, __line_coords_t *_ln_coord);
     void print_layer_by_coord(__tsinuu_t *_tsinuu, __layer_coords_t *_l_coord);
-    void print_results(__tsinuu_t *_tsinuu);
+    void print_tsninuu_jkimyei_results(__tsinuu_t *_tsinuu);
     void print_all_lines(__tsinuu_t *_tsinuu);
     void print_all_nodes(__tsinuu_t *_tsinuu);
 

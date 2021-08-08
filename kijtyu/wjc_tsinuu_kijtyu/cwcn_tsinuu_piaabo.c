@@ -1079,7 +1079,7 @@ void print_layer_by_coord(__tsinuu_t *_tsinuu, __layer_coords_t *_l_coord){
         node_kemu(_tsinuu, node_index_to_node_coord(_tsinuu, _l_coord->__l_s_coord->__layer_index, idx_n))->__value);
     }
 }
-void print_results(__tsinuu_t *_tsinuu){
+void print_tsninuu_jkimyei_results(__tsinuu_t *_tsinuu){
     __cwcn_type_t c_wapaajco_vector[output_size(_tsinuu)];
     __cwcn_type_t c_input_vector[input_size(_tsinuu)];
     __cwcn_type_t c_output_vector[output_size(_tsinuu)];

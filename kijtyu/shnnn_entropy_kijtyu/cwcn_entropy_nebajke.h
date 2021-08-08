@@ -10,7 +10,7 @@
 // #FIXME duuruva instead of entropy dist (what!)
 // #define ENTROPY_DEBUG 
 #define BUGGER_ENTROPYCOSA_SIZE (unsigned int) 3 // cauchy +beta +normal =3
-#define GAMMA_SCALE (__cwcn_type_t) 1
+#define GAMMA_SCALE (__cwcn_type_t) 1 // change to a higher number?
 #define clrscr() printf("\e[1;1H\e[2J")
 typedef _Bool ___cwcn_bool_t;
 #define ___CWCN_TRUE (___cwcn_bool_t) 0b1
@@ -92,7 +92,7 @@ __cauchy_pdf_t *_ipivye_cauchy_pdf(unsigned int _d_res, unsigned int _n_tsane);
 /*
     Normal
 */
-typedef void (*__normal_forward_pointer_t)(void *_normal_pdf, __cwcn_type_t _normal_a, __cwcn_type_t _normal_b);
+typedef void (*__normal_forward_pointer_t)(void *_normal_pdf, __cwcn_type_t _normal_a, __cwcn_type_t _normal_b, __cwcn_type_t _normal_mean);
 typedef void (*__normal_print_pointer_t)(void *_normal_pdf, int _print_lvel);
 typedef struct normal_pdf{
     __cwcn_type_t *__direct_map;
@@ -113,6 +113,7 @@ typedef struct normal_pdf{
     unsigned int __normal_b_tsinuu_index;
     unsigned int __num_tsane;
     unsigned int __direct_resolution;
+    __cwcn_type_t __gamma_res;
     __normal_forward_pointer_t __forward;
     __normal_print_pointer_t __print;
     unsigned int __num_params;
@@ -190,8 +191,9 @@ void normal_map_tsane(__normal_pdf_t *_normal_pdf);
 void normal_plot_direct_resolution(__normal_pdf_t *_normal_pdf);
 void normal_plot_tsane(__normal_pdf_t *_normal_pdf);
 void normal_plot_statistics(__normal_pdf_t *_normal_pdf);
-void normal_forward(void *_normal_pdf, __cwcn_type_t _normal_a, __cwcn_type_t _normal_b);
+void normal_forward(void *_normal_pdf, __cwcn_type_t _normal_a, __cwcn_type_t _normal_b, __cwcn_type_t _normal_mean);
 void normal_print(void *_normal_pdf, int _print_lvel);
+void normal_GAMMA_RESOLUTION(__normal_pdf_t *_normal_pdf);
 
 // // CHI
 // __cwcn_type_t chi_n(__cwcn_type_t input);

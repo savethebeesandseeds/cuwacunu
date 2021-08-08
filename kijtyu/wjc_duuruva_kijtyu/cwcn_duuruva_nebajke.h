@@ -4,9 +4,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
-#include "wikimyei_piaabo.h"
 // #FIXME fix dependencies
+
+#define BUGGER_SIZE_DUURUVA (unsigned int) 12
+#define BUGGER_READY_DUURUVA_COUNT (unsigned int) 5
+#define BUGGER_MAX_DUURUVA_COUNT (__cwcn_type_t) 100.0
+#define BUGGER_DUURUVA_MIN_STD (float) 0.0001
 #define NAT_TYPE
+
 typedef _Bool ___cwcn_bool_t;
 typedef float (__cwcn_type_t);
 #define __cwcn_type_size sizeof(__cwcn_type_t) // #FIXME not in use
@@ -44,7 +49,7 @@ typedef struct __duuruva_bolean_parametrics {
     ___cwcn_bool_t __reset_flag;
 }__duuruva_bolean_parametrics_t;
 typedef struct __duuruva {
-    unsigned int __num_base_duuruva;
+    unsigned int __duuruva_base_size;
     unsigned int __duuruva_vector_size;
     __cwcn_type_t *__value;
     __duuruva_bolean_parametrics_t * __dvbp;
@@ -58,7 +63,7 @@ void set_duuruvaboleanparametrics(
     ___cwcn_bool_t _pardon_diff,
     ___cwcn_bool_t _pardon_count);
 
-__duuruva_t *duuruva_fabric(__wikimyei_t *__wikimyei);
+__duuruva_t *duuruva_fabric(unsigned int _num_base_duuruva);
 void duuruva_destroy(__duuruva_t *_duuruva);
 void reset_duuruva(__duuruva_t *_duuruva);
 void reset_duuruva_max_min(__duuruva_t *_duurva);
@@ -81,6 +86,4 @@ void duuruva_normalize(__duuruva_t *_duuruva, __cwcn_type_t *_value_vect);
 void duuruva_destandarize(__duuruva_t *_duuruva, __cwcn_type_t *_value_vect);
 void duuruva_denormalize(__duuruva_t *_duuruva, __cwcn_type_t *_value_vect);
 void normalize_duuruva_values(__duuruva_t *_duuruva);
-
-#include "cwcn_wikimyei_piaabo.h"
 #endif

@@ -1,20 +1,15 @@
 #include "cwcn_uwaabo_piaabo.h"
-__uwaabo_t *uwaabo_fabric(unsigned int _uwaabo_base_size, unsigned int _uwaabo_size){
+__uwaabo_t *uwaabo_fabric(unsigned int _uwaabo_base_w_size, unsigned int _uwaabo_state_size, __cwcn_type_t _uwaabo_waapajco_potency){
     // #FIXME add assertions
     __uwaabo_t *new_uwaabo = malloc(sizeof(__uwaabo_t));
-    /*
-        ('cajtucu') DUURUVA FABRIC
-    */
-    new_uwaabo->__uwaabo_duuruva=duuruva_fabric(unsigned int _num_base_duuruva); // uwaabo 'cajtucu'
-    new_uwaabo->__uwaabo_loss_duuruva=duuruva_fabric(unsigned int _num_base_duuruva); // uwaabo 'cajtucu' loss
-
+    new_uwaabo->__uwaabo_base_w_size=_uwaabo_base_w_size;
+    new_uwaabo->__uwaabo_state_size=_uwaabo_state_size;
+    new_uwaabo->__uwaabo_w_base=malloc(new_uwaabo->__uwaabo_base_w_size*sizeof(__cwcn_type_t));
     /*
         ('ujcamei'->'cajtucu') TSINUU FABRIC
     */
     unsigned int uw_total_layers=0x05;
-    unsigned int uw_input_size=_uwaabo_base_size; // huge thing
-    unsigned int uw_output_size=_uwaabo_size;
-    unsigned int uw_layers_sizes[0x05] = {uw_input_size,0x05,0x0a,0x05,uw_output_size};
+    unsigned int uw_layers_sizes[0x05] = {_uwaabo_base_w_size,0x05,0x0a,0x05,_uwaabo_state_size};
     #ifndef DEBUG_LINEAR_EXPERIMENT
     __list_activations_t uw_activations_iho[0x05] = {\
                             LINEAR,\
@@ -23,7 +18,7 @@ __uwaabo_t *uwaabo_fabric(unsigned int _uwaabo_base_size, unsigned int _uwaabo_s
                             SIGMOID,\
                             SIGMOID};
     #else
-    __list_activations_t uw_activations_iho[0x05] = {LINEAR, LINEAR, SIGMOID};
+    __list_activations_t uw_activations_iho[0x05] = {LINEAR, LINEAR, LINEAR, LINEAR, SIGMOID};
     #endif
     __attribute_tsinuu_t *c_attribute_tsinuu = malloc(sizeof(__attribute_tsinuu_t));
     c_attribute_tsinuu->__NUM_TOTAL_LAYERS=uw_total_layers;
@@ -49,18 +44,44 @@ __uwaabo_t *uwaabo_fabric(unsigned int _uwaabo_base_size, unsigned int _uwaabo_s
     c_attribute_tsinuu->__bias_limits->__min=-__cwcn_infinite;
     /* fabric */
     new_uwaabo->__uwaabo_tsinuu=tsinuu_fabric(c_attribute_tsinuu);
-
-    // tsinuu_initialize_weights_zero(new_uwaabo_tsinuu);
-    // tsinuu_initialize_bias_zero(new_uwaabo_tsinuu);
+    new_uwaabo->__uwaabo_tsinuu->__attributes->__wapaajco_potency=_uwaabo_waapajco_potency;
+    // tsinuu_initialize_weights_zero(new_uwaabo->__uwaabo_tsinuu);
+    // tsinuu_initialize_bias_zero(new_uwaabo->__uwaabo_tsinuu);
     #ifndef DEBUG_LINEAR_EXPERIMENT
-    tsinuu_initialize_weights_random(new_uwaabo_tsinuu, 0.5, -0.5);
-    tsinuu_initialize_bias_random(new_uwaabo_tsinuu, 0.5, -0.5);
+    tsinuu_initialize_weights_random(new_uwaabo->__uwaabo_tsinuu, 0.5, -0.5);
+    tsinuu_initialize_bias_random(new_uwaabo->__uwaabo_tsinuu, 0.5, -0.5);
     #else
-    tsinuu_initialize_weights_fixed(new_uwaabo_tsinuu,1.0);
-    tsinuu_initialize_bias_fixed(new_uwaabo_tsinuu,1.0);
+    tsinuu_initialize_weights_fixed(new_uwaabo->__uwaabo_tsinuu,1.0);
+    tsinuu_initialize_bias_fixed(new_uwaabo->__uwaabo_tsinuu,1.0);
     #endif
-    set_all_nodebooleanpardon_parametric(new_uwaabo_tsinuu, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00); // #FIXME pardon to make it faster
-    pardon_inputoutput_bias(new_uwaabo_tsinuu); // #FIXME check if needed of enabled
-    set_all_linebooleanpardon_parametric(new_uwaabo_tsinuu, 0x00, 0x00);
-    return new_uwaabo_tsinuu;
+    set_all_nodebooleanpardon_parametric(new_uwaabo->__uwaabo_tsinuu, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00); // #FIXME pardon to make it faster
+    pardon_inputoutput_bias(new_uwaabo->__uwaabo_tsinuu); // #FIXME check if needed of enabled
+    set_all_linebooleanpardon_parametric(new_uwaabo->__uwaabo_tsinuu, 0x00, 0x00);
+    return new_uwaabo;
+}
+void read_uwaabo_w_base(__wikimyei_t *_wikimyei){
+    unsigned int m_ctx=0x00;
+    #if defined(__IN_UWAABO_W_BASE_ALLIU_DUURUVA_IS_INCLUDED__)
+    #if defined(__EXPEND_ALLIU_DUURUVA__) && defined(__PROPAGATE_ALLIU_DUURUVA__)
+    for(unsigned int idx=0x00;idx<_wikimyei->__wajyu->__metric->__alliu_duuruva->__duuruva_vector_size;idx++){
+        _wikimyei->__uwaabo->__uwaabo_w_base[m_ctx]=glti(_wikimyei)->__alliu_duuruva_state[idx];
+        m_ctx++;
+    }
+    #endif
+    fprintf(stderr,"BAD configuration __IN_UWAABO_W_BASE_ALLIU_DUURUVA_IS_INCLUDED__ requires : [__EXPEND_ALLIU_DUURUVA__ && __PROPAGATE_ALLIU_DUURUVA__]");
+    assert(0x00);
+    #endif
+    #if defined(__IN_UWAABO_W_BASE_ALLIU_IS_INCLUDED__)
+    for(unsigned int idx=0x00;idx<_wikimyei->__alliu->__source_size;idx++){
+        _wikimyei->__uwaabo->__uwaabo_w_base[m_ctx]=glti(_wikimyei)->__alliu_state[idx];
+        m_ctx++;
+    }
+    #endif
+    assert(_wikimyei->__uwaabo->__uwaabo_base_w_size==m_ctx); // might be due to a bad #define configuration 
+}
+
+void uwaabo_destroy(__uwaabo_t *_uwaabo){
+    free(_uwaabo->__uwaabo_w_base);
+    tsinuu_destroy(_uwaabo->__uwaabo_tsinuu);
+    
 }

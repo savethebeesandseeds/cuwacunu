@@ -1,14 +1,22 @@
 #include "cwcn_munaajpi_piaabo.h"
-__tsinuu_t *munaajpi_fabric(unsigned int _munaajpi_base_size, unsigned int _munaajpi_returns_size){
+__munaajpi_t *munaajpi_fabric(\
+            unsigned int _munaajpi_base_size, \
+            unsigned int _munaajpi_state_size, \
+            __cwcn_type_t _munaajpi_waapajco_potency){
     /* config */
-    unsigned int mjpi_total_layers=0x02;
+    __munaajpi_t *new_munaajpi=malloc(sizeof(__munaajpi_t));
+    new_munaajpi->__jkimyei_uwaabo_munaajpi_state_size=_munaajpi_state_size;
+    new_munaajpi->__munaajpi_base_w_size=_munaajpi_base_size;
+    new_munaajpi->__munaajpi_w_base=malloc(new_munaajpi->__munaajpi_base_w_size*sizeof(__cwcn_type_t));
+    /* tsinuu */
+    unsigned int mjpi_total_layers=0x05;
     unsigned int mjpi_input_size=_munaajpi_base_size; // huge thing
-    unsigned int mjpi_output_size=_munaajpi_returns_size;
-    unsigned int mjpi_layers_sizes[0x02] = {mjpi_input_size,mjpi_output_size};
+    unsigned int mjpi_output_size=_munaajpi_state_size;
+    unsigned int mjpi_layers_sizes[0x05] = {mjpi_input_size,15,15,15,mjpi_output_size};
     #ifndef DEBUG_LINEAR_EXPERIMENT
-    __list_activations_t mjpi_activations_iho[0x02] = {LINEAR, SIGNEDSIGMOID};
+    __list_activations_t mjpi_activations_iho[0x05] = {LINEAR, SIGMOID, SIGMOID, SIGMOID, SIGNEDSIGMOID};
     #else
-    __list_activations_t mjpi_activations_iho[0x02] = {LINEAR, LINEAR, SIGMOID, SIGMOID, SIGNEDSIGMOID};
+    __list_activations_t mjpi_activations_iho[0x05] = {LINEAR, LINEAR, SIGMOID, SIGMOID, SIGNEDSIGMOID};
     #endif
     __attribute_tsinuu_t *c_attribute_tsinuu=malloc(sizeof(__attribute_tsinuu_t));
     c_attribute_tsinuu->__NUM_TOTAL_LAYERS=mjpi_total_layers;
@@ -33,21 +41,23 @@ __tsinuu_t *munaajpi_fabric(unsigned int _munaajpi_base_size, unsigned int _muna
     c_attribute_tsinuu->__bias_limits->__max=__cwcn_infinite;
     c_attribute_tsinuu->__bias_limits->__min=-__cwcn_infinite;
     /* fabric */
-    __tsinuu_t *new_munaajpi_tsinuu=malloc(sizeof(__tsinuu_t));
-    new_munaajpi_tsinuu=tsinuu_fabric(c_attribute_tsinuu);
-    // tsinuu_initialize_weights_zero(new_munaajpi_tsinuu);
-    // tsinuu_initialize_bias_zero(new_munaajpi_tsinuu);
+    new_munaajpi->__munaajpi_tsinuu=tsinuu_fabric(c_attribute_tsinuu);
+
+    new_munaajpi->__munaajpi_tsinuu->__attributes->__wapaajco_potency=_munaajpi_waapajco_potency;
+
+    // tsinuu_initialize_weights_zero(new_munaajpi->__munaajpi_tsinuu);
+    // tsinuu_initialize_bias_zero(new_munaajpi->__munaajpi_tsinuu);
     #ifndef DEBUG_LINEAR_EXPERIMENT
-    tsinuu_initialize_weights_random(new_munaajpi_tsinuu, 0.5, -0.5);
-    tsinuu_initialize_bias_random(new_munaajpi_tsinuu, 0.5, -0.5);
+    tsinuu_initialize_weights_random(new_munaajpi->__munaajpi_tsinuu, 0.5, -0.5);
+    tsinuu_initialize_bias_random(new_munaajpi->__munaajpi_tsinuu, 0.5, -0.5);
     #else
-    tsinuu_initialize_weights_fixed(new_munaajpi_tsinuu,1.0);
-    tsinuu_initialize_bias_fixed(new_munaajpi_tsinuu,1.0);
+    tsinuu_initialize_weights_fixed(new_munaajpi->__munaajpi_tsinuu,1.0);
+    tsinuu_initialize_bias_fixed(new_munaajpi->__munaajpi_tsinuu,1.0);
     #endif
-    set_all_nodebooleanpardon_parametric(new_munaajpi_tsinuu, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00);
-    pardon_inputoutput_bias(new_munaajpi_tsinuu); // #FIXME check if needed of enabled
-    set_all_linebooleanpardon_parametric(new_munaajpi_tsinuu, 0x00, 0x00);
-    return new_munaajpi_tsinuu;
+    set_all_nodebooleanpardon_parametric(new_munaajpi->__munaajpi_tsinuu, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00);
+    pardon_inputoutput_bias(new_munaajpi->__munaajpi_tsinuu); // #FIXME check if needed of enabled
+    set_all_linebooleanpardon_parametric(new_munaajpi->__munaajpi_tsinuu, 0x00, 0x00);
+    return new_munaajpi;
 }
 /*
 
@@ -79,12 +89,12 @@ ___cwcn_bool_t set_load_pending_munaajpi(__wikimyei_t *_wikimyei){
             if(_wikimyei->__load_size-c_index<_wikimyei->__horizon_munaajpi){break;} // skip
             if(c_item->__pending_munaajpi_index<_wikimyei->__horizon_munaajpi){
                 c_item->__pending_munaajpi_index++;
-                for(unsigned int m_idx=0x00;m_idx<_wikimyei->__alliu_state_size;m_idx++){
+                for(unsigned int m_idx=0x00;m_idx<_wikimyei->__alliu->__source_size;m_idx++){
                     c_item->__nonuwaabo_alliu_state[m_idx]+=glti(_wikimyei)->__alliu_state[m_idx]/((__cwcn_type_t)_wikimyei->__horizon_munaajpi); // #FIXME lacking gamma
                 }
                 #ifdef MUNJAAPI_DEBUG
                     printf("%s>> > .g. nonuwaabo alliu update: [",COLOR_ALLIU);
-                    for(unsigned int m_idx=0x00;m_idx<_wikimyei->__alliu_state_size;m_idx++){
+                    for(unsigned int m_idx=0x00;m_idx<_wikimyei->__alliu->__source_size;m_idx++){
                         printf(" nonuwaabo_alliu_state [%d/%d]: %f, alliu_state [%d/%d]: %f\t ", c_index, m_idx, c_item->__nonuwaabo_alliu_state[m_idx], _wikimyei->__load_index, m_idx, glti(_wikimyei)->__alliu_state[m_idx]);
                     }
                     printf(" ]%s\n",COLOR_REGULAR);
@@ -92,10 +102,11 @@ ___cwcn_bool_t set_load_pending_munaajpi(__wikimyei_t *_wikimyei){
             }if(c_item->__pending_munaajpi_index==_wikimyei->__horizon_munaajpi){
                 load_to_index(_wikimyei,c_index);
                 _wikimyei->__flags->__nonuwaabo_alliu_done=___CWCN_TRUE;
-                compute_imibajcho_munaajpi(_wikimyei);
-                imibajcho_munaajpi_cajtucu_transformation(_wikimyei);
-                ___munaajpi_duuruva_hash(_wikimyei);
-                ___munaajpi_hash(_wikimyei);
+                // STAND FOR IMIBAJCHO MUNAAJPI
+                ___imibajcho_munaajpi_hash(_wikimyei);
+                // STAND FOR UWAABO MUNAAJPI
+                ___jkimyei_uwaabo_munaajpi_hash(_wikimyei);
+                ___jkimyei_uwaabo_munaajpi_duuruva_hash(_wikimyei);
                 break;
             }
         }while(load_go_up(_wikimyei)!=-1); // here one might try to make time go backward
@@ -118,43 +129,65 @@ void reset_load_pending_munaajpi(__wikimyei_t *_wikimyei){
 */
 void print_munaajpi_w_base(__wikimyei_t *_wikimyei){
     fprintf(stdout,"%s>> > ... munaajpi_w_base: [%s",COLOR_MUNAAJPI,COLOR_REGULAR);
-    for(unsigned int idx=0x00;idx<_wikimyei->__munaajpi_base_size;idx++){
+    for(unsigned int idx=0x00;idx<_wikimyei->__munaajpi->__munaajpi_base_w_size;idx++){
         if(!(idx%9)&&idx!=0x00){fprintf(stdout,"\n\t\t\t");}
-        fprintf(stdout, "\t%.2f,",_wikimyei->__munaajpi_base_w_state[idx]);
+        fprintf(stdout, "\t%.2f,",_wikimyei->__munaajpi->__munaajpi_w_base[idx]);
     }
     fprintf(stdout," %s]%s\n",COLOR_MUNAAJPI,COLOR_REGULAR);
 }
 void read_munaajpi_w_base(__wikimyei_t *_wikimyei){
     unsigned int m_ctx=0x00;
-    for(unsigned int idx=0x00;idx<_wikimyei->__alliu_state_size;idx++){
-        _wikimyei->__munaajpi_base_w_state[m_ctx]=glti(_wikimyei)->__nonuwaabo_alliu_state[idx];
-        m_ctx++;
-    }
-    #ifdef __EXPAND_ALLIU__DUURUVA__
-    for(unsigned int idx=0x00;idx<_wikimyei->__alliu_duuruva_state_size;idx++){
-        _wikimyei->__munaajpi_base_w_state[m_ctx]=glti(_wikimyei)->__alliu_duuruva_state[idx];
+    #if defined(__IN_MUNAAJPI_W_BASE_IMIBAJCHO_MUNAAJPI_DUURUVA_IS_INCLUDED__)
+    #if defined(__EXPEND_IMIBAJCHO_MUNAAJPI_DUURUVA__) && defined(__PROPAGATE_JKIMYEI_UWAABO_MUNAAJPI_DUURUVA__)
+    #else
+    fprintf(stderr,"BAD CONFIGURATION: __IN_MUNAAJPI_W_BASE_IMIBAJCHO_MUNAAJPI_DUURUVA_IS_INCLUDED__ needs [__EXPEND_IMIBAJCHO_MUNAAJPI_DUURUVA__ && __PROPAGATE_JKIMYEI_UWAABO_MUNAAJPI_DUURUVA__]")
+    assert(0x00);
+    #endif
+    #endif
+    #if defined(__IN_MUNAAJPI_W_BASE_ALLIU_IS_INCLUDED__) // ALLIU
+    for(unsigned int idx=0x00;idx<_wikimyei->__alliu->__source_size;idx++){
+        _wikimyei->__munaajpi->__munaajpi_w_base[m_ctx]=glti(_wikimyei)->__alliu_state[idx];
         m_ctx++;
     }
     #endif
-    for(unsigned int idx=0x00;idx<_wikimyei->__uwaabo_state_size;idx++){
-        _wikimyei->__munaajpi_base_w_state[m_ctx]=glti(_wikimyei)->__uwaabo_state[idx];
+    #if defined(__IN_MUNAAJPI_W_BASE_ALLIU_DUURUVA_IS_INCLUDED__) // ALLIU_DUURUVA
+    #if defined(__EXPEND_ALLIU_DUURUVA__) && defined(__PROPAGATE_ALLIU_DUURUVA__)
+    for(unsigned int idx=0x00;idx<_wikimyei->__wajyu->__metric->__alliu_duuruva->__duuruva_vector_size;idx++){
+        _wikimyei->__munaajpi->__munaajpi_w_base[m_ctx]=glti(_wikimyei)->__alliu_duuruva_state[idx];
         m_ctx++;
     }
-    for(unsigned int idx=0x00;idx<_wikimyei->__tsane_state_size;idx++){
-        _wikimyei->__munaajpi_base_w_state[m_ctx]=glti(_wikimyei)->__tsane_state[idx];
-        m_ctx++;
-    }
-    #ifdef __EXPAND_IMIBAJCHO_MUNAAJPI_DUURUVA__
-    for(unsigned int idx=0x00;idx<_wikimyei->__imibajcho_munaajpi_duuruva_state_size;idx++){
-        _wikimyei->__munaajpi_base_w_state[m_ctx]=glti(_wikimyei)->__imibajcho_munaajpi_duuruva_state[idx];
+    #else
+    fprintf(stderr,"BAD CONFIGURATION: __IN_MUNAAJPI_W_BASE_ALLIU_DUURUVA_IS_INCLUDED__ needs [__EXPEND_ALLIU_DUURUVA__ && __PROPAGATE_ALLIU_DUURUVA__]")
+    assert(0x00);
+    #endif
+    #endif
+    #if defined(__IN_MUNAAJPI_W_BASE_nonuwaaboALLIU_IS_INCLUDED__) // nonuwaaboALLIU
+    for(unsigned int idx=0x00;idx<_wikimyei->__alliu->__source_size;idx++){
+        _wikimyei->__munaajpi->__munaajpi_w_base[m_ctx]=glti(_wikimyei)->__nonuwaabo_alliu_state[idx];
         m_ctx++;
     }
     #endif
-    #if defined(WIKIMYEI_DEBUG) || defined(MUNJAAPI_DEBUG)
-        fprintf(stdout,"%s>> > load_index: [%d] ... request to read_munaajpi_w_base %s\n",COLOR_MUNAAJPI,_wikimyei->__load_index,COLOR_REGULAR);
-        print_munaajpi_w_base(_wikimyei);
+    #if defined(__IN_MUNAAJPI_W_BASE_UAWAABO_IS_INCLUDED__) // UWAABO
+    for(unsigned int idx=0x00;idx<_wikimyei->__uwaabo->__uwaabo_state_size;idx++){
+        _wikimyei->__munaajpi->__munaajpi_w_base[m_ctx]=glti(_wikimyei)->__uwaabo_state[idx];
+        m_ctx++;
+    }
     #endif
-    assert(_wikimyei->__munaajpi_base_size==m_ctx);
+    #if defined(__IN_MUNAAJPI_W_BASE_TASNE_IS_INCLUDED__) // TSANE
+    for(unsigned int idx=0x00;idx<_wikimyei->__tsane->__tsane_size;idx++){
+        _wikimyei->__munaajpi->__munaajpi_w_base[m_ctx]=glti(_wikimyei)->__tsane_state[idx];
+        m_ctx++;
+    }
+    #endif
+    #if defined(__IN_MUNAAJPI_W_BASE_IMIBAJCHO_MUNAAJPI_IS_INCLUDED__) // IMIBAJCHO MUNAAJPI
+    _wikimyei->__munaajpi->__munaajpi_w_base[m_ctx]=glti(_wikimyei)->__imibajcho_munaajpi_state[0x00];
+    m_ctx++;
+    #endif
+    #if defined(__IN_MUNAAJPI_W_BASE_ENTROPY_IS_INCLUDED__)
+    _wikimyei->__munaajpi->__munaajpi_w_base[m_ctx]=glti(_wikimyei)->__entropy_state[0x00];
+    m_ctx++;
+    #endif
+    assert(_wikimyei->__munaajpi->__munaajpi_base_w_size==m_ctx); // might be due to a bad #define configuration 
 }
 /*
 
@@ -163,27 +196,23 @@ void imibajcho_munaajpi_cajtucu_transformation(__wikimyei_t *_wikimyei){
     // #FIXME, enum class tsane
     // tsane_state[0] == call
     // tsane_state[1] == put
-    assert(_wikimyei->__tsane_state_size==0x02);
+    assert(_wikimyei->__tsane->__tsane_size==0x02);
     __cwcn_type_t ims_aux=0x00;
-    ims_aux+=glti(_wikimyei)->__imibajcho_munaajpi_state[0x00]*(+1)*glti(_wikimyei)->__tsane_state[0x00];
-    ims_aux+=glti(_wikimyei)->__imibajcho_munaajpi_state[0x00]*(-1)*glti(_wikimyei)->__tsane_state[0x01];
+    ims_aux+=glti(_wikimyei)->__imibajcho_munaajpi_state[0x00]*((__cwcn_type_t)+1.0)*glti(_wikimyei)->__tsane_state[0x00];
+    ims_aux+=glti(_wikimyei)->__imibajcho_munaajpi_state[0x00]*((__cwcn_type_t)-1.0)*glti(_wikimyei)->__tsane_state[0x01];
     glti(_wikimyei)->__imibajcho_munaajpi_state[0x00]=ims_aux;
     // #FIXME, try the experiment to normalize after ims
     #if defined(WIKIMYEI_DEBUG) || defined(MUNJAAPI_DEBUG)
-        if(_wikimyei->__flags->__norm_stand){
-            fprintf(stdout,"%s>> > load_index: [%d] ... (result of) imibajcho munaajpi cajtucu transformation: (regularized) %f%s\n",COLOR_MUNAAJPI,_wikimyei->__load_index,\
-                glti(_wikimyei)->__imibajcho_munaajpi_state[0x00],\
-                COLOR_REGULAR);
-        }else{
-            fprintf(stdout,"%s>> > load_index: [%d] ... (result of) imibajcho munaajpi cajtucu transformation: %f%s\n",COLOR_MUNAAJPI,_wikimyei->__load_index,glti(_wikimyei)->__imibajcho_munaajpi_state[0x00],COLOR_REGULAR);
-        }
+        fprintf(stdout,"%s>> > load_index: [%d] ... (result of) imibajcho munaajpi cajtucu transformation: %f%s\n",COLOR_MUNAAJPI,_wikimyei->__load_index,\
+            glti(_wikimyei)->__imibajcho_munaajpi_state[0x00],\
+            COLOR_REGULAR);
     #endif
 }
 /*
 
 */
 // void imibajcho_step_munaajpi(__wikimyei_t *_wikimyei){ // #FIXME broken not in use
-//     for(unsigned int m_idx=0x00;m_idx<_wikimyei->__alliu_state_size;m_idx++){
+//     for(unsigned int m_idx=0x00;m_idx<_wikimyei->__alliu->__source_size;m_idx++){
 //         glti(_wikimyei)->__nonuwaabo_alliu_state[m_idx]+=g...etnext_alliu(_wikimyei->__alliu)[m_idx]/_wikimyei->__horizon_munaajpi;
 //     }
 // }
@@ -191,12 +220,12 @@ void compute_imibajcho_munaajpi(__wikimyei_t *_wikimyei){ // J
     // Assumes __nonuwaabo_alliu_state is ready
     assert(_wikimyei->__flags->__nonuwaabo_alliu_done); 
     glti(_wikimyei)->__imibajcho_munaajpi_state[0x00]=0x00; // is this the problem?
-    for(unsigned int m_idx=0x00;m_idx<_wikimyei->__alliu_state_size;m_idx++){
+    for(unsigned int m_idx=0x00;m_idx<_wikimyei->__alliu->__source_size;m_idx++){
         glti(_wikimyei)->__imibajcho_munaajpi_state[0x00]+=\
         glti(_wikimyei)->__nonuwaabo_alliu_state[m_idx]-\
         glti(_wikimyei)->__alliu_state[m_idx];
         glti(_wikimyei)->__imibajcho_munaajpi_state[0x00]/=\
-        (__cwcn_type_t)_wikimyei->__alliu_state_size;
+        (__cwcn_type_t)_wikimyei->__alliu->__source_size;
     }
     #ifdef WIKIMYEI_DEBUG
     fprintf(stdout,"%s>> > load_index: [%d] ... request to compute_imibajcho_munaajpi%s\n",COLOR_MUNAAJPI,_wikimyei->__load_index,COLOR_REGULAR);
@@ -204,11 +233,11 @@ void compute_imibajcho_munaajpi(__wikimyei_t *_wikimyei){ // J
     #ifdef MUNAAJPI_DEBUG
     fprintf(stdout,"\t[%d] %simibajcho_munaajpi_state: %.4f%s",_wikimyei->__load_index,COLOR_MUNAAJPI,glti(_wikimyei)->__imibajcho_munaajpi_state[0x00],COLOR_REGULAR);
     fprintf(stdout,"\t%s nonuwaabo_alliu_state: [ ",COLOR_ALLIU);
-    for(unsigned int m_idx=0x00;m_idx<_wikimyei->__alliu_state_size;m_idx++){
+    for(unsigned int m_idx=0x00;m_idx<_wikimyei->__alliu->__source_size;m_idx++){
         fprintf(stdout," %.2f,",glti(_wikimyei)->__nonuwaabo_alliu_state[m_idx]);
     }
     fprintf(stdout," ]\t alliu_state: [ ");
-    for(unsigned int m_idx=0x00;m_idx<_wikimyei->__alliu_state_size;m_idx++){
+    for(unsigned int m_idx=0x00;m_idx<_wikimyei->__alliu->__source_size;m_idx++){
         fprintf(stdout," %.2f,",glti(_wikimyei)->__alliu_state[m_idx]);
     }
     fprintf(stdout," ]%s\n",COLOR_REGULAR);
@@ -216,7 +245,7 @@ void compute_imibajcho_munaajpi(__wikimyei_t *_wikimyei){ // J
     glti(_wikimyei)->__pending_munaajpi=___CWCN_FALSE; // means not lacking compute_imibajcho
     #ifdef MUNJAAPI_DEBUG
         printf(">> > .g. nonuwaabo alliu state:\t[");
-        for(unsigned int m_idx=0x00;m_idx<_wikimyei->__alliu_state_size;m_idx++){
+        for(unsigned int m_idx=0x00;m_idx<_wikimyei->__alliu->__source_size;m_idx++){
             printf(" %.2f",glti(_wikimyei)->__nonuwaabo_alliu_state[m_idx]);
         }
         printf(" ]\n");
@@ -252,19 +281,41 @@ ___cwcn_bool_t are_munaajpi_pending(__wikimyei_t *_wikimyei){
 
 */
 void print_report_munaajpi(__wikimyei_t *_wikimyei){
-    fprintf(stdout,"%s",COLOR_MUNAAJPI);
-    load_to_start(_wikimyei);
     fprintf(stdout,"\t THE ONE AND ONLY, REPORT MUNAAJPI:\n\t(MUNAAJPI)\n");
-    print_duuruva(_wikimyei->__wajyu->__metric->__munaajpi_duuruva);
+    fprintf(stdout,"%s",COLOR_MUNAAJPI);
+    int c_index=_wikimyei->__load_index;
+    // FEATURING THE IMIBAJCHO
+    fprintf(stdout,"\t FEATURING THE IMIBAJCHO DUURUVA\n");
+    load_to_start(_wikimyei);
+    print_duuruva(_wikimyei->__wajyu->__metric->__imibajcho_munaajpi_duuruva);
     do{
         for(unsigned int mjpi_idx=0x00;mjpi_idx<0x01;mjpi_idx++){
-            if(fabs(fabs(glti(_wikimyei)->__imibajcho_munaajpi_state[0x00])-fabs(_wikimyei->__wajyu->__metric->__munaajpi_duuruva->__dv_dist[mjpi_idx].__mean))>fabs(_wikimyei->__wajyu->__metric->__munaajpi_duuruva->__dv_dist[mjpi_idx].__std)){
+            if(fabs(fabs(glti(_wikimyei)->__imibajcho_munaajpi_state[0x00])-fabs(_wikimyei->__wajyu->__metric->__imibajcho_munaajpi_duuruva->__dv_dist[mjpi_idx].__mean))>fabs(_wikimyei->__wajyu->__metric->__imibajcho_munaajpi_duuruva->__dv_dist[mjpi_idx].__std)){
                 fprintf(stdout,"\t[%d] load_index:[%d]\t imibajcho_munaajpi_state:[0x00] %s%f%s\n",mjpi_idx,_wikimyei->__load_index,COLOR_DANGER,glti(_wikimyei)->__imibajcho_munaajpi_state[0x00],COLOR_MUNAAJPI);
             }else{
                 fprintf(stdout,"\t[%d] load_index:[%d]\t imibajcho_munaajpi_state:[0x00] %s%f%s\n",mjpi_idx,_wikimyei->__load_index,COLOR_GOOD,glti(_wikimyei)->__imibajcho_munaajpi_duuruva_state[mjpi_idx],COLOR_MUNAAJPI);
             }
         }
     }while(load_go_up(_wikimyei)!=-1);
+    // JKIMYEI UWAABO
+    // fprintf(stdout,"\t FEATURING THE JKIMYEI UWAABO DUURUVA\n");
+    // load_to_start(_wikimyei);
+    // print_duuruva(_wikimyei->__wajyu->__metric->__jkimyei_uwaabo_duuruva);
+    // do{
+    //     for(unsigned int mjpi_idx=0x00;mjpi_idx<0x01;mjpi_idx++){
+    //         if(fabs(fabs(glti(_wikimyei)->__jkimyei_uwaabo_munaajpi_state[mjpi_idx])-fabs(_wikimyei->__wajyu->__metric->__jkimyei_uwaabo_duuruva->__dv_dist[mjpi_idx].__mean))>fabs(_wikimyei->__wajyu->__metric->__jkimyei_uwaabo_duuruva->__dv_dist[mjpi_idx].__std)){
+    //             fprintf(stdout,"\t[%d] load_index:[%d]\t imibajcho_munaajpi_state:[0x00] %s%f%s\n",mjpi_idx,_wikimyei->__load_index,COLOR_DANGER,glti(_wikimyei)->__jkimyei_uwaabo_munaajpi_state[mjpi_idx],COLOR_MUNAAJPI);
+    //         }else{
+    //             fprintf(stdout,"\t[%d] load_index:[%d]\t imibajcho_munaajpi_state:[0x00] %s%f%s\n",mjpi_idx,_wikimyei->__load_index,COLOR_GOOD,glti(_wikimyei)->__jkimyei_uwaabo_duuruva_state[mjpi_idx],COLOR_MUNAAJPI);
+    //         }
+    //     }
+    // }while(load_go_up(_wikimyei)!=-1);
+    // fprintf(stdout,"%s\n",COLOR_REGULAR);
     
-    fprintf(stdout,"%s\n",COLOR_REGULAR);
+    load_to_index(_wikimyei,c_index);
+}
+// 
+void munaajpi_destroy(__munaajpi_t *_munaajpi){
+    free(_munaajpi->__munaajpi_w_base);
+    tsinuu_destroy(_munaajpi->__munaajpi_tsinuu);
 }
