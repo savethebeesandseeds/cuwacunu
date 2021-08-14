@@ -158,8 +158,21 @@ ___cwcn_bool_t is_duuruva_ready(__duuruva_t *_duuruva){
 /*
 
 */
-__duuruva_t *duuruva_fabric(unsigned int _num_base_duuruva){
+void reset_dumpfile(__duuruva_t *_duuruva){
+    fprintf(stdout,"Reseting duuruva dumpfile <%s>\n",_duuruva->__duuruva_dumpfile);
+    FILE *fp=fopen(_duuruva->__duuruva_dumpfile,"w+");
+    fclose(fp);
+}
+void duuruva_value_to_dumpfile(__duuruva_t *_duuruva){
+    FILE *fp;
+    fp=fopen(_duuruva->__duuruva_dumpfile,"a");
+    for(unsigned int idx=0x00;idx<_duuruva->__duuruva_base_size;idx++){fprintf(fp,"%f,",_duuruva->__value[idx]);}
+    fprintf(fp,"\n");
+    fclose(fp);
+}
+__duuruva_t *duuruva_fabric(unsigned int _num_base_duuruva, char *_dumpfilepath){
     __duuruva_t* new_duuruva=malloc(sizeof(__duuruva_t));
+    new_duuruva->__duuruva_dumpfile=_dumpfilepath;
     new_duuruva->__duuruva_base_size=_num_base_duuruva;
     new_duuruva->__duuruva_vector_size=_num_base_duuruva*BUGGER_SIZE_DUURUVA;
     new_duuruva->__value=malloc(_num_base_duuruva*sizeof(__cwcn_type_t));
@@ -171,7 +184,11 @@ __duuruva_t *duuruva_fabric(unsigned int _num_base_duuruva){
     new_duuruva->__dvbp=malloc(sizeof(__duuruva_bolean_parametrics_t));
     set_duuruvaboleanparametrics(new_duuruva,0x00,0x00,0x00,0x00);
     new_duuruva->__dvbp->__reset_flag=0x00;
+    #ifdef __ALLOW_DUURUVA_DUMPFILE__
+    reset_dumpfile(new_duuruva);
+    #endif
     reset_duuruva(new_duuruva);
+    
     return new_duuruva;
 }
 
@@ -261,6 +278,9 @@ void set_duuruva_value(__duuruva_t *_duuruva, __cwcn_type_t *_set_vector){
     for(unsigned int idx=0x00;idx<_duuruva->__duuruva_base_size;idx++){
         _duuruva->__value[idx]=_set_vector[idx];
     }
+    #ifdef __ALLOW_DUURUVA_DUMPFILE__
+    duuruva_value_to_dumpfile(_duuruva);
+    #endif
 }
 __cwcn_type_t *get_duuruva_value(__duuruva_t *_duuruva){
     return _duuruva->__value;

@@ -14,8 +14,8 @@ __trayectory_t *trayectory_fabric(__wikimyei_t *_wikimyei){
     new_trayectory->__alliu_state=malloc(_wikimyei->__alliu->__source_size*sizeof(__cwcn_type_t));
     new_trayectory->__nonuwaabo_alliu_state=malloc(_wikimyei->__alliu->__source_size*sizeof(__cwcn_type_t));
     new_trayectory->__uwaabo_state=malloc(_wikimyei->__uwaabo->__uwaabo_state_size*sizeof(__cwcn_type_t));
-    new_trayectory->__uwaabo_returns=malloc(_wikimyei->__uwaabo->__uwaabo_state_size*sizeof(__cwcn_type_t));
-    new_trayectory->__uwaabo_adventage=malloc(_wikimyei->__uwaabo->__uwaabo_state_size*sizeof(__cwcn_type_t));
+    new_trayectory->__uwaabo_gae_returns=malloc(_wikimyei->__uwaabo->__uwaabo_state_size*sizeof(__cwcn_type_t));
+    new_trayectory->__uwaabo_gae_adventage=malloc(_wikimyei->__uwaabo->__uwaabo_state_size*sizeof(__cwcn_type_t));
     new_trayectory->__tsane_state=malloc(_wikimyei->__tsane->__tsane_size*sizeof(__cwcn_type_t));
     new_trayectory->__jkimyei_uwaabo_munaajpi_state=malloc(_wikimyei->__munaajpi->__jkimyei_uwaabo_munaajpi_state_size*sizeof(__cwcn_type_t));
     new_trayectory->__imibajcho_munaajpi_state=malloc(0x01*sizeof(__cwcn_type_t)); // #FIXME, is J onedimensional
@@ -23,21 +23,21 @@ __trayectory_t *trayectory_fabric(__wikimyei_t *_wikimyei){
     for(unsigned int idx=0x00;idx<_wikimyei->__alliu->__source_size;idx++){new_trayectory->__alliu_state[idx]=0x00;}
     for(unsigned int idx=0x00;idx<_wikimyei->__alliu->__source_size;idx++){new_trayectory->__nonuwaabo_alliu_state[idx]=0x00;}
     new_trayectory->__entropy_state=malloc(0x01*sizeof(__cwcn_type_t));;
-    new_trayectory->__entropy_state=0x00;
+    new_trayectory->__entropy_state[0x00]=0x00;
     new_trayectory->__uwaabo_mask=0x01; // #FIXME
     for(unsigned int idx=0x00;idx<_wikimyei->__uwaabo->__uwaabo_state_size;idx++){new_trayectory->__uwaabo_state[idx]=0x00;}
     for(unsigned int idx=0x00;idx<_wikimyei->__tsane->__tsane_size;idx++){new_trayectory->__tsane_state[idx]=0x00;}
     for(unsigned int idx=0x00;idx<_wikimyei->__munaajpi->__jkimyei_uwaabo_munaajpi_state_size;idx++){new_trayectory->__jkimyei_uwaabo_munaajpi_state[idx]=0x00;}
-    #if defined(__EXPEND_ALLIU__DUURUVA__) // here is the expature in memory for alliu
+    #if defined(__PROPAGATE_ALLIU_DUURUVA__) // here is the expature in memory for alliu
     new_trayectory->__alliu_duuruva_state=malloc(_wikimyei->__wajyu->__metric->__alliu_duuruva->__duuruva_vector_size*sizeof(__cwcn_type_t));
     for(unsigned int idx=0x00;idx<_wikimyei->__wajyu->__metric->__alliu_duuruva->__duuruva_vector_size;idx++){new_trayectory->__alliu_duuruva_state[idx]=0x00;}
     #endif
-    #if defined(__EXPEND_IMIBAJCHO_MUNAAJPI_DUURUVA__) // here is the expenture in memory for imibajcho munaajp
-    new_trayectory->__imibajcho_munaajpi_duuruva_state=malloc(_wikimyei->__wajyu->__metric->__imibajcho_munaajpi_duuruva->__duuruva_vector_size*sizeof(__cwcn_type_t));
-    for(unsigned int idx=0x00;idx<_wikimyei->__wajyu->__metric->__imibajcho_munaajpi_duuruva->__duuruva_vector_size;idx++){new_trayectory->__imibajcho_munaajpi_duuruva_state[idx]=0x00;}
+    #if defined(__PROPAGATE_JKIMYEI_UWAABO_MUNAAJPI_DUURUVA__) // here is the expenture in memory for jkimyei_uwaabo munaajp
+    new_trayectory->__jkimyei_uwaabo_munaajpi_duuruva_state=malloc(_wikimyei->__wajyu->__metric->__jkimyei_uwaabo_munaajpi_duuruva->__duuruva_vector_size*sizeof(__cwcn_type_t));
+    for(unsigned int idx=0x00;idx<_wikimyei->__wajyu->__metric->__jkimyei_uwaabo_munaajpi_duuruva->__duuruva_vector_size;idx++){new_trayectory->__jkimyei_uwaabo_munaajpi_duuruva_state[idx]=0x00;}
     #endif
-    for(unsigned int idx=0x00;idx<_wikimyei->__uwaabo->__uwaabo_state_size;idx++){new_trayectory->__uwaabo_adventage[idx]=0x00;}
-    for(unsigned int idx=0x00;idx<_wikimyei->__uwaabo->__uwaabo_state_size;idx++){new_trayectory->__uwaabo_returns[idx]=0x00;}
+    for(unsigned int idx=0x00;idx<_wikimyei->__uwaabo->__uwaabo_state_size;idx++){new_trayectory->__uwaabo_gae_adventage[idx]=0x00;}
+    for(unsigned int idx=0x00;idx<_wikimyei->__uwaabo->__uwaabo_state_size;idx++){new_trayectory->__uwaabo_gae_returns[idx]=0x00;}
     #if defined(ALOCATION_DEBUG) // #FIXME this is only used here!
     fprintf(stdout,"%s     +++ [trayectory_fabric]:\n%s",COLOR_ALOCATION_ADD,COLOR_REGULAR);
     fprintf(stdout,"%s\t __alliu_state: %s%p:\n",COLOR_ALOCATION_ADD,COLOR_REGULAR,new_trayectory->__alliu_state);
@@ -45,14 +45,13 @@ __trayectory_t *trayectory_fabric(__wikimyei_t *_wikimyei){
     fprintf(stdout,"%s\t __jkimyei_uwaabo_munaajpi_state: %s%p:\n",COLOR_ALOCATION_ADD,COLOR_REGULAR,new_trayectory->__jkimyei_uwaabo_munaajpi_state);
     fprintf(stdout,"%s\t __nonuwaabo_alliu_state: %s%p:\n",COLOR_ALOCATION_ADD,COLOR_REGULAR,new_trayectory->__nonuwaabo_alliu_state);
     fprintf(stdout,"%s\t __uwaabo_state: %s%p:\n",COLOR_ALOCATION_ADD,COLOR_REGULAR,new_trayectory->__uwaabo_state);
-    fprintf(stdout,"%s\t __uwaabo_returns: %s%p:\n",COLOR_ALOCATION_ADD,COLOR_REGULAR,new_trayectory->__uwaabo_returns);
-    fprintf(stdout,"%s\t __uwaabo_adventage: %s%p:\n",COLOR_ALOCATION_ADD,COLOR_REGULAR,new_trayectory->__uwaabo_adventage);
-    #if defined(__EXPEND_ALLIU__DUURUVA__)
+    fprintf(stdout,"%s\t __uwaabo_gae_returns: %s%p:\n",COLOR_ALOCATION_ADD,COLOR_REGULAR,new_trayectory->__uwaabo_gae_returns);
+    fprintf(stdout,"%s\t __uwaabo_gae_adventage: %s%p:\n",COLOR_ALOCATION_ADD,COLOR_REGULAR,new_trayectory->__uwaabo_gae_adventage);
+    #if defined(__PROPAGATE_ALLIU_DUURUVA__)
     fprintf(stdout,"%s\t __alliu_duuruva_state: %s%p:\n",COLOR_ALOCATION_ADD,COLOR_REGULAR,new_trayectory->__alliu_duuruva_state);
     #endif
-    fprintf(stdout,"%s\t __imibajcho_munaajpi_state: %s%p:\n",COLOR_ALOCATION_ADD,COLOR_REGULAR,new_trayectory->__imibajcho_munaajpi_state[0x00]);
-    #if defined(__EXPEND_IMIBAJCHO_MUNAAJPI_DUURUVA__)
-    fprintf(stdout,"%s\t __imibajcho_munaajpi_duuruva_state: %s%p:\n",COLOR_ALOCATION_ADD,COLOR_REGULAR,new_trayectory->__imibajcho_munaajpi_duuruva_state);
+    #if defined(__PROPAGATE_JKIMYEI_UWAABO_MUNAAJPI_DUURUVA__)
+    fprintf(stdout,"%s\t __jkimyei_uwaabo_munaajpi_duuruva_state: %s%p:\n",COLOR_ALOCATION_ADD,COLOR_REGULAR,new_trayectory->__jkimyei_uwaabo_munaajpi_duuruva_state);
     #endif
     #endif
     return new_trayectory;
@@ -131,12 +130,10 @@ __wikimyei_t *wikimyei_fabric(
     new_wikimyei->__load_index=-1; // redundant (due to fabric load)
     new_wikimyei->__load_size=0x00; // redundant (due to fabric load)
     new_wikimyei->__direct_resolution=_direct_resolution;
-    #if defined(__EXPEND_ALLIU__DUURUVA__)
-    __cwcn_type_t c_uwaabo_base_w_size=_alliu_source_size*BUGGER_SIZE_DUURUVA;
-    #else 
-    __cwcn_type_t c_uwaabo_base_w_size=_alliu_source_size;
-    #endif
-    __cwcn_type_t c_uwaabo_state_size=new_wikimyei->__ec->__total_cosa_params; // do not play with index position
+    
+	new_wikimyei->__ec=entropycosa_fabric(_direct_resolution, _tsane_size);
+    unsigned int c_uwaabo_state_size=new_wikimyei->__ec->__total_cosa_params; // do not play with index position
+    
     /* 
         in uwaabo w base 
     */
@@ -151,18 +148,17 @@ __wikimyei_t *wikimyei_fabric(
     fprintf(stderr,"BAD CONFIGURATION : __IN_UWAABO_W_BASE_*__ must be set for at least one field");
     assert(0x00);
     #endif
-    __cwcn_type_t c_uwaabo_base_size=0x00;
-    #if defined(__IN_UWAABO_W_BASE_ALLIU_IS_INCLUDED__)
-    c_uwaabo_base_size+=_alliu_source_size;
-    #endif
-    #if defined(__IN_UWAABO_W_BASE_ALLIU_DUURUVA_IS_INCLUDED__) 
-    #if defined(__EXPEND_ALLIU_DUURUVA__) && defined(__PROPAGATE_ALLIU_DUURUVA__)
-    c_uwaabo_base_size+=_alliu_source_size*BUGGER_SIZE_DUURUVA;
-    #else
+    #if defined(__IN_UWAABO_W_BASE_ALLIU_DUURUVA_IS_INCLUDED__) && !(defined(__EXPEND_ALLIU_DUURUVA__) && defined(__PROPAGATE_ALLIU_DUURUVA__))
     fprintf(stderr,"BAD CONFIGURATION : __IN_UWAABO_W_BASE_ALLIU_DUURUVA_IS_INCLUDED__ : needs to set both [__EXPEND_ALLIU_DUURUVA__, __PROPAGATE_ALLIU_DUURUVA__]");
     assert(0x00);
     #endif
-        ;
+    unsigned int c_uwaabo_base_w_size=0x00;
+    #if defined(__IN_UWAABO_W_BASE_ALLIU_IS_INCLUDED__)
+    c_uwaabo_base_w_size+=_alliu_source_size;
+    #endif
+    #if defined(__IN_UWAABO_W_BASE_ALLIU_DUURUVA_IS_INCLUDED__) && defined(__EXPEND_ALLIU_DUURUVA__) && defined(__PROPAGATE_ALLIU_DUURUVA__)
+    c_uwaabo_base_w_size+=_alliu_source_size*BUGGER_SIZE_DUURUVA;
+    #endif
     /* 
         in munaajipi w base 
     */
@@ -175,7 +171,6 @@ __wikimyei_t *wikimyei_fabric(
             [0x5] : __IN_MUNAAJPI_W_BASE_TASNE_IS_INCLUDED__
             [0x6] : __IN_MUNAAJPI_W_BASE_ENTROPY_IS_INCLUDED__
             [0x7] : __IN_MUNAAJPI_W_BASE_IMIBAJCHO_MUNAAJPI_IS_INCLUDED__
-            [0x8] : __IN_MUNAAJPI_W_BASE_IMIBAJCHO_MUNAAJPI_DUURUVA_IS_INCLUDED__
     */
     #if \
     !defined(__IN_MUNAAJPI_W_BASE_ALLIU_IS_INCLUDED__) && \
@@ -184,12 +179,11 @@ __wikimyei_t *wikimyei_fabric(
     !defined(__IN_MUNAAJPI_W_BASE_UAWAABO_IS_INCLUDED__) && \
     !defined(__IN_MUNAAJPI_W_BASE_TASNE_IS_INCLUDED__) && \
     !defined(__IN_MUNAAJPI_W_BASE_ENTROPY_IS_INCLUDED__) && \
-    !defined(__IN_MUNAAJPI_W_BASE_IMIBAJCHO_MUNAAJPI_IS_INCLUDED__) && \
-    !defined(__IN_MUNAAJPI_W_BASE_IMIBAJCHO_MUNAAJPI_DUURUVA_IS_INCLUDED__)
+    !defined(__IN_MUNAAJPI_W_BASE_IMIBAJCHO_MUNAAJPI_IS_INCLUDED__)
     fprintf(stderr,"BAD CONFIGURATION : __IN_MUNAAJPI_W_BASE_*__ must be set for at least one field");
     assert(0x00);
     #endif
-    __cwcn_type_t c_munaajpi_base_size=0x00;
+    unsigned int c_munaajpi_base_size=0x00;
     #if defined(__IN_MUNAAJPI_W_BASE_ALLIU_IS_INCLUDED__)
     c_munaajpi_base_size+=_alliu_source_size;
     #endif
@@ -202,34 +196,25 @@ __wikimyei_t *wikimyei_fabric(
     #endif
     #endif
     #if defined(__IN_MUNAAJPI_W_BASE_nonuwaaboALLIU_IS_INCLUDED__)
-    c_munaajpi_base_size=_alliu_source_size;
+    c_munaajpi_base_size+=_alliu_source_size;
     #endif
     #if defined(__IN_MUNAAJPI_W_BASE_UAWAABO_IS_INCLUDED__)
-    c_munaajpi_base_size=c_uwaabo_state_size;
+    c_munaajpi_base_size+=c_uwaabo_state_size;
     #endif
     #if defined(__IN_MUNAAJPI_W_BASE_TASNE_IS_INCLUDED__)
-    c_munaajpi_base_size=_tsane_size;
+    c_munaajpi_base_size+=_tsane_size;
     #endif
     #if defined(__IN_MUNAAJPI_W_BASE_ENTROPY_IS_INCLUDED__)
-    c_munaajpi_base_size=+0x01;
+    c_munaajpi_base_size+=0x01;
     #endif
     #if defined(__IN_MUNAAJPI_W_BASE_IMIBAJCHO_MUNAAJPI_IS_INCLUDED__)
-    c_munaajpi_base_size=+0x01;
-    #endif
-    #if defined(__IN_MUNAAJPI_W_BASE_IMIBAJCHO_MUNAAJPI_DUURUVA_IS_INCLUDED__)
-    #if defined(__EXPEND_IMIBAJCHO_MUNAAJPI_DUURUVA__) && defined(__PROPAGATE_JKIMYEI_UWAABO_MUNAAJPI_DUURUVA__)
-    c_munaajpi_base_size=+0x01*BUGGER_SIZE_DUURUVA;
-    #else
-    fprintf(stderr,"BAD CONFIGURATION : __IN_MUNAAJPI_W_BASE_IMIBAJCHO_MUNAAJPI_DUURUVA_IS_INCLUDED__ : needs to set both [__EXPEND_IMIBAJCHO_MUNAAJPI_DUURUVA__, __PROPAGATE_JKIMYEI_UWAABO_MUNAAJPI_DUURUVA__]");
-    assert(0x00);
-    #endif
+    c_munaajpi_base_size+=0x01;
     #endif
     set_seed();
     /* core nebajke */
     new_wikimyei->__jkimyei=jkimyei_fabric(_jk_size);
     new_wikimyei->__alliu=alliu_fabric(_alliu_source,_alliu_source_size);
     new_wikimyei->__tsane=tsane_fabric(_take_tsane, _tsane_size);
-	new_wikimyei->__ec=entropycosa_fabric(_direct_resolution, _tsane_size);
     new_wikimyei->__uwaabo=uwaabo_fabric(c_uwaabo_base_w_size, c_uwaabo_state_size,_uwaabo_waapajco_potency);
     new_wikimyei->__munaajpi=munaajpi_fabric(c_munaajpi_base_size, c_uwaabo_state_size,_munaajpi_waapajco_potency);
     new_wikimyei->__wajyu=wajyu_fabric(new_wikimyei);
@@ -253,7 +238,7 @@ __wikimyei_t *wikimyei_fabric(
 }
 ___cwcn_bool_t all_wajyu_duuruva_ready(__wikimyei_t *_wikimyei){
     // #if defined(JKIMYEI_DEBUG) || defined(DUURUVA_DEBUG)
-    //     fprintf(stdout,"%s>> > adventage_duuruva_ready: %d, munaajpi_duuruva_ready: %d, alliu_duuruva_ready: %d %s\n",COLOR_DUURUVA,_wikimyei->__flags->__uwaabo_adventage_duuruva_ready, _wikimyei->__flags->__munaajpi_duuruva_ready,_wikimyei->__flags->__alliu_duuruva_ready,COLOR_REGULAR);
+    //     fprintf(stdout,"%s>> > adventage_duuruva_ready: %d, munaajpi_duuruva_ready: %d, alliu_duuruva_ready: %d %s\n",COLOR_DUURUVA,_wikimyei->__flags->__uwaabo_gae_adventage_duuruva_ready, _wikimyei->__flags->__munaajpi_duuruva_ready,_wikimyei->__flags->__alliu_duuruva_ready,COLOR_REGULAR);
     // #endif
     return  is_wajyu_ready(_wikimyei->__wajyu);
 }
@@ -583,17 +568,17 @@ void kill_trayectory(__trayectory_t *_trayectory){
     free(_trayectory->__alliu_state);                       _trayectory->__alliu_state=NULL;
     free(_trayectory->__nonuwaabo_alliu_state);             _trayectory->__nonuwaabo_alliu_state=NULL;
     free(_trayectory->__uwaabo_state);                      _trayectory->__uwaabo_state=NULL;
-    free(_trayectory->__uwaabo_returns);                    _trayectory->__uwaabo_returns=NULL;
-    free(_trayectory->__uwaabo_adventage);                  _trayectory->__uwaabo_adventage=NULL;
+    free(_trayectory->__uwaabo_gae_returns);                    _trayectory->__uwaabo_gae_returns=NULL;
+    free(_trayectory->__uwaabo_gae_adventage);                  _trayectory->__uwaabo_gae_adventage=NULL;
     free(_trayectory->__imibajcho_munaajpi_state);          _trayectory->__imibajcho_munaajpi_state=NULL;
     free(_trayectory->__tsane_state);                       _trayectory->__tsane_state=NULL;
-    free(_trayectory->__entropy_state);                       _trayectory->__entropy_state=NULL;
+    free(_trayectory->__entropy_state);                     _trayectory->__entropy_state=NULL;
     free(_trayectory->__jkimyei_uwaabo_munaajpi_state);                    _trayectory->__jkimyei_uwaabo_munaajpi_state=NULL;
-    #if defined(__EXPEND_ALLIU__DUURUVA__)
+    #if defined(__PROPAGATE_ALLIU_DUURUVA__)
     free(_trayectory->__alliu_duuruva_state);               _trayectory->__alliu_duuruva_state=NULL;
     #endif
-    #if defined(__EXPEND_IMIBAJCHO_MUNAAJPI_DUURUVA__)
-    free(_trayectory->__imibajcho_munaajpi_duuruva_state);  _trayectory->__imibajcho_munaajpi_duuruva_state=NULL;
+    #if defined(__PROPAGATE_JKIMYEI_UWAABO_MUNAAJPI_DUURUVA__)
+    free(_trayectory->__jkimyei_uwaabo_munaajpi_duuruva_state);  _trayectory->__jkimyei_uwaabo_munaajpi_duuruva_state=NULL;
     #endif
 }
 void kill_queue(__load_queue_t *_queue){
@@ -681,7 +666,6 @@ void destroy_wikimyei(__wikimyei_t *_wikimyei){
         fprintf(stdout,">> > ... destroy_wikimyei [#FIXME alocation cleaning]\n");
     #endif
     kill_load(_wikimyei);
-    free(_wikimyei->__load_head); // #FIXME might be redundant or can be better placed
     alliu_destroy(_wikimyei->__alliu);
     wajyu_destroy(_wikimyei->__wajyu);
     tsane_destroy(_wikimyei->__tsane);
@@ -689,7 +673,6 @@ void destroy_wikimyei(__wikimyei_t *_wikimyei){
     uwaabo_destroy(_wikimyei->__uwaabo);
     munaajpi_destroy(_wikimyei->__munaajpi);
     free(_wikimyei->__flags);
-    if(_wikimyei->__load_head!=NULL){free(_wikimyei->__load_head);}
     // free(_wikimyei); // #FIXME assert me outside
 }
 

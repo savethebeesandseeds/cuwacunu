@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <assert.h>
 // #FIXME fix dependencies
+#define __ALLOW_DUURUVA_DUMPFILE__
 
 #define BUGGER_SIZE_DUURUVA (unsigned int) 12
 #define BUGGER_READY_DUURUVA_COUNT (unsigned int) 5
@@ -49,6 +50,7 @@ typedef struct __duuruva_bolean_parametrics {
     ___cwcn_bool_t __reset_flag;
 }__duuruva_bolean_parametrics_t;
 typedef struct __duuruva {
+    char *__duuruva_dumpfile;
     unsigned int __duuruva_base_size;
     unsigned int __duuruva_vector_size;
     __cwcn_type_t *__value;
@@ -63,7 +65,7 @@ void set_duuruvaboleanparametrics(
     ___cwcn_bool_t _pardon_diff,
     ___cwcn_bool_t _pardon_count);
 
-__duuruva_t *duuruva_fabric(unsigned int _num_base_duuruva);
+__duuruva_t *duuruva_fabric(unsigned int _num_base_duuruva, char *_dumpfilepath);
 void duuruva_destroy(__duuruva_t *_duuruva);
 void reset_duuruva(__duuruva_t *_duuruva);
 void reset_duuruva_max_min(__duuruva_t *_duurva);
@@ -86,4 +88,7 @@ void duuruva_normalize(__duuruva_t *_duuruva, __cwcn_type_t *_value_vect);
 void duuruva_destandarize(__duuruva_t *_duuruva, __cwcn_type_t *_value_vect);
 void duuruva_denormalize(__duuruva_t *_duuruva, __cwcn_type_t *_value_vect);
 void normalize_duuruva_values(__duuruva_t *_duuruva);
+
+void reset_dumpfile(__duuruva_t *_duuruva);
+void duuruva_value_to_dumpfile(__duuruva_t *_duuruva);
 #endif

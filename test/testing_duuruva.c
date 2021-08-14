@@ -28,7 +28,7 @@ DUURUVA [ 0x00 ]   __skewness       0.000006       -0.000000           -0.000254
 int main(){
     srand(time(NULL));
     unsigned int c_num_duuruva=0x01;
-    __duuruva_t *c_duuruva = duuruva_fabric(c_num_duuruva);
+    __duuruva_t *c_duuruva = duuruva_fabric(c_num_duuruva,"testingduuruva.dumpfile");
     __cwcn_type_t c_input_vector[LOAD_SIZE][ALLIU_SIZE]={
         {0.00},
         {0.01},{0.02},{0.03},{0.04},{0.05},{0.06},{0.07},{0.08},{0.09},{0.1},

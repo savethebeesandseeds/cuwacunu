@@ -2,6 +2,7 @@
 #define WAJYU_PIAABO_INCLUDED
 #define WAJYU_INCLUDED
 #include "cwcn_duuruva_nebajke.h"
+
 typedef struct __wajyu_metric {
     __cwcn_type_t __wajyu_simple_value; // 'this is the show' # FIXME add the show, there is no use of this variable
     __duuruva_t *__wajyu_simple_value_duuruva;
@@ -11,8 +12,8 @@ typedef struct __wajyu_metric {
     __duuruva_t *__entropy_duuruva;
     __duuruva_t *__imibajcho_munaajpi_duuruva;
     __duuruva_t *__jkimyei_uwaabo_munaajpi_duuruva;
-    __duuruva_t *__uwaabo_returns_duuruva;
-    __duuruva_t *__uwaabo_adventage_duuruva;
+    __duuruva_t *__uwaabo_gae_returns_duuruva;
+    __duuruva_t *__uwaabo_gae_adventage_duuruva;
     __duuruva_t *__uwaabo_loss_duuruva;
     __duuruva_t *__jkimyei_uwaabo_munaajpi_loss_duuruva;
     __duuruva_t *__ratio_handler_duuruva;
@@ -42,8 +43,8 @@ typedef struct __wajyu_flags {
     ___cwcn_bool_t __is_uwaabo_ready;
     ___cwcn_bool_t __is_tsane_ready;
     ___cwcn_bool_t __is_entropy_ready;
-    ___cwcn_bool_t __is_uwaabo_returns_ready;
-    ___cwcn_bool_t __is_uwaabo_adventage_ready;
+    ___cwcn_bool_t __is_uwaabo_gae_returns_ready;
+    ___cwcn_bool_t __is_uwaabo_gae_adventage_ready;
     ___cwcn_bool_t __is_imibajcho_munaajpi_ready;
     ___cwcn_bool_t __is_jkimyei_uwaabo_munaajpi_ready;
     ___cwcn_bool_t __is_uwaabo_loss_ready;

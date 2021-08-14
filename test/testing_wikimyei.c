@@ -37,43 +37,50 @@ int main(){
         c_uwaabo_waapajco_potency,\
         c_munaajpi_waapajco_potency,\
         c_take_tsane);
-    fprintf(stdout,">> > ... waka0x00 empty_load: load size: %d load index: %d\n",c_wikimyei->__load_size,c_wikimyei->__load_index);
-    
     // load_print_up_trayectory_queue(c_wikimyei);
-    for(unsigned int f_ctx=0x00;f_ctx<3;f_ctx++){
-        printf("%s ENTER TO LIVE LOAD:%s",COLOR_GOOD,COLOR_REGULAR);
-        // getchar();
+    for(unsigned int f_ctx=0x00;f_ctx<1;f_ctx++){
+        printf("%s ENTER TO LIVE LOAD:%s\n",COLOR_GOOD,COLOR_REGULAR);
+        getchar();
         begin=clock();
         wikimyei_live_load(c_wikimyei, c_size_of_load);
         end=clock();
         printf("%s exe time [wikimyei_live_load] %f:%s\n", COLOR_DANGER, (double)(end-begin)/CLOCKS_PER_SEC,COLOR_REGULAR);
         // wikimyei_live_load(c_wikimyei, 1);
-        printf("%s ENTER TO JKIMYEI:%s",COLOR_GOOD,COLOR_REGULAR);
-        // getchar();
+        printf("%s ENTER TO JKIMYEI:%s\n",COLOR_GOOD,COLOR_REGULAR);
+        getchar();
         begin=clock();
         wikimyei_jkimyei(c_wikimyei, c_epochs);
         end=clock();
         printf("%s exe time [wikimyei_jkimyei] %f:%s\n", COLOR_DANGER, (double)(end-begin)/CLOCKS_PER_SEC,COLOR_REGULAR);
-        printf("%s ENTER TO PRINT TRAYECOTRY:%s\n",COLOR_GOOD,COLOR_REGULAR);
         // getchar();
-        load_print_up_trayectory_queue(c_wikimyei);
         // printf("%s ENTER TO PRINT TRAYECOTRY POINTERS:%s\n",COLOR_GOOD,COLOR_REGULAR);
         // // getchar();
         // load_print_up_trayectory_pointers(c_wikimyei);
-        printf("%s ENTER TO PRINT MUNAAJPI REPORT:%s",COLOR_GOOD,COLOR_REGULAR);
+        // printf("%s ENTER TO PRINT MUNAAJPI REPORT:%s\n",COLOR_GOOD,COLOR_REGULAR);
         // getchar();
-        print_report_munaajpi(c_wikimyei);
+        // print_report_munaajpi(c_wikimyei);
         // kill_load(c_wikimyei);
-        printf("%s ENTER TO LIVE PRINT UWAABO LINES:%s",COLOR_GOOD,COLOR_REGULAR);
+        // printf("%s ENTER TO LIVE PRINT UWAABO LINES:%s\n",COLOR_GOOD,COLOR_REGULAR);
         // getchar();
         
         // print_all_lines(c_wikimyei->__uwaabo);
-        // printf("%s ENTER TO LIVE PRINT UWAABO NODEX:%s",COLOR_GOOD,COLOR_REGULAR);
+        // printf("%s ENTER TO LIVE PRINT UWAABO NODEX:%s\n",COLOR_GOOD,COLOR_REGULAR);
         // // getchar();
         // print_all_nodes(c_wikimyei->__uwaabo);
-        // printf("%s ENTER TO LIVE LOAD AGAIN:%s",COLOR_GOOD,COLOR_REGULAR);
+        // printf("%s ENTER TO LIVE LOAD AGAIN:%s\n",COLOR_GOOD,COLOR_REGULAR);
         // // getchar();
     }
+    printf("%s ENTER TO RE-LIVE LOAD:%s\n",COLOR_GOOD,COLOR_REGULAR);
+    getchar();
+    kill_load(c_wikimyei);
+    wikimyei_live_load(c_wikimyei, c_size_of_load);
+
+    printf("%s ENTER TO PRINT TRAYECOTRY:%s\n",COLOR_GOOD,COLOR_REGULAR);
+    getchar();
+    load_print_up_trayectory_queue(c_wikimyei);
+    printf("%s ENTER TO PRINT WAJYU METRIC REPORT:%s\n",COLOR_GOOD,COLOR_REGULAR);+
+    getchar();
+    print_wayiu_metric_report(c_wikimyei->__wajyu);
     printf("%s waka dao %s\n",COLOR_GOOD,COLOR_REGULAR);
     printf("%s waka din %s\n",COLOR_GOOD,COLOR_REGULAR);
     // load_print_down_trayectory_queue(c_wikimyei);

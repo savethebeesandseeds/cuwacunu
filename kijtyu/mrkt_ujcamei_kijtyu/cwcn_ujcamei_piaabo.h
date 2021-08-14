@@ -15,6 +15,7 @@ typedef enum{
     UNIT_as_alliu,
     SINE_as_alliu,
     INDEX_as_alliu,
+    negINDEX_as_alliu,
     MARKET_as_alliu
 } __alliu_source_t; // not in use #FIXME
 typedef struct __alliu {

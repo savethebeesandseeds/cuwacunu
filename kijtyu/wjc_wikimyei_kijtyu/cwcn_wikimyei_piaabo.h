@@ -32,12 +32,15 @@ typedef __cwcn_type_t (*__function_pointer_t)(__cwcn_type_t);
 #define COLOR_WAJYU "\x1B[0;37m"
 #define COLOR_JKIMYEI "\x1B[0;32m"
 #define COLOR_HEALT "\033[0;31m"
+/*
+    DEGGUG OPTIONS
+*/
 // #define UWAABO_DEBUG
 // #define TSINUU_DEBUG
 // #define TSINUU_DEBUG_v2
 // #define WIKIMYEI_DEBUG
 // #define WIKIMYEI_DEBUG_v2
-#define ENTROPY_DEBUG
+// #define ENTROPY_DEBUG
 // #define ENTROPY_DEBUG_v1
 // #define ENTROPY_DEBUG_v2
 // #define ALOCATION_DEBUG
@@ -48,41 +51,63 @@ typedef __cwcn_type_t (*__function_pointer_t)(__cwcn_type_t);
 // #define JKIMYEI_DEBUG_v2
 // #define MUNAAJPI_DEBUG
 
-#define __JK_SIZE__ (unsigned int) 0x0F
-#define __EPOCHS__ (unsigned int) 0x01
+#define __ALLOW_DUURUVA_DUMPFILE__
+
+#define __WAJYU_DUMPFOLDER__ "wajyu_data/"
+#define __DUMPFILE_WAJYU_SIMPLE_VALUE_DUURUVA__ __WAJYU_DUMPFOLDER__ "wajyu.wajyu_simple_value.dumpfile"
+#define __DUMPFILE_ALLIU_DUURUVA__ __WAJYU_DUMPFOLDER__ "wajyu.alliu.dumpfile"
+#define __DUMPFILE_UWAABO_DUURUVA__ __WAJYU_DUMPFOLDER__ "wajyu.uwaabo.dumpfile"
+#define __DUMPFILE_TSANE_DUURUVA__ __WAJYU_DUMPFOLDER__ "wajyu.tsane.dumpfile"
+#define __DUMPFILE_ENTROPY_DUURUVA__ __WAJYU_DUMPFOLDER__ "wajyu.entropy.dumpfile"
+#define __DUMPFILE_IMIBAJCHO_MUNAAJPI_DUURUVA__ __WAJYU_DUMPFOLDER__ "wajyu.imibajcho_munaajpi.dumpfile"
+#define __DUMPFILE_JKIMYEI_UWAABO_MUNAAJPI_DUURUVA__ __WAJYU_DUMPFOLDER__ "wajyu.jkimyei_uwaabo_munaajpi.dumpfile"
+#define __DUMPFILE_UWAABO_GAE_RETURNS_DUURUVA__ __WAJYU_DUMPFOLDER__ "wajyu.uwaabo_gae_returns.dumpfile"
+#define __DUMPFILE_UWAABO_GAE_ADVENTAGE_DUURUVA__ __WAJYU_DUMPFOLDER__ "wajyu.uwaabo_gae_adventage.dumpfile"
+#define __DUMPFILE_UWAABO_LOSS_DUURUVA__ __WAJYU_DUMPFOLDER__ "wajyu.uwaabo_loss.dumpfile"
+#define __DUMPFILE_JKIMYEI_UWAABO_MUNAAJPI_LOSS_DUURUVA__ __WAJYU_DUMPFOLDER__ "wajyu.jkimyei_uwaabo_munaajpi_loss.dumpfile"
+#define __DUMPFILE_RATIO_HANDLER_DUURUVA__ __WAJYU_DUMPFOLDER__ "wajyu.ratio_handler.dumpfile"
+#define __DUMPFILE_SURR1_HANDLER_DUURUVA__ __WAJYU_DUMPFOLDER__ "wajyu.surr1_handler.dumpfile"
+#define __DUMPFILE_SURR2_HANDLER_DUURUVA__ __WAJYU_DUMPFOLDER__ "wajyu.surr2_handler.dumpfile"
+
+// #define DEFINED_RANDOM_JK // #FIXME do not activate, terrible!
+#define DEFINED_LOAD_SEQ_JK
+
+#define __JK_SIZE__ (unsigned int) 0x01
+#define __EPOCHS__ (unsigned int) 0x03
+#define __SIZE_OF_LOAD__ (int) 100
 
 #define __GAE_GAMMA__ (__cwcn_type_t) 0.99
 #define __GAE_LAMBDA__ (__cwcn_type_t) 0.95
 #define __CLIP_PARAM__ (__cwcn_type_t) 0.2
 #define __UWAABO_BETA__ (__cwcn_type_t) 0.01
 #define __MUNAAJPI_BETA__ (__cwcn_type_t) 0.01
-#define __ENTROPY_BETA__ (__cwcn_type_t) 0.001 // #FIXME findme
-#define __UWAABO_WAAPAJCO_POTENCY__ (__cwcn_type_t) 10.0
-#define __MUNAAJPI_WAAPAJCO_POTENCY__ (__cwcn_type_t) 10.0
+#define __ENTROPY_BETA__ (__cwcn_type_t) 0.002 // #FIXME findme
+#define __UWAABO_WAAPAJCO_POTENCY__ (__cwcn_type_t) 10.0//1.0
+#define __MUNAAJPI_WAAPAJCO_POTENCY__ (__cwcn_type_t) 1.0 //0.25
 
 #define __TAKE_TSANE__ (___cwcn_bool_t) ___CWCN_FALSE
 #define __TSANE_SIZE__ (unsigned int) 0x02 
 #define __ALLIU_SOURCE_SIZE__ (unsigned int) 0x01 // vector dimension size
-#define __SIZE_OF_LOAD__ (int) 0x0A
 
-#define _TRAYECTORY_BUFFERS_NUM_ 0x09
 #define __NUM_BASE_DUURUVA__ (unsigned int) 0x11 // not configurable! == 0x11
 #define __HORIZON_MUNAAJPI__ (unsigned int) 0x02
 #define __DIRECT_RESOLUTION__ (unsigned int) 0x20
 
 #ifndef DEBUG_LINEAR_EXPERIMENT
+// #define __ALLIU_SOURCE__ (__alliu_source_t) negINDEX_as_alliu;
+// #define __ALLIU_SOURCE__ (__alliu_source_t) INDEX_as_alliu;
 #define __ALLIU_SOURCE__ (__alliu_source_t) SINE_as_alliu;
 #else
 #define __ALLIU_SOURCE__ (__alliu_source_t) UNIT_as_alliu;
 #endif
 
-#define __EXPEND_ALLIU_DUURUVA__ // apply duuruva transformation to alliu 
-#define __EXPEND_IMIBAJCHO_MUNAAJPI_DUURUVA__ // apply duuruva transformation to imibacho munaajpi
-
 #define _ENTROPY_GAMMA_RESOLUTION_ (unsigned int) 1024
-#define _DUURUVA_NORM_STAND_JKIMYEI_UWAABO_ (___cwcn_bool_t) 0x0
-#define _DUURUVA_NORM_STAND_ALLIU_ (___cwcn_bool_t) 0x0
-// #define __NORM_STAND_DUURUVA_ADVENTAGE__ // try without it 
+
+// #define _DUURUVA_NORM_STAND_JKIMYEI_UWAABO_
+#define _DUURUVA_NORM_STAND_JKIMYEI_UWAABO_DUURUVA_
+// #define _DUURUVA_NORM_STAND_ALLIU_ // do not define
+#define _DUURUVA_NORM_STAND_ALLIU_DUURUVA_
+// #define __NORM_STAND_DUURUVA_ADVENTAGE__ // #FIXME acivate 
 /* set the expenses * expend is to compute, "to expend the computing effort"  */
 
 #define __EXPEND_WAJYU_SIMPLE_VALUE_DUURUVA__
@@ -92,8 +117,8 @@ typedef __cwcn_type_t (*__function_pointer_t)(__cwcn_type_t);
 #define __EXPEND_ENTROPY_DUURUVA__
 #define __EXPEND_JKIMYEI_UWAABO_MUNAAJPI_DUURUVA__
 #define __EXPEND_IMIBAJCHO_MUNAAJPI_DUURUVA__
-#define __EXPEND_UWAABO_RETURNS_DUURUVA__ // #FIXME is it beeing used?
-#define __EXPEND_UWAABO_ADVENTAGE_DUURUVA__
+#define __EXPEND_UWAABO_GAE_RETURNS_DUURUVA__ // #FIXME is it beeing used?
+#define __EXPEND_UWAABO_GAE_ADVENTAGE_DUURUVA__
 #define __EXPEND_UWAABO_LOSS_DUURUVA__
 #define __EXPEND_JKIMYEI_UWAABO_MUNAAJPI_LOSS_DUURUVA__
 #define __EXPEND_RATIO_HANDLER_DUURUVA__
@@ -125,13 +150,9 @@ BUILD ON : fixme
         [0x5] : __IN_MUNAAJPI_W_BASE_TASNE_IS_INCLUDED__
         [0x6] : __IN_MUNAAJPI_W_BASE_ENTROPY_IS_INCLUDED__
         [0x7] : __IN_MUNAAJPI_W_BASE_IMIBAJCHO_MUNAAJPI_IS_INCLUDED__
-        [0x8] : __IN_MUNAAJPI_W_BASE_IMIBAJCHO_MUNAAJPI_DUURUVA_IS_INCLUDED__
 */
 #if defined(__EXPEND_ALLIU_DUURUVA__) && defined(__PROPAGATE_ALLIU_DUURUVA__)
 #define __IN_MUNAAJPI_W_BASE_ALLIU_DUURUVA_IS_INCLUDED__
-#endif
-#if defined(__EXPEND_IMIBAJCHO_MUNAAJPI_DUURUVA__) && defined(__PROPAGATE_JKIMYEI_UWAABO_MUNAAJPI_DUURUVA__)
-#define __IN_MUNAAJPI_W_BASE_IMIBAJCHO_MUNAAJPI_DUURUVA_IS_INCLUDED__
 #endif
 #define __IN_MUNAAJPI_W_BASE_ALLIU_IS_INCLUDED__
 #define __IN_MUNAAJPI_W_BASE_nonuwaaboALLIU_IS_INCLUDED__
@@ -142,13 +163,13 @@ BUILD ON : fixme
 /* set the masks for the trayectory */
 /*
     DUURUVA: (pay attention : this instruct how to set mask)
-        [0x0] : value
+        [0x0] : value               ###   MUNAAJPI --- [TEST] ... [DISABLED] experiments found in neg/index_as_alliu  ### [TEST] 
         [0x1] : __diff_1
         [0x2] : __diff_2
         [0x3] : __max
         [0x4] : __min
-        [0x5] : __std
-        [0x6] : __mean
+        [0x5] : __std               ###   MUNAAJPI --- [TEST] ... [DISABLED] experiment found in neg/index_as_aslliu 
+        [0x6] : __mean              ###   MUNAAJPI --- [TEST] ... [DISABLED] experiment found in neg/index_as_aslliu 
         [0x7] : __M2
         [0x8] : __M3
         [0x9] : __M4
@@ -159,22 +180,22 @@ BUILD ON : fixme
 #define _ALLIU_DUURUVA_MASK_ (__cwcn_type_t[BUGGER_SIZE_DUURUVA]){\
         0x1, \
         0x1, \
+        0x1, \
         0x0, \
         0x0, \
-        0x0, \
-        0x0, \
-        0x0, \
+        0x1, \
+        0x1, \
         0x0, \
         0x0, \
         0x0, \
         0x0, \
         0x0}
 #endif
-#if defined(__EXPEND_IMIBAJCHO_MUNAAJPI_DUURUVA__) && defined(__PROPAGATE_JKIMYEI_UWAABO_MUNAAJPI_DUURUVA__)
-#define _IMIBAJCHO_MUNAAJPI_MASK_ (__cwcn_type_t[BUGGER_SIZE_DUURUVA]){\
+#if defined(__EXPEND_JKIMYEI_UWAABO_MUNAAJPI_DUURUVA__) && defined(__PROPAGATE_JKIMYEI_UWAABO_MUNAAJPI_DUURUVA__)
+#define _JKIMYEI_UWAABO_MUNAAJPI_DUURUVA_MASK_ (__cwcn_type_t[BUGGER_SIZE_DUURUVA]){\
+        0x0, \
         0x1, \
-        0x0, \
-        0x0, \
+        0x1, \
         0x0, \
         0x0, \
         0x0, \
@@ -204,21 +225,21 @@ typedef struct __trayectory { // #FIXME too many fields
     #endif
     __cwcn_type_t __uwaabo_mask;
     __cwcn_type_t *__uwaabo_state;
-    __cwcn_type_t *__uwaabo_returns;
-    __cwcn_type_t *__uwaabo_adventage;
+    __cwcn_type_t *__uwaabo_gae_returns;
+    __cwcn_type_t *__uwaabo_gae_adventage; // generalized adv'a'ntage estimation
     __cwcn_type_t *__tsane_state;
     __cwcn_type_t *__entropy_state;
-    #if defined(...__EXPEND_IMIBAJCHO_MUNAAJPI_DUURUVA__) && defined(__PROPAGATE_JKIMYEI_UWAABO_MUNAAJPI_DUURUVA__)
+    #if defined(__EXPEND_JKIMYEI_UWAABO_MUNAAJPI_DUURUVA__) && defined(__PROPAGATE_JKIMYEI_UWAABO_MUNAAJPI_DUURUVA__)
     unsigned int __pending_munaajpi_index;
     ___cwcn_bool_t __pending_munaajpi;
-    __cwcn_type_t *__jkimyei_uwaabo_munaajpi_state; //... these are the uwaabo waapajco parameteres, munaajpi wapaajco is imibajcho_munaajpi
     __cwcn_type_t *__imibajcho_munaajpi_state;// this is J, varies while pending_munaajpi_index
-    __cwcn_type_t *__imibajcho_munaajpi_duuruva_state;// this is J, varies while pending_munaajpi_index
+    __cwcn_type_t *__jkimyei_uwaabo_munaajpi_state; //... these are the uwaabo waapajco parameteres, munaajpi wapaajco is imibajcho_munaajpi
+    __cwcn_type_t *__jkimyei_uwaabo_munaajpi_duuruva_state;// this is J, varies while pending_munaajpi_index
     #else
     unsigned int __pending_munaajpi_index;
     ___cwcn_bool_t __pending_munaajpi;
-    __cwcn_type_t *__jkimyei_uwaabo_munaajpi_state; //... these are the uwaabo waapajco parameteres, munaajpi wapaajco is imibajcho_munaajpi
     __cwcn_type_t *__imibajcho_munaajpi_state;// this is J, varies while pending_munaajpi_index
+    __cwcn_type_t *__jkimyei_uwaabo_munaajpi_state; //... these are the uwaabo waapajco parameteres, munaajpi wapaajco is imibajcho_munaajpi
     #endif
 }__trayectory_t;
 // typedef struct __jk_queue { // jk is but a regular queue
@@ -327,5 +348,5 @@ ___cwcn_bool_t load_on_end(__wikimyei_t *_wikimyei);
 ___cwcn_bool_t load_on_start(__wikimyei_t *_wikimyei);
 ___cwcn_bool_t load_is_healty(__wikimyei_t *_wikimyei);
 ___cwcn_bool_t load_is_empty(__wikimyei_t *_wikimyei);
-void printflags(__wikimyei_t *_wikimyei);
+void print_wikimyei_flags(__wikimyei_t *_wikimyei);
 #endif

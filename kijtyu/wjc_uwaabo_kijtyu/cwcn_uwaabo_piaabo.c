@@ -8,17 +8,20 @@ __uwaabo_t *uwaabo_fabric(unsigned int _uwaabo_base_w_size, unsigned int _uwaabo
     /*
         ('ujcamei'->'cajtucu') TSINUU FABRIC
     */
-    unsigned int uw_total_layers=0x05;
-    unsigned int uw_layers_sizes[0x05] = {_uwaabo_base_w_size,0x05,0x0a,0x05,_uwaabo_state_size};
+    unsigned int uw_total_layers=0x08;
+    unsigned int uw_layers_sizes[0x08] = {_uwaabo_base_w_size,32,64,128,32,32,16,_uwaabo_state_size};
     #ifndef DEBUG_LINEAR_EXPERIMENT
-    __list_activations_t uw_activations_iho[0x05] = {\
+    __list_activations_t uw_activations_iho[0x08] = {\
                             LINEAR,\
+                            SIGMOID,\
+                            SIGMOID,\
+                            SIGMOID,\
                             SIGMOID,\
                             SIGMOID,\
                             SIGMOID,\
                             SIGMOID};
     #else
-    __list_activations_t uw_activations_iho[0x05] = {LINEAR, LINEAR, LINEAR, LINEAR, SIGMOID};
+    __list_activations_t uw_activations_iho[0x04] = {LINEAR, LINEAR, LINEAR, LINEAR, SIGMOID};
     #endif
     __attribute_tsinuu_t *c_attribute_tsinuu = malloc(sizeof(__attribute_tsinuu_t));
     c_attribute_tsinuu->__NUM_TOTAL_LAYERS=uw_total_layers;
@@ -67,9 +70,10 @@ void read_uwaabo_w_base(__wikimyei_t *_wikimyei){
         _wikimyei->__uwaabo->__uwaabo_w_base[m_ctx]=glti(_wikimyei)->__alliu_duuruva_state[idx];
         m_ctx++;
     }
-    #endif
+    #else
     fprintf(stderr,"BAD configuration __IN_UWAABO_W_BASE_ALLIU_DUURUVA_IS_INCLUDED__ requires : [__EXPEND_ALLIU_DUURUVA__ && __PROPAGATE_ALLIU_DUURUVA__]");
     assert(0x00);
+    #endif
     #endif
     #if defined(__IN_UWAABO_W_BASE_ALLIU_IS_INCLUDED__)
     for(unsigned int idx=0x00;idx<_wikimyei->__alliu->__source_size;idx++){
@@ -77,7 +81,7 @@ void read_uwaabo_w_base(__wikimyei_t *_wikimyei){
         m_ctx++;
     }
     #endif
-    assert(_wikimyei->__uwaabo->__uwaabo_base_w_size==m_ctx); // might be due to a bad #define configuration 
+    assert(_wikimyei->__uwaabo->__uwaabo_base_w_size==m_ctx); // might rise due to a bad #define configuration 
 }
 
 void uwaabo_destroy(__uwaabo_t *_uwaabo){

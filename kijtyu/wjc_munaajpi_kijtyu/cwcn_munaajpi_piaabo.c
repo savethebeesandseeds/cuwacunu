@@ -12,7 +12,7 @@ __munaajpi_t *munaajpi_fabric(\
     unsigned int mjpi_total_layers=0x05;
     unsigned int mjpi_input_size=_munaajpi_base_size; // huge thing
     unsigned int mjpi_output_size=_munaajpi_state_size;
-    unsigned int mjpi_layers_sizes[0x05] = {mjpi_input_size,15,15,15,mjpi_output_size};
+    unsigned int mjpi_layers_sizes[0x05] = {mjpi_input_size,15,35,15,mjpi_output_size};
     #ifndef DEBUG_LINEAR_EXPERIMENT
     __list_activations_t mjpi_activations_iho[0x05] = {LINEAR, SIGMOID, SIGMOID, SIGMOID, SIGNEDSIGMOID};
     #else
@@ -63,6 +63,9 @@ __munaajpi_t *munaajpi_fabric(\
 
 */
 ___cwcn_bool_t set_load_pending_munaajpi(__wikimyei_t *_wikimyei){
+    #if defined(WIKIMYEI_DEBUG) || defined(MUNAAJPI_DEBUG)
+    fprintf(stdout,"%s>> > request to set_load_pending_munaajpi %s\n",COLOR_MUNAAJPI,COLOR_REGULAR);
+    #endif
     if(_wikimyei->__load_size<_wikimyei->__horizon_munaajpi){
         fprintf(stdout,">> > WARNING, request to (set_load_pending_munaajpi) on load_size [%d] to short for horizon_munaajpi [%d]...\n",_wikimyei->__load_size,_wikimyei->__horizon_munaajpi);
         return are_munaajpi_pending(_wikimyei);
@@ -99,7 +102,7 @@ ___cwcn_bool_t set_load_pending_munaajpi(__wikimyei_t *_wikimyei){
                     }
                     printf(" ]%s\n",COLOR_REGULAR);
                 #endif
-            }if(c_item->__pending_munaajpi_index==_wikimyei->__horizon_munaajpi){
+            }if(c_item->__pending_munaajpi_index>=_wikimyei->__horizon_munaajpi){
                 load_to_index(_wikimyei,c_index);
                 _wikimyei->__flags->__nonuwaabo_alliu_done=___CWCN_TRUE;
                 // STAND FOR IMIBAJCHO MUNAAJPI
@@ -137,13 +140,6 @@ void print_munaajpi_w_base(__wikimyei_t *_wikimyei){
 }
 void read_munaajpi_w_base(__wikimyei_t *_wikimyei){
     unsigned int m_ctx=0x00;
-    #if defined(__IN_MUNAAJPI_W_BASE_IMIBAJCHO_MUNAAJPI_DUURUVA_IS_INCLUDED__)
-    #if defined(__EXPEND_IMIBAJCHO_MUNAAJPI_DUURUVA__) && defined(__PROPAGATE_JKIMYEI_UWAABO_MUNAAJPI_DUURUVA__)
-    #else
-    fprintf(stderr,"BAD CONFIGURATION: __IN_MUNAAJPI_W_BASE_IMIBAJCHO_MUNAAJPI_DUURUVA_IS_INCLUDED__ needs [__EXPEND_IMIBAJCHO_MUNAAJPI_DUURUVA__ && __PROPAGATE_JKIMYEI_UWAABO_MUNAAJPI_DUURUVA__]")
-    assert(0x00);
-    #endif
-    #endif
     #if defined(__IN_MUNAAJPI_W_BASE_ALLIU_IS_INCLUDED__) // ALLIU
     for(unsigned int idx=0x00;idx<_wikimyei->__alliu->__source_size;idx++){
         _wikimyei->__munaajpi->__munaajpi_w_base[m_ctx]=glti(_wikimyei)->__alliu_state[idx];
@@ -289,12 +285,10 @@ void print_report_munaajpi(__wikimyei_t *_wikimyei){
     load_to_start(_wikimyei);
     print_duuruva(_wikimyei->__wajyu->__metric->__imibajcho_munaajpi_duuruva);
     do{
-        for(unsigned int mjpi_idx=0x00;mjpi_idx<0x01;mjpi_idx++){
-            if(fabs(fabs(glti(_wikimyei)->__imibajcho_munaajpi_state[0x00])-fabs(_wikimyei->__wajyu->__metric->__imibajcho_munaajpi_duuruva->__dv_dist[mjpi_idx].__mean))>fabs(_wikimyei->__wajyu->__metric->__imibajcho_munaajpi_duuruva->__dv_dist[mjpi_idx].__std)){
-                fprintf(stdout,"\t[%d] load_index:[%d]\t imibajcho_munaajpi_state:[0x00] %s%f%s\n",mjpi_idx,_wikimyei->__load_index,COLOR_DANGER,glti(_wikimyei)->__imibajcho_munaajpi_state[0x00],COLOR_MUNAAJPI);
-            }else{
-                fprintf(stdout,"\t[%d] load_index:[%d]\t imibajcho_munaajpi_state:[0x00] %s%f%s\n",mjpi_idx,_wikimyei->__load_index,COLOR_GOOD,glti(_wikimyei)->__imibajcho_munaajpi_duuruva_state[mjpi_idx],COLOR_MUNAAJPI);
-            }
+        if(fabs(fabs(glti(_wikimyei)->__imibajcho_munaajpi_state[0x00])-fabs(_wikimyei->__wajyu->__metric->__imibajcho_munaajpi_duuruva->__dv_dist[0x00].__mean))>fabs(_wikimyei->__wajyu->__metric->__imibajcho_munaajpi_duuruva->__dv_dist[0x00].__std)){
+            fprintf(stdout,"\t[%d] load_index:[%d]\t imibajcho_munaajpi_state:[0x00] %s%f%s\n",0x00,_wikimyei->__load_index,COLOR_DANGER,glti(_wikimyei)->__imibajcho_munaajpi_state[0x00],COLOR_MUNAAJPI);
+        }else{
+            fprintf(stdout,"\t[%d] load_index:[%d]\t imibajcho_munaajpi_state:[0x00] %s%f%s\n",0x00,_wikimyei->__load_index,COLOR_GOOD,glti(_wikimyei)->__imibajcho_munaajpi_state[0x00],COLOR_MUNAAJPI);
         }
     }while(load_go_up(_wikimyei)!=-1);
     // JKIMYEI UWAABO
