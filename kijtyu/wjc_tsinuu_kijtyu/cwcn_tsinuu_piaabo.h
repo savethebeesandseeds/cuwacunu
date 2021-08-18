@@ -3,12 +3,21 @@
 #include <assert.h>
 #include <math.h>
 #include <time.h>
+#ifdef WIKIMYEI_PIAABO_INCLUDED
+#include "cwcn_wikimyei_piaabo.h"
+#endif
 #ifndef TSINUU_PIAABO_INCLUDED
 #define TSINUU_PIAABO_INCLUDED
 // #define TSINUU_DEBUG
 #define NAT_TYPE
 #define SYMETRIC_TSINUU // #FIXME, not in use, but true. (fix both)
 #define TSINUU_FORWARD
+
+#define __MIN_SUM_NABLA__ (__cwcn_type_t) 0.0
+#define __TSINUU_NODE_SUM_MAX__ (__cwcn_type_t) 5.0
+#define __TSINUU_MAX_DELTA_WEIGHT__ (__cwcn_type_t) 0.01
+#define __TSINUU_MAX_DELTA_BIAS__ (__cwcn_type_t) 0.01
+
 // #define TSINUU_VERBOSE_1
 // #define TSINUU_VERBOSE_2
 // #ifdef TSINUU_BACKWARD
@@ -290,6 +299,9 @@ typedef _Bool ___cwcn_bool_t;
     void clamp_bias(__tsinuu_t *_tsinuu, __node_kemu_t *_n_kemu);
     void clamp_all_weights(__tsinuu_t *_tsinuu);
     void clamp_weight(__tsinuu_t *_tsinuu, __line_kemu_t *_ln_kemu);
+    
+    __cwcn_type_t sum_all_weights(__tsinuu_t *_tsinuu);
+    __cwcn_type_t sum_all_biases(__tsinuu_t *_tsinuu);
 #else 
     #ifdef BIN_TYPE
         typedef __uint8_t (__cwcn_type_t);

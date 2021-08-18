@@ -14,6 +14,9 @@
 */
 int main(void){
     //
+    for(int c_wakactx=0x00;c_wakactx>=0x00;c_wakactx--){
+        printf(">> -- >> -- > [%d]\n",c_wakactx);
+    }
     printf("\n------->------\n");
     set_seed();
     // Configure tsinuu
@@ -80,7 +83,7 @@ int main(void){
     */
     // fprintf(stdout, "--------->(PREV TRAINING)<---------\n");
     // for(unsigned int idx_n=0x00;idx_n<INPUT_SIZE;idx_n++){
-    //     fprintf(stdout, ">>>>(after uwaabo) suspect elemenet input[%d]=%f\n",idx_n, c_input_vector[idx_n]);
+    //     fprintf(stdout, ">>>>(after uwaabo) suspect elemenet input[%d]=%f\n",idx_n, c_correct_input_vector[idx_n]);
     // }
     // for(unsigned int idx_n=0x00;idx_n<OUTPUT_SIZE;idx_n++){
     //     fprintf(stdout, ">>>>(after uwaabo) suspect elemenet \t\toutput[%d]=%f\n",idx_n, c_output_vector[idx_n]);
@@ -90,14 +93,14 @@ int main(void){
         TRAIN
     */
     // __cwcn_type_t *c_wapaajco=malloc(OUTPUT_SIZE*sizeof(__cwcn_type_t));
-    // __cwcn_type_t c_correct_output[6][OUTPUT_SIZE]={{0,0},{0,0},{0,1},{0,1},{0,0}};
-    // __cwcn_type_t c_input_vector[6][INPUT_SIZE]={{0,0},{0,0},{1,0},{0,1},{1,1}};
-    // __cwcn_type_t c_input_vector[4][INPUT_SIZE]={{0,0,0},{0,1,0},{0,0,1},{0,1,1}};
-    // __cwcn_type_t c_correct_output[4][OUTPUT_SIZE]={{0},{1},{1},{0}};
+    // __cwcn_type_t c_set_output_vector[6][OUTPUT_SIZE]={{0,0},{0,0},{0,1},{0,1},{0,0}};
+    // __cwcn_type_t c_correct_input_vector[6][INPUT_SIZE]={{0,0},{0,0},{1,0},{0,1},{1,1}};
+    // __cwcn_type_t c_correct_input_vector[4][INPUT_SIZE]={{0,0,0},{0,1,0},{0,0,1},{0,1,1}};
+    // __cwcn_type_t c_set_output_vector[4][OUTPUT_SIZE]={{0},{1},{1},{0}};
 
-    // __cwcn_type_t c_input_vector[DATA_COUNT][INPUT_SIZE]={{0},{1},{2},{3}};
-    // __cwcn_type_t c_correct_output[DATA_COUNT][OUTPUT_SIZE]={{0},{1},{2},{3}};
-    __cwcn_type_t c_input_vector[DATA_COUNT][INPUT_SIZE]={
+    // __cwcn_type_t c_correct_input_vector[DATA_COUNT][INPUT_SIZE]={{0},{1},{2},{3}};
+    // __cwcn_type_t c_set_output_vector[DATA_COUNT][OUTPUT_SIZE]={{0},{1},{2},{3}};
+    __cwcn_type_t c_correct_input_vector[DATA_COUNT][INPUT_SIZE]={
         {0.00},
         {0.01},{0.02},{0.03},{0.04},{0.05},{0.06},{0.07},{0.08},{0.09},{0.1},
         {0.11},{0.12},{0.13},{0.14},{0.15},{0.16},{0.17},{0.18},{0.19},{0.2},
@@ -109,15 +112,17 @@ int main(void){
         {0.71},{0.72},{0.73},{0.74},{0.75},{0.76},{0.77},{0.78},{0.79},{0.8},
         {0.81},{0.82},{0.83},{0.84},{0.85},{0.86},{0.87},{0.88},{0.89},{0.9},
         {0.91},{0.92},{0.93},{0.94},{0.95},{0.96},{0.97},{0.98},{0.99}};
-    __cwcn_type_t c_correct_output[DATA_COUNT][OUTPUT_SIZE];
+    __cwcn_type_t c_set_output_vector[DATA_COUNT][OUTPUT_SIZE];
     for(unsigned int ctx_p=0x00;ctx_p<DATA_COUNT;ctx_p++){
         for(unsigned int idx_v=0x00;idx_v<INPUT_SIZE;idx_v++){
-            // c_correct_output[ctx_p][idx_v]=0.5*sin(2*3.141592*1.0*c_input_vector[ctx_p][idx_v])+1;
-            c_correct_output[ctx_p][idx_v]=0.5*tanh(2*3.141592*1.0*c_input_vector[ctx_p][idx_v])+1;
-            // c_correct_output[ctx_p][idx_v]=0.5*sin(2*3.141592*1.0*c_input_vector[ctx_p][idx_v])/(2*3.141592*1.0*c_input_vector[ctx_p][idx_v])+1;
-            fprintf(stdout, "%f -> %f\n",c_input_vector[ctx_p][idx_v],c_correct_output[ctx_p][idx_v]);
+            // c_set_output_vector[ctx_p][idx_v]=0.5*sin(2*3.141592*1.0*c_correct_input_vector[ctx_p][idx_v])+1;
+            c_set_output_vector[ctx_p][idx_v]=0.5*tanh(2*3.141592*1.0*c_correct_input_vector[ctx_p][idx_v])+1;
+            // c_set_output_vector[ctx_p][idx_v]=0.5*sin(2*3.141592*1.0*c_correct_input_vector[ctx_p][idx_v])/(2*3.141592*1.0*c_correct_input_vector[ctx_p][idx_v])+1;
+            fprintf(stdout, "%f -> %f\n",c_correct_input_vector[ctx_p][idx_v],c_set_output_vector[ctx_p][idx_v]);
         }
     }
+    __cwcn_type_t aux_output[OUTPUT_SIZE];
+    __cwcn_type_t aux_input[INPUT_SIZE];
     unsigned int rand_idx;
     for(unsigned int ctx_epoch=0x00;ctx_epoch<NUM_EPOCHS;ctx_epoch++){
         for(unsigned int ctx_p=0x00;ctx_p<DATA_COUNT;ctx_p++){
@@ -125,17 +130,17 @@ int main(void){
             // rand_idx = ctx_p;
             // fprintf(stdout, " --- --- ---epoch:[ %d ] data:[ %d ] --- --- --- --- --- START ---\t",ctx_epoch,ctx_p);
             // uwaabo
-            // fprintf(stdout, "%f -> %f\n",c_input_vector[rand_idx][0x00],c_correct_output[rand_idx][0x00]);
-            set_tsinuu_input(c_tsinuu, c_input_vector[rand_idx]);
+            // fprintf(stdout, "%f -> %f\n",c_correct_input_vector[rand_idx][0x00],c_set_output_vector[rand_idx][0x00]);
+            set_tsinuu_input(c_tsinuu, c_correct_input_vector[rand_idx]);
             tsinuu_direct_full_parametric(c_tsinuu);
-            wapaajco_bydifference(c_tsinuu, c_correct_output[rand_idx]);
-            // fprintf(stdout, "--------->(RESULTS) epoch:[ %d ] data:[ %d ]<---------\n",ctx_epoch,ctx_p);
-            // fprintf(stdout, "--------->(JKIMYEI) epoch:[ %d ] data:[ %d ]<---------\n",ctx_epoch,ctx_p);
-            jkimyei_tsinuu_bydirectNABLA(c_tsinuu);
-            print_tsninuu_jkimyei_results(c_tsinuu);
-            // fprintf(stdout,"\n");
-            print_all_lines(c_tsinuu);
+            read_tsinuu_output(c_tsinuu,aux_output);
+            fprintf(stdout,"[TESTING DIRECT]\t: input <%f>, output:<%f>\n",c_correct_input_vector[rand_idx][0x0],aux_output[0x0]);
+            set_tsinuu_output(c_tsinuu, aux_output);
+            tsinuu_inverse_full_parametric(c_tsinuu);
+            read_tsinuu_input(c_tsinuu,aux_input);
+            fprintf(stdout,"[TESTING INVERSE]\t: input <%f>, output:<%f>\n",aux_input[0x0],aux_output[0x0]);
             getchar();
+            ... #INVERSE TSINUU IS UNDONE
         }
         // fprintf(stdout, "--------->END OF EPOCH<---------\n");
     }

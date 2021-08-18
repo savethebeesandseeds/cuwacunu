@@ -88,6 +88,7 @@ WIKIMYEI_TEST_HEADERS=$(REGULAR_HEADERS)
 
 ENTROPY_TEST_TARGETS=$(ENTROPY_)/*.c $(TEST_)/testing_entropy.c
 TSINUU_TEST_TARGETS=$(TSINUU_)/cwcn_tsinuu_piaabo.c $(TSINUU_)/cwcn_tsinuu_nebajke.c $(TEST_)/testing_tsinuu.c
+TSINUU_INVERSE_TEST_TARGETS=$(TSINUU_)/cwcn_tsinuu_piaabo.c $(TSINUU_)/cwcn_tsinuu_nebajke.c $(TEST_)/testing_inverse_tsinuu.c
 DUURUVA_TEST_TARGETS=$(DUURUVA_)/cwcn_duuruva_nebajke.c $(TEST_)/testing_duuruva.c
 _all_wikimyei: _wikimyei_btc_fut
 _kalamar_test:
@@ -102,6 +103,9 @@ _entropy_test:
 _tsinuu_test:
 	$(CC) $(TSINUU_TEST_TARGETS) -I $(TSINUU_)/ -lm -Wall -o $(ROOT)/_tsinuu_test
 	$(ROOT)/_tsinuu_test 
+_tsinuu_inverse_test:
+	$(CC) $(TSINUU_INVERSE_TEST_TARGETS) -I $(TSINUU_)/ -lm -Wall -o $(ROOT)/_tsinuu_inverse_test
+	$(ROOT)/_tsinuu_inverse_test 
 _duuruva_test:
 	$(CC) $(DUURUVA_TEST_TARGETS) -I $(DUURUVA_)/ -I -lm -Wall -o $(ROOT)/_duuruva_test
 	$(ROOT)/_duuruva_test

@@ -59,9 +59,42 @@ void ___uwaabo_hash(__wikimyei_t *_wikimyei){
     // #FIXME add assertions
     read_uwaabo_w_base(_wikimyei);
     set_tsinuu_input(_wikimyei->__uwaabo->__uwaabo_tsinuu, _wikimyei->__uwaabo->__uwaabo_w_base);
-    tsinuu_direct_uwaabo_full_parametric(_wikimyei->__uwaabo->__uwaabo_tsinuu);
+    tsinuu_direct_full_parametric(_wikimyei->__uwaabo->__uwaabo_tsinuu);
     read_tsinuu_output(_wikimyei->__uwaabo->__uwaabo_tsinuu, glti(_wikimyei)->__uwaabo_state);
     #if defined(__EXPEND_UWAABO_DUURUVA__)
+    set_duuruva_value(_wikimyei->__wajyu->__metric->__uwaabo_duuruva,glti(_wikimyei)->__uwaabo_state);
+	diff_duuruva(_wikimyei->__wajyu->__metric->__uwaabo_duuruva);
+	dist_duuruva(_wikimyei->__wajyu->__metric->__uwaabo_duuruva);
+    #endif
+    // --- --- --- --- 
+    #if defined(WIKIMYEI_DEBUG) || defined(UWAABO_DEBUG)
+    fprintf(stdout,"%s>> > load_index: [%d] \t ... request uwaabo_hash\t uwaabo_state: [",COLOR_UWAABO,_wikimyei->__load_index);
+    for(unsigned int idx=0x00;idx<_wikimyei->__uwaabo->__uwaabo_state_size;idx++){
+        fprintf(stdout," %.2f",glti(_wikimyei)->__uwaabo_state[idx]);
+    }
+    fprintf(stdout," ]\t%s\n",COLOR_REGULAR);
+    fprintf(stdout,"%s>> > load_index: [%d] ... request uwaabo_hash\t uwaabo_base_w_state: [",COLOR_ALLIU,_wikimyei->__load_index);
+    for(unsigned int idx=0x00;idx<_wikimyei->__uwaabo->__uwaabo_base_w_size;idx++){
+        fprintf(stdout," %.2f",_wikimyei->__uwaabo->__uwaabo_w_base[idx]);
+    }
+    fprintf(stdout," ]%s\n",COLOR_REGULAR);
+    #endif
+}
+void ___uwaabo_exploration_hash(__wikimyei_t *_wikimyei){
+    // During exploration uwaabo state holds the exploration value, not the tsinuu output.
+    read_uwaabo_w_base(_wikimyei); // not in use, but chill
+    // set_tsinuu_input(_wikimyei->__uwaabo->__uwaabo_tsinuu, _wikimyei->__uwaabo->__uwaabo_w_base);
+    // tsinuu_direct_full_parametric(_wikimyei->__uwaabo->__uwaabo_tsinuu);
+    // read_tsinuu_output(_wikimyei->__uwaabo->__uwaabo_tsinuu, glti(_wikimyei)->__uwaabo_state);
+    #if defined(UWAABO_EXPLORATION_RANDOM)
+    for(unsigned int idx=0x00;idx<_wikimyei->__uwaabo->__uwaabo_state_size;idx++){
+        glti(_wikimyei)->__uwaabo_state[idx]=((__cwcn_type_t)(rand() % 98)-.02)/((__cwcn_type_t)100.0)+0.01;
+    }
+    #else
+    fprintf(stderr,"BAD CONFIGURATION, set UWAABO_EXPLORATION_*\n");
+    assert(0x00);
+    #endif
+    #if defined(__EXPEND_UWAABO_DUURUVA__) // #FIXME might not needed
     set_duuruva_value(_wikimyei->__wajyu->__metric->__uwaabo_duuruva,glti(_wikimyei)->__uwaabo_state);
 	diff_duuruva(_wikimyei->__wajyu->__metric->__uwaabo_duuruva);
 	dist_duuruva(_wikimyei->__wajyu->__metric->__uwaabo_duuruva);
@@ -147,7 +180,7 @@ void ___jkimyei_uwaabo_munaajpi_hash(__wikimyei_t *_wikimyei){
     // #FIXME add assertions
     read_munaajpi_w_base(_wikimyei);
     set_tsinuu_input(_wikimyei->__munaajpi->__munaajpi_tsinuu, _wikimyei->__munaajpi->__munaajpi_w_base);
-	tsinuu_direct_uwaabo_full_parametric(_wikimyei->__munaajpi->__munaajpi_tsinuu);
+	tsinuu_direct_full_parametric(_wikimyei->__munaajpi->__munaajpi_tsinuu);
     read_tsinuu_output(_wikimyei->__munaajpi->__munaajpi_tsinuu, glti(_wikimyei)->__jkimyei_uwaabo_munaajpi_state);
     #ifdef WIKIMYEI_DEBUG
         fprintf(stdout,"%s>> > load_index: [%d] ... request jkimyei uwaabo munaajpi_hash:\n",COLOR_MUNAAJPI,_wikimyei->__load_index);
@@ -222,6 +255,32 @@ void ___imibajcho_munaajpi_hash(__wikimyei_t *_wikimyei){
 /*
     NEBAJKE ACTUAL FUNCTIONS
 */
+void wikimyei_live_one(__wikimyei_t *_wikimyei){
+    // #FIXME add assertions
+    #ifdef WIKIMYEI_DEBUG
+    fprintf(stdout,">> > ... %s wikimyei_live_one --- --- --- --- --- --- --- --- --- --- --- LOAD: %s%d\n",COLOR_DANGER,COLOR_REGULAR,_wikimyei->__load_index);
+    fprintf(stdout,">> > ... load_index: [%d] ... wikimyei_live_one\n",_wikimyei->__load_index);
+    #endif
+    #ifdef WIKIMYEI_DEBUG
+    fprintf(stdout,">> > ... load_index: [%d] ... starting with flags:\n",_wikimyei->__load_index);
+    print_wikimyei_flags(_wikimyei);
+    #endif
+    assert(!yield_next_trayectory(_wikimyei)); // mallocs the next item
+    _wikimyei->__flags->__done=___CWCN_FALSE;
+    // glti(_wikimyei)->__pending_munaajpi=___CWCN_TRUE;
+    // glti(_wikimyei)->__pending_munaajpi_index=0x00;
+    // clock_t begin;
+    // clock_t end;
+    ___alliu_hash(_wikimyei);
+    ___alliu_duuruva_hash(_wikimyei); // defined activated inside
+    ___uwaabo_hash(_wikimyei);
+    ___entropy_hash(_wikimyei);
+    ___tsane_dehash(_wikimyei);
+    // begin=clock();
+    // end=clock();
+    // printf("\033[1;31m exe time [___tsane_dehash] %f:\033[0m\n", (double)(end-begin)/CLOCKS_PER_SEC);
+    _wikimyei->__flags->__done=___CWCN_TRUE;
+}
 void wikimyei_relive_alliu_one(__wikimyei_t *_wikimyei){
     // #FIXME add assertions
     assert(_wikimyei->__flags->__done);
@@ -232,19 +291,17 @@ void wikimyei_relive_alliu_one(__wikimyei_t *_wikimyei){
     #endif
     _wikimyei->__flags->__done=___CWCN_FALSE;
     // presumes a steady munaajpi beein comptued #FIXME assert it's recomptued once a while reseting the queue.
-    // glti(_wikimyei)->__pending_munaajpi=___CWCN_TRUE;
-    // glti(_wikimyei)->__pending_munaajpi_index=0x00; 
     ___uwaabo_hash(_wikimyei);
     ___entropy_hash(_wikimyei);
     ___tsane_dehash(_wikimyei); // #FIXME maybe one wants to keep track
     // # no set pending munaajpi seems correct
     _wikimyei->__flags->__done=___CWCN_TRUE;
 }
-void wikimyei_live_one(__wikimyei_t *_wikimyei){
-    // #FIXME add assertions
+void wikimyei_live_uwaabo_exploration_one(__wikimyei_t *_wikimyei){
+    // During exploration uwaabo state holds the exploration value, not the tsinuu output. 
     #ifdef WIKIMYEI_DEBUG
-    fprintf(stdout,">> > ... %s wikimyei_live_one --- --- --- --- --- --- --- --- --- --- --- LOAD: %s%d\n",COLOR_DANGER,COLOR_REGULAR,_wikimyei->__load_index);
-    fprintf(stdout,">> > ... load_index: [%d] ... wikimyei_live_one\n",_wikimyei->__load_index);
+    fprintf(stdout,">> > ... %s wikimyei_live_uwaabo_exploration_one --- --- --- --- --- --- --- --- --- --- --- LOAD: %s%d\n",COLOR_DANGER,COLOR_REGULAR,_wikimyei->__load_index);
+    fprintf(stdout,">> > ... load_index: [%d] ... wikimyei_live_uwaabo_exploration_one\n",_wikimyei->__load_index);
     #endif
     #ifdef WIKIMYEI_DEBUG
     fprintf(stdout,">> > ... load_index: [%d] ... starting with flags:\n",_wikimyei->__load_index);
@@ -258,7 +315,7 @@ void wikimyei_live_one(__wikimyei_t *_wikimyei){
     // clock_t end;
     ___alliu_hash(_wikimyei);
     ___alliu_duuruva_hash(_wikimyei); // defined activated inside
-    ___uwaabo_hash(_wikimyei);
+    ___uwaabo_exploration_hash(_wikimyei);
     ___entropy_hash(_wikimyei);
     ___tsane_dehash(_wikimyei);
     // begin=clock();
@@ -313,6 +370,35 @@ void wikimyei_relive_alliu_load(__wikimyei_t *_wikimyei){
         wikimyei_relive_alliu_one(_wikimyei);
     }while(load_go_up(_wikimyei)!=-1);
     set_load_pending_munaajpi(_wikimyei);
+}
+
+void wikimyei_live_uwaabo_exploration_load(__wikimyei_t *_wikimyei, int _size_of_load){
+    // #FIXME add assertions
+    #ifdef WIKIMYEI_DEBUG
+    fprintf(stdout,">> > ... request to [live_uwaabo_exploration_load]\n");
+    #endif
+    if(!load_is_empty(_wikimyei)){
+        #ifdef WIKIMYEI_DEBUG
+        fprintf(stdout,">> > ... load found %s[not empty]%s -> ask to kill current load\n",COLOR_WARNING,COLOR_REGULAR);
+        #endif
+        kill_load(_wikimyei);
+    }
+    #ifdef WIKIMYEI_DEBUG
+    else{fprintf(stdout,">> > ... load found [empty]\n");}
+    #endif
+    assert(load_is_empty(_wikimyei));
+    // clock_t begin;
+    // clock_t end;
+    while(_wikimyei->__load_size<_size_of_load){
+        if(_wikimyei->__load_index%10==0){fprintf(stdout, ">> > ... living uwabao exploration load index: [%d]\n",_wikimyei->__load_index);}
+        wikimyei_live_uwaabo_exploration_one(_wikimyei);
+        // begin=clock();
+        // end=clock();
+        // printf("\033[1;31m exe time [wikimyei_live_one] %f:\033[0m\n", (double)(end-begin)/CLOCKS_PER_SEC);
+    }
+    set_load_pending_munaajpi(_wikimyei);
+    assert(!load_is_empty(_wikimyei));
+    assert(_wikimyei->__load_size==_size_of_load);
 }
 /*
 

@@ -38,48 +38,119 @@ int main(){
         c_munaajpi_waapajco_potency,\
         c_take_tsane);
     // load_print_up_trayectory_queue(c_wikimyei);
+    printf("%s ENTER TO LIVE UWAABO EXPLORATION LOAD:%s\n",COLOR_GOOD,COLOR_REGULAR);
+    // getchar();
+    begin=clock();wikimyei_live_uwaabo_exploration_load(c_wikimyei, c_size_of_load);end=clock();printf("%s exe time [wikimyei_live_uwaabo_exploration_load] %f:%s\n", COLOR_DANGER, (double)(end-begin)/CLOCKS_PER_SEC,COLOR_REGULAR);
+    printf("uwaabo sum_weights: %f\n",sum_all_weights(c_wikimyei->__uwaabo->__uwaabo_tsinuu));
+    printf("uwaabo sum_biases : %f\n",sum_all_biases(c_wikimyei->__uwaabo->__uwaabo_tsinuu));
+    printf("munaajpi sum_weights: %f\n",sum_all_weights(c_wikimyei->__munaajpi->__munaajpi_tsinuu));
+    printf("munaajpi sum_biases : %f\n",sum_all_biases(c_wikimyei->__munaajpi->__munaajpi_tsinuu));
+    //
+    printf("%s ENTER TO JKIMYEI UWAABO EXPLORATION:%s\n",COLOR_GOOD,COLOR_REGULAR);
+    // getchar();
+    begin=clock();wikimyei_jkimyei(c_wikimyei, c_epochs);end=clock();printf("%s exe time [wikimyei_jkimyei] %f:%s\n", COLOR_DANGER, (double)(end-begin)/CLOCKS_PER_SEC,COLOR_REGULAR);
+    printf("uwaabo sum_weights: %f\n",sum_all_weights(c_wikimyei->__uwaabo->__uwaabo_tsinuu));
+    printf("uwaabo sum_biases : %f\n",sum_all_biases(c_wikimyei->__uwaabo->__uwaabo_tsinuu));
+    printf("munaajpi sum_weights: %f\n",sum_all_weights(c_wikimyei->__munaajpi->__munaajpi_tsinuu));
+    printf("munaajpi sum_biases : %f\n",sum_all_biases(c_wikimyei->__munaajpi->__munaajpi_tsinuu));
     for(unsigned int f_ctx=0x00;f_ctx<1;f_ctx++){
         printf("%s ENTER TO LIVE LOAD:%s\n",COLOR_GOOD,COLOR_REGULAR);
-        getchar();
-        begin=clock();
-        wikimyei_live_load(c_wikimyei, c_size_of_load);
-        end=clock();
-        printf("%s exe time [wikimyei_live_load] %f:%s\n", COLOR_DANGER, (double)(end-begin)/CLOCKS_PER_SEC,COLOR_REGULAR);
-        // wikimyei_live_load(c_wikimyei, 1);
+        // getchar();
+        begin=clock();wikimyei_live_load(c_wikimyei, c_size_of_load);end=clock();printf("%s exe time [wikimyei_live_load] %f:%s\n", COLOR_DANGER, (double)(end-begin)/CLOCKS_PER_SEC,COLOR_REGULAR);
+        printf("uwaabo sum_weights: %f\n",sum_all_weights(c_wikimyei->__uwaabo->__uwaabo_tsinuu));
+        printf("uwaabo sum_biases : %f\n",sum_all_biases(c_wikimyei->__uwaabo->__uwaabo_tsinuu));
+        printf("munaajpi sum_weights: %f\n",sum_all_weights(c_wikimyei->__munaajpi->__munaajpi_tsinuu));
+        printf("munaajpi sum_biases : %f\n",sum_all_biases(c_wikimyei->__munaajpi->__munaajpi_tsinuu));
+        //
         printf("%s ENTER TO JKIMYEI:%s\n",COLOR_GOOD,COLOR_REGULAR);
-        getchar();
-        begin=clock();
-        wikimyei_jkimyei(c_wikimyei, c_epochs);
-        end=clock();
-        printf("%s exe time [wikimyei_jkimyei] %f:%s\n", COLOR_DANGER, (double)(end-begin)/CLOCKS_PER_SEC,COLOR_REGULAR);
         // getchar();
-        // printf("%s ENTER TO PRINT TRAYECOTRY POINTERS:%s\n",COLOR_GOOD,COLOR_REGULAR);
+        begin=clock();wikimyei_jkimyei(c_wikimyei, c_epochs);end=clock();printf("%s exe time [wikimyei_jkimyei] %f:%s\n", COLOR_DANGER, (double)(end-begin)/CLOCKS_PER_SEC,COLOR_REGULAR);
+        printf("uwaabo sum_weights: %f\n",sum_all_weights(c_wikimyei->__uwaabo->__uwaabo_tsinuu));
+        printf("uwaabo sum_biases : %f\n",sum_all_biases(c_wikimyei->__uwaabo->__uwaabo_tsinuu));
+        printf("munaajpi sum_weights: %f\n",sum_all_weights(c_wikimyei->__munaajpi->__munaajpi_tsinuu));
+        printf("munaajpi sum_biases : %f\n",sum_all_biases(c_wikimyei->__munaajpi->__munaajpi_tsinuu));
+        //
+        // printf("%s ENTER TO LIVE LOAD:%s\n",COLOR_GOOD,COLOR_REGULAR);
         // // getchar();
-        // load_print_up_trayectory_pointers(c_wikimyei);
-        // printf("%s ENTER TO PRINT MUNAAJPI REPORT:%s\n",COLOR_GOOD,COLOR_REGULAR);
+        // begin=clock();wikimyei_live_load(c_wikimyei, c_size_of_load);end=clock();printf("%s exe time [wikimyei_live_load] %f:%s\n", COLOR_DANGER, (double)(end-begin)/CLOCKS_PER_SEC,COLOR_REGULAR);
+        // printf("uwaabo sum_weights: %f\n",sum_all_weights(c_wikimyei->__uwaabo->__uwaabo_tsinuu));
+        // printf("uwaabo sum_biases : %f\n",sum_all_biases(c_wikimyei->__uwaabo->__uwaabo_tsinuu));
+        // printf("munaajpi sum_weights: %f\n",sum_all_weights(c_wikimyei->__munaajpi->__munaajpi_tsinuu));
+        // printf("munaajpi sum_biases : %f\n",sum_all_biases(c_wikimyei->__munaajpi->__munaajpi_tsinuu));
+        // //
+        // printf("%s ENTER TO JKIMYEI:%s\n",COLOR_GOOD,COLOR_REGULAR);
+        // // getchar();
+        // begin=clock();wikimyei_jkimyei(c_wikimyei, c_epochs);end=clock();printf("%s exe time [wikimyei_jkimyei] %f:%s\n", COLOR_DANGER, (double)(end-begin)/CLOCKS_PER_SEC,COLOR_REGULAR);
+        // printf("uwaabo sum_weights: %f\n",sum_all_weights(c_wikimyei->__uwaabo->__uwaabo_tsinuu));
+        // printf("uwaabo sum_biases : %f\n",sum_all_biases(c_wikimyei->__uwaabo->__uwaabo_tsinuu));
+        // printf("munaajpi sum_weights: %f\n",sum_all_weights(c_wikimyei->__munaajpi->__munaajpi_tsinuu));
+        // printf("munaajpi sum_biases : %f\n",sum_all_biases(c_wikimyei->__munaajpi->__munaajpi_tsinuu));
+        //
+        // printf("%s ENTER TO LIVE UWAABO EXPLORATION LOAD:%s\n",COLOR_GOOD,COLOR_REGULAR);
+        // // getchar();
+        // begin=clock();wikimyei_live_uwaabo_exploration_load(c_wikimyei, c_size_of_load);end=clock();printf("%s exe time [wikimyei_live_uwaabo_exploration_load] %f:%s\n", COLOR_DANGER, (double)(end-begin)/CLOCKS_PER_SEC,COLOR_REGULAR);
+        // printf("uwaabo sum_weights: %f\n",sum_all_weights(c_wikimyei->__uwaabo->__uwaabo_tsinuu));
+        // printf("uwaabo sum_biases : %f\n",sum_all_biases(c_wikimyei->__uwaabo->__uwaabo_tsinuu));
+        // printf("munaajpi sum_weights: %f\n",sum_all_weights(c_wikimyei->__munaajpi->__munaajpi_tsinuu));
+        // printf("munaajpi sum_biases : %f\n",sum_all_biases(c_wikimyei->__munaajpi->__munaajpi_tsinuu));
+        // //
+        // printf("%s ENTER TO JKIMYEI UWAABO EXPLORATION:%s\n",COLOR_GOOD,COLOR_REGULAR);
+        // // getchar();
+        // begin=clock();wikimyei_jkimyei(c_wikimyei, c_epochs);end=clock();printf("%s exe time [wikimyei_jkimyei] %f:%s\n", COLOR_DANGER, (double)(end-begin)/CLOCKS_PER_SEC,COLOR_REGULAR);
+        // printf("uwaabo sum_weights: %f\n",sum_all_weights(c_wikimyei->__uwaabo->__uwaabo_tsinuu));
+        // printf("uwaabo sum_biases : %f\n",sum_all_biases(c_wikimyei->__uwaabo->__uwaabo_tsinuu));
+        // printf("munaajpi sum_weights: %f\n",sum_all_weights(c_wikimyei->__munaajpi->__munaajpi_tsinuu));
+        // printf("munaajpi sum_biases : %f\n",sum_all_biases(c_wikimyei->__munaajpi->__munaajpi_tsinuu));
+        // //
+        // printf("%s ENTER TO LIVE LOAD:%s\n",COLOR_GOOD,COLOR_REGULAR);
         // getchar();
-        // print_report_munaajpi(c_wikimyei);
-        // kill_load(c_wikimyei);
-        // printf("%s ENTER TO LIVE PRINT UWAABO LINES:%s\n",COLOR_GOOD,COLOR_REGULAR);
+        // begin=clock();wikimyei_live_load(c_wikimyei, c_size_of_load);end=clock();printf("%s exe time [wikimyei_live_load] %f:%s\n", COLOR_DANGER, (double)(end-begin)/CLOCKS_PER_SEC,COLOR_REGULAR);
+        // printf("uwaabo sum_weights: %f\n",sum_all_weights(c_wikimyei->__uwaabo->__uwaabo_tsinuu));
+        // printf("uwaabo sum_biases : %f\n",sum_all_biases(c_wikimyei->__uwaabo->__uwaabo_tsinuu));
+        // printf("munaajpi sum_weights: %f\n",sum_all_weights(c_wikimyei->__munaajpi->__munaajpi_tsinuu));
+        // printf("munaajpi sum_biases : %f\n",sum_all_biases(c_wikimyei->__munaajpi->__munaajpi_tsinuu));
+        // //
+        // printf("%s ENTER TO JKIMYEI:%s\n",COLOR_GOOD,COLOR_REGULAR);
         // getchar();
-        
-        // print_all_lines(c_wikimyei->__uwaabo);
-        // printf("%s ENTER TO LIVE PRINT UWAABO NODEX:%s\n",COLOR_GOOD,COLOR_REGULAR);
-        // // getchar();
-        // print_all_nodes(c_wikimyei->__uwaabo);
-        // printf("%s ENTER TO LIVE LOAD AGAIN:%s\n",COLOR_GOOD,COLOR_REGULAR);
-        // // getchar();
+        // begin=clock();wikimyei_jkimyei(c_wikimyei, c_epochs);end=clock();printf("%s exe time [wikimyei_jkimyei] %f:%s\n", COLOR_DANGER, (double)(end-begin)/CLOCKS_PER_SEC,COLOR_REGULAR);
+        // printf("uwaabo sum_weights: %f\n",sum_all_weights(c_wikimyei->__uwaabo->__uwaabo_tsinuu));
+        // printf("uwaabo sum_biases : %f\n",sum_all_biases(c_wikimyei->__uwaabo->__uwaabo_tsinuu));
+        // printf("munaajpi sum_weights: %f\n",sum_all_weights(c_wikimyei->__munaajpi->__munaajpi_tsinuu));
+        // printf("munaajpi sum_biases : %f\n",sum_all_biases(c_wikimyei->__munaajpi->__munaajpi_tsinuu));
+        // //
+        // printf("%s ENTER TO LIVE LOAD:%s\n",COLOR_GOOD,COLOR_REGULAR);
+        // getchar();
+        // begin=clock();wikimyei_live_load(c_wikimyei, c_size_of_load);end=clock();printf("%s exe time [wikimyei_live_load] %f:%s\n", COLOR_DANGER, (double)(end-begin)/CLOCKS_PER_SEC,COLOR_REGULAR);
+        // printf("uwaabo sum_weights: %f\n",sum_all_weights(c_wikimyei->__uwaabo->__uwaabo_tsinuu));
+        // printf("uwaabo sum_biases : %f\n",sum_all_biases(c_wikimyei->__uwaabo->__uwaabo_tsinuu));
+        // printf("munaajpi sum_weights: %f\n",sum_all_weights(c_wikimyei->__munaajpi->__munaajpi_tsinuu));
+        // printf("munaajpi sum_biases : %f\n",sum_all_biases(c_wikimyei->__munaajpi->__munaajpi_tsinuu));
+        // //
     }
     printf("%s ENTER TO RE-LIVE LOAD:%s\n",COLOR_GOOD,COLOR_REGULAR);
     getchar();
-    kill_load(c_wikimyei);
-    wikimyei_live_load(c_wikimyei, c_size_of_load);
+    //
+    printf("%s ENTER TO LIVE LOAD:%s\n",COLOR_GOOD,COLOR_REGULAR);
+    // getchar();
+    begin=clock();wikimyei_live_load(c_wikimyei, c_size_of_load);end=clock();printf("%s exe time [wikimyei_live_load] %f:%s\n", COLOR_DANGER, (double)(end-begin)/CLOCKS_PER_SEC,COLOR_REGULAR);
+    printf("uwaabo sum_weights: %f\n",sum_all_weights(c_wikimyei->__uwaabo->__uwaabo_tsinuu));
+    printf("uwaabo sum_biases : %f\n",sum_all_biases(c_wikimyei->__uwaabo->__uwaabo_tsinuu));
+    printf("munaajpi sum_weights: %f\n",sum_all_weights(c_wikimyei->__munaajpi->__munaajpi_tsinuu));
+    printf("munaajpi sum_biases : %f\n",sum_all_biases(c_wikimyei->__munaajpi->__munaajpi_tsinuu));
+    //
+    printf("%s ENTER TO LIVE LOAD:%s\n",COLOR_GOOD,COLOR_REGULAR);
+    // getchar();
+    begin=clock();wikimyei_live_load(c_wikimyei, c_size_of_load);end=clock();printf("%s exe time [wikimyei_live_load] %f:%s\n", COLOR_DANGER, (double)(end-begin)/CLOCKS_PER_SEC,COLOR_REGULAR);
+    printf("uwaabo sum_weights: %f\n",sum_all_weights(c_wikimyei->__uwaabo->__uwaabo_tsinuu));
+    printf("uwaabo sum_biases : %f\n",sum_all_biases(c_wikimyei->__uwaabo->__uwaabo_tsinuu));
+    printf("munaajpi sum_weights: %f\n",sum_all_weights(c_wikimyei->__munaajpi->__munaajpi_tsinuu));
+    printf("munaajpi sum_biases : %f\n",sum_all_biases(c_wikimyei->__munaajpi->__munaajpi_tsinuu));
 
     printf("%s ENTER TO PRINT TRAYECOTRY:%s\n",COLOR_GOOD,COLOR_REGULAR);
-    getchar();
+    // getchar();
     load_print_up_trayectory_queue(c_wikimyei);
-    printf("%s ENTER TO PRINT WAJYU METRIC REPORT:%s\n",COLOR_GOOD,COLOR_REGULAR);+
-    getchar();
+    printf("%s ENTER TO PRINT WAJYU METRIC REPORT:%s\n",COLOR_GOOD,COLOR_REGULAR);
+    // getchar();
     print_wayiu_metric_report(c_wikimyei->__wajyu);
     printf("%s waka dao %s\n",COLOR_GOOD,COLOR_REGULAR);
     printf("%s waka din %s\n",COLOR_GOOD,COLOR_REGULAR);
@@ -111,7 +182,8 @@ int main(){
     // for(unsigned int ctx_epoch=0x00;ctx_epoch<0x01;ctx_epoch++){
     //     for(unsigned int ctx_p=0x00;ctx_p<DATA_COUNT;ctx_p++){
     //         jkimyei_tsinuu_bydirectNABLA(c_tsinuu);
-    // //         // getchar();
+    // //         // 
+    // getchar();
     //     }
     // }
     destroy_wikimyei(c_wikimyei);

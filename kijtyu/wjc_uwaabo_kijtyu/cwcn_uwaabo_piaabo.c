@@ -4,21 +4,19 @@ __uwaabo_t *uwaabo_fabric(unsigned int _uwaabo_base_w_size, unsigned int _uwaabo
     __uwaabo_t *new_uwaabo = malloc(sizeof(__uwaabo_t));
     new_uwaabo->__uwaabo_base_w_size=_uwaabo_base_w_size;
     new_uwaabo->__uwaabo_state_size=_uwaabo_state_size;
-    new_uwaabo->__uwaabo_w_base=malloc(new_uwaabo->__uwaabo_base_w_size*sizeof(__cwcn_type_t));
+    new_uwaabo->__uwaabo_w_base=malloc(_uwaabo_base_w_size*sizeof(__cwcn_type_t));
+    for(unsigned int idx=0x00;idx<_uwaabo_base_w_size;idx++){new_uwaabo->__uwaabo_w_base[idx]=0x00;}
     /*
         ('ujcamei'->'cajtucu') TSINUU FABRIC
     */
-    unsigned int uw_total_layers=0x08;
-    unsigned int uw_layers_sizes[0x08] = {_uwaabo_base_w_size,32,64,128,32,32,16,_uwaabo_state_size};
+    unsigned int uw_total_layers=0x05;
+    unsigned int uw_layers_sizes[0x05] = {_uwaabo_base_w_size,32,72,32,_uwaabo_state_size};
     #ifndef DEBUG_LINEAR_EXPERIMENT
-    __list_activations_t uw_activations_iho[0x08] = {\
+    __list_activations_t uw_activations_iho[0x05] = {\
                             LINEAR,\
-                            SIGMOID,\
-                            SIGMOID,\
-                            SIGMOID,\
-                            SIGMOID,\
-                            SIGMOID,\
-                            SIGMOID,\
+                            SIGNEDSIGMOID,\
+                            SIGNEDSIGMOID,\
+                            SIGNEDSIGMOID,\
                             SIGMOID};
     #else
     __list_activations_t uw_activations_iho[0x04] = {LINEAR, LINEAR, LINEAR, LINEAR, SIGMOID};
@@ -40,16 +38,14 @@ __uwaabo_t *uwaabo_fabric(unsigned int _uwaabo_base_w_size, unsigned int _uwaabo
     c_attribute_tsinuu->__wapaajco_potency=1.0; // the potency of the wapaajco
     c_attribute_tsinuu->__omega_stiffess=1.0; // #FIXME not in use
     c_attribute_tsinuu->__weight_limits=malloc(sizeof(__limits_t));
-    c_attribute_tsinuu->__weight_limits->__max=__cwcn_infinite;
-    c_attribute_tsinuu->__weight_limits->__min=-__cwcn_infinite;
+    c_attribute_tsinuu->__weight_limits->__max=__MAX_TSINUU_HIPERPARAMETER__;
+    c_attribute_tsinuu->__weight_limits->__min=-__MAX_TSINUU_HIPERPARAMETER__;
     c_attribute_tsinuu->__bias_limits=malloc(sizeof(__limits_t));
-    c_attribute_tsinuu->__bias_limits->__max=__cwcn_infinite;
-    c_attribute_tsinuu->__bias_limits->__min=-__cwcn_infinite;
+    c_attribute_tsinuu->__bias_limits->__max=__MAX_TSINUU_HIPERPARAMETER__;
+    c_attribute_tsinuu->__bias_limits->__min=-__MAX_TSINUU_HIPERPARAMETER__;
     /* fabric */
     new_uwaabo->__uwaabo_tsinuu=tsinuu_fabric(c_attribute_tsinuu);
     new_uwaabo->__uwaabo_tsinuu->__attributes->__wapaajco_potency=_uwaabo_waapajco_potency;
-    // tsinuu_initialize_weights_zero(new_uwaabo->__uwaabo_tsinuu);
-    // tsinuu_initialize_bias_zero(new_uwaabo->__uwaabo_tsinuu);
     #ifndef DEBUG_LINEAR_EXPERIMENT
     tsinuu_initialize_weights_random(new_uwaabo->__uwaabo_tsinuu, 0.5, -0.5);
     tsinuu_initialize_bias_random(new_uwaabo->__uwaabo_tsinuu, 0.5, -0.5);
@@ -57,6 +53,10 @@ __uwaabo_t *uwaabo_fabric(unsigned int _uwaabo_base_w_size, unsigned int _uwaabo
     tsinuu_initialize_weights_fixed(new_uwaabo->__uwaabo_tsinuu,1.0);
     tsinuu_initialize_bias_fixed(new_uwaabo->__uwaabo_tsinuu,1.0);
     #endif
+    // printf("waka\n");
+    tsinuu_initialize_bias_zero(new_uwaabo->__uwaabo_tsinuu);
+    // tsinuu_initialize_weights_zero(new_uwaabo->__uwaabo_tsinuu);
+    // printf("waka\n");
     set_all_nodebooleanpardon_parametric(new_uwaabo->__uwaabo_tsinuu, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00); // #FIXME pardon to make it faster
     pardon_inputoutput_bias(new_uwaabo->__uwaabo_tsinuu); // #FIXME check if needed of enabled
     set_all_linebooleanpardon_parametric(new_uwaabo->__uwaabo_tsinuu, 0x00, 0x00);

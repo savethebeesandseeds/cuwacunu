@@ -8,13 +8,14 @@ __munaajpi_t *munaajpi_fabric(\
     new_munaajpi->__jkimyei_uwaabo_munaajpi_state_size=_munaajpi_state_size;
     new_munaajpi->__munaajpi_base_w_size=_munaajpi_base_size;
     new_munaajpi->__munaajpi_w_base=malloc(new_munaajpi->__munaajpi_base_w_size*sizeof(__cwcn_type_t));
+    for(unsigned int idx=0x00;idx<_munaajpi_base_size;idx++){new_munaajpi->__munaajpi_w_base[idx]=0x00;}
     /* tsinuu */
-    unsigned int mjpi_total_layers=0x05;
+    unsigned int mjpi_total_layers=0x04;
     unsigned int mjpi_input_size=_munaajpi_base_size; // huge thing
     unsigned int mjpi_output_size=_munaajpi_state_size;
-    unsigned int mjpi_layers_sizes[0x05] = {mjpi_input_size,15,35,15,mjpi_output_size};
+    unsigned int mjpi_layers_sizes[0x04] = {mjpi_input_size,32,16,mjpi_output_size};
     #ifndef DEBUG_LINEAR_EXPERIMENT
-    __list_activations_t mjpi_activations_iho[0x05] = {LINEAR, SIGMOID, SIGMOID, SIGMOID, SIGNEDSIGMOID};
+    __list_activations_t mjpi_activations_iho[0x04] = {LINEAR, SIGNEDSIGMOID, SIGNEDSIGMOID,SIGNEDSIGMOID};
     #else
     __list_activations_t mjpi_activations_iho[0x05] = {LINEAR, LINEAR, SIGMOID, SIGMOID, SIGNEDSIGMOID};
     #endif
@@ -30,23 +31,21 @@ __munaajpi_t *munaajpi_fabric(\
     }
     c_attribute_tsinuu->__is_symetric=___CWCN_TRUE; // meaning fully conected normal Network
     c_attribute_tsinuu->__alpha=0.0; // alpha assert negative, is a mesure for resisting change; is if you kguht the friction of the learning; required to create new tsinuu
-    c_attribute_tsinuu->__eta=1; // eta is the error impulse, required to create new tsinuu
+    c_attribute_tsinuu->__eta=1.0; // eta is the error impulse, required to create new tsinuu
     c_attribute_tsinuu->__omega=0.1; // required to create new tsinuu
     c_attribute_tsinuu->__wapaajco_potency=1.0; // the potency of the wapaajco
     c_attribute_tsinuu->__omega_stiffess=1.0; // #FIXME not in use
     c_attribute_tsinuu->__weight_limits=malloc(sizeof(__limits_t));
-    c_attribute_tsinuu->__weight_limits->__max=__cwcn_infinite;
-    c_attribute_tsinuu->__weight_limits->__min=-__cwcn_infinite;
+    c_attribute_tsinuu->__weight_limits->__max=__MAX_TSINUU_HIPERPARAMETER__;
+    c_attribute_tsinuu->__weight_limits->__min=-__MAX_TSINUU_HIPERPARAMETER__;
     c_attribute_tsinuu->__bias_limits=malloc(sizeof(__limits_t));
-    c_attribute_tsinuu->__bias_limits->__max=__cwcn_infinite;
-    c_attribute_tsinuu->__bias_limits->__min=-__cwcn_infinite;
+    c_attribute_tsinuu->__bias_limits->__max=__MAX_TSINUU_HIPERPARAMETER__;
+    c_attribute_tsinuu->__bias_limits->__min=-__MAX_TSINUU_HIPERPARAMETER__;
     /* fabric */
     new_munaajpi->__munaajpi_tsinuu=tsinuu_fabric(c_attribute_tsinuu);
 
     new_munaajpi->__munaajpi_tsinuu->__attributes->__wapaajco_potency=_munaajpi_waapajco_potency;
 
-    // tsinuu_initialize_weights_zero(new_munaajpi->__munaajpi_tsinuu);
-    // tsinuu_initialize_bias_zero(new_munaajpi->__munaajpi_tsinuu);
     #ifndef DEBUG_LINEAR_EXPERIMENT
     tsinuu_initialize_weights_random(new_munaajpi->__munaajpi_tsinuu, 0.5, -0.5);
     tsinuu_initialize_bias_random(new_munaajpi->__munaajpi_tsinuu, 0.5, -0.5);
@@ -54,6 +53,8 @@ __munaajpi_t *munaajpi_fabric(\
     tsinuu_initialize_weights_fixed(new_munaajpi->__munaajpi_tsinuu,1.0);
     tsinuu_initialize_bias_fixed(new_munaajpi->__munaajpi_tsinuu,1.0);
     #endif
+    // tsinuu_initialize_weights_zero(new_munaajpi->__munaajpi_tsinuu);
+    tsinuu_initialize_bias_zero(new_munaajpi->__munaajpi_tsinuu);
     set_all_nodebooleanpardon_parametric(new_munaajpi->__munaajpi_tsinuu, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00);
     pardon_inputoutput_bias(new_munaajpi->__munaajpi_tsinuu); // #FIXME check if needed of enabled
     set_all_linebooleanpardon_parametric(new_munaajpi->__munaajpi_tsinuu, 0x00, 0x00);
@@ -188,22 +189,7 @@ void read_munaajpi_w_base(__wikimyei_t *_wikimyei){
 /*
 
 */
-void imibajcho_munaajpi_cajtucu_transformation(__wikimyei_t *_wikimyei){
-    // #FIXME, enum class tsane
-    // tsane_state[0] == call
-    // tsane_state[1] == put
-    assert(_wikimyei->__tsane->__tsane_size==0x02);
-    __cwcn_type_t ims_aux=0x00;
-    ims_aux+=glti(_wikimyei)->__imibajcho_munaajpi_state[0x00]*((__cwcn_type_t)+1.0)*glti(_wikimyei)->__tsane_state[0x00];
-    ims_aux+=glti(_wikimyei)->__imibajcho_munaajpi_state[0x00]*((__cwcn_type_t)-1.0)*glti(_wikimyei)->__tsane_state[0x01];
-    glti(_wikimyei)->__imibajcho_munaajpi_state[0x00]=ims_aux;
-    // #FIXME, try the experiment to normalize after ims
-    #if defined(WIKIMYEI_DEBUG) || defined(MUNJAAPI_DEBUG)
-        fprintf(stdout,"%s>> > load_index: [%d] ... (result of) imibajcho munaajpi cajtucu transformation: %f%s\n",COLOR_MUNAAJPI,_wikimyei->__load_index,\
-            glti(_wikimyei)->__imibajcho_munaajpi_state[0x00],\
-            COLOR_REGULAR);
-    #endif
-}
+
 /*
 
 */
@@ -212,17 +198,17 @@ void imibajcho_munaajpi_cajtucu_transformation(__wikimyei_t *_wikimyei){
 //         glti(_wikimyei)->__nonuwaabo_alliu_state[m_idx]+=g...etnext_alliu(_wikimyei->__alliu)[m_idx]/_wikimyei->__horizon_munaajpi;
 //     }
 // }
-void compute_imibajcho_munaajpi(__wikimyei_t *_wikimyei){ // J
+void compute_imibajcho_munaajpi(__wikimyei_t *_wikimyei){ // J, meaning the state difference
     // Assumes __nonuwaabo_alliu_state is ready
-    assert(_wikimyei->__flags->__nonuwaabo_alliu_done); 
+    assert(_wikimyei->__flags->__nonuwaabo_alliu_done);
     glti(_wikimyei)->__imibajcho_munaajpi_state[0x00]=0x00; // is this the problem?
     for(unsigned int m_idx=0x00;m_idx<_wikimyei->__alliu->__source_size;m_idx++){
         glti(_wikimyei)->__imibajcho_munaajpi_state[0x00]+=\
         glti(_wikimyei)->__nonuwaabo_alliu_state[m_idx]-\
         glti(_wikimyei)->__alliu_state[m_idx];
-        glti(_wikimyei)->__imibajcho_munaajpi_state[0x00]/=\
-        (__cwcn_type_t)_wikimyei->__alliu->__source_size;
     }
+    glti(_wikimyei)->__imibajcho_munaajpi_state[0x00]/=\
+    (__cwcn_type_t)_wikimyei->__alliu->__source_size;
     #ifdef WIKIMYEI_DEBUG
     fprintf(stdout,"%s>> > load_index: [%d] ... request to compute_imibajcho_munaajpi%s\n",COLOR_MUNAAJPI,_wikimyei->__load_index,COLOR_REGULAR);
     #endif
@@ -238,7 +224,6 @@ void compute_imibajcho_munaajpi(__wikimyei_t *_wikimyei){ // J
     }
     fprintf(stdout," ]%s\n",COLOR_REGULAR);
     #endif
-    glti(_wikimyei)->__pending_munaajpi=___CWCN_FALSE; // means not lacking compute_imibajcho
     #ifdef MUNJAAPI_DEBUG
         printf(">> > .g. nonuwaabo alliu state:\t[");
         for(unsigned int m_idx=0x00;m_idx<_wikimyei->__alliu->__source_size;m_idx++){
@@ -247,6 +232,54 @@ void compute_imibajcho_munaajpi(__wikimyei_t *_wikimyei){ // J
         printf(" ]\n");
     #endif
 }
+void imibajcho_munaajpi_cajtucu_transformation(__wikimyei_t *_wikimyei){
+    // #FIXME, enum class tsane
+    // tsane_state[0] == call
+    // tsane_state[1] == put
+    assert(_wikimyei->__tsane->__tsane_size==0x02);
+    __cwcn_type_t tsn_aux=glti(_wikimyei)->__tsane_state[0x00]-glti(_wikimyei)->__tsane_state[0x01];
+    __cwcn_type_t ims_aux=5.0*glti(_wikimyei)->__imibajcho_munaajpi_state[0x00];
+    // ims_aux=nat_signedsigmoid_direct(10*glti(_wikimyei)->__imibajcho_munaajpi_state[0x00]);
+    /*
+        Calculated as the distance of a point to a line (vlx), (line of slope 1 and intercept in zero)
+    */
+    __cwcn_type_t a=1;
+    __cwcn_type_t b=-1;
+    __cwcn_type_t c=0;
+    __cwcn_type_t vlx_aux=fabs(a*tsn_aux+b*ims_aux+c)/sqrt(pow(a,2)+pow(b,2));
+    /*
+        Calculate the point on the line
+    */
+    __cwcn_type_t xlx=(b*(b*tsn_aux-a*ims_aux)-a*c)/(pow(a,2)+pow(b,2));
+    __cwcn_type_t ylx=(a*(-b*tsn_aux+a*ims_aux)-b*c)/(pow(a,2)+pow(b,2));
+    /*
+        Calculate the distance to the origin
+    */
+   __cwcn_type_t dlx_aux=sqrt(pow(xlx,2)+pow(ylx,2));
+    /*
+        This distance is used to compute the growth slope on a cuadratic hibercolic secant space
+    */
+    dlx_aux = 12.0-dlx_aux*9.0;
+    // vlx_aux=8.0/pow(exp(-3*vlx_aux)+exp(3*vlx_aux),3);
+    vlx_aux=8.0/pow(exp(-dlx_aux*vlx_aux)+exp(dlx_aux*vlx_aux),3);
+    /*
+        Scale and move
+    */
+    glti(_wikimyei)->__imibajcho_munaajpi_state[0x00]=__IMIBAJCHO_MUNAAJPI_POTENCY__*(2.0*vlx_aux-1.0);
+
+    printf("waka: tsn: %f, ims: %f, vlx: %f, final: %f\n",tsn_aux,ims_aux,vlx_aux,glti(_wikimyei)->__imibajcho_munaajpi_state[0x00]);
+    // glti(_wikimyei)->__imibajcho_munaajpi_state[0x00]=max(glti(_wikimyei)->__imibajcho_munaajpi_state[0x00],-1.0);
+    // glti(_wikimyei)->__imibajcho_munaajpi_state[0x00]=min(glti(_wikimyei)->__imibajcho_munaajpi_state[0x00],1.0);
+
+    glti(_wikimyei)->__pending_munaajpi=___CWCN_FALSE; // means not lacking compute_imibajcho
+    // #FIXME, try the experiment to normalize after ims
+    #if defined(WIKIMYEI_DEBUG) || defined(MUNJAAPI_DEBUG)
+        fprintf(stdout,"%s>> > load_index: [%d] ... (result of) imibajcho munaajpi cajtucu transformation: %f%s\n",COLOR_MUNAAJPI,_wikimyei->__load_index,\
+            glti(_wikimyei)->__imibajcho_munaajpi_state[0x00],\
+            COLOR_REGULAR);
+    #endif
+}
+
 ___cwcn_bool_t are_munaajpi_pending(__wikimyei_t *_wikimyei){
     
     int start_index=_wikimyei->__load_index;

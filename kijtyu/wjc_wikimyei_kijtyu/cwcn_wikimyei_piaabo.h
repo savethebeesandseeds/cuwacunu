@@ -71,22 +71,27 @@ typedef __cwcn_type_t (*__function_pointer_t)(__cwcn_type_t);
 
 // #define DEFINED_RANDOM_JK // #FIXME do not activate, terrible!
 #define DEFINED_LOAD_SEQ_JK
+#define UWAABO_EXPLORATION_RANDOM
 
 #define __JK_SIZE__ (unsigned int) 0x01
-#define __EPOCHS__ (unsigned int) 0x03
+#define __EPOCHS__ (unsigned int) 0x05
 #define __SIZE_OF_LOAD__ (int) 100
 
 #define __GAE_GAMMA__ (__cwcn_type_t) 0.99
 #define __GAE_LAMBDA__ (__cwcn_type_t) 0.95
 #define __CLIP_PARAM__ (__cwcn_type_t) 0.2
-#define __UWAABO_BETA__ (__cwcn_type_t) 0.01
-#define __MUNAAJPI_BETA__ (__cwcn_type_t) 0.01
-#define __ENTROPY_BETA__ (__cwcn_type_t) 0.002 // #FIXME findme
-#define __UWAABO_WAAPAJCO_POTENCY__ (__cwcn_type_t) 10.0//1.0
-#define __MUNAAJPI_WAAPAJCO_POTENCY__ (__cwcn_type_t) 1.0 //0.25
+#define __UWAABO_BETA__ (__cwcn_type_t) 0.005
+#define __MUNAAJPI_BETA__ (__cwcn_type_t) 0.0005
+#define __ENTROPY_BETA__ (__cwcn_type_t) 0.001 // #FIXME findme
+
+#define __UWAABO_WAAPAJCO_POTENCY__ (__cwcn_type_t) 1.0
+#define __MUNAAJPI_WAAPAJCO_POTENCY__ (__cwcn_type_t) 1.0
+#define __IMIBAJCHO_MUNAAJPI_POTENCY__ (__cwcn_type_t) 1.0
+
+#define __MAX_TSINUU_HIPERPARAMETER__ (__cwcn_type_t) 10.0
 
 #define __TAKE_TSANE__ (___cwcn_bool_t) ___CWCN_FALSE
-#define __TSANE_SIZE__ (unsigned int) 0x02 
+#define __TSANE_SIZE__ (unsigned int) 0x02 // not configurable! do not change
 #define __ALLIU_SOURCE_SIZE__ (unsigned int) 0x01 // vector dimension size
 
 #define __NUM_BASE_DUURUVA__ (unsigned int) 0x11 // not configurable! == 0x11
@@ -97,6 +102,7 @@ typedef __cwcn_type_t (*__function_pointer_t)(__cwcn_type_t);
 // #define __ALLIU_SOURCE__ (__alliu_source_t) negINDEX_as_alliu;
 // #define __ALLIU_SOURCE__ (__alliu_source_t) INDEX_as_alliu;
 #define __ALLIU_SOURCE__ (__alliu_source_t) SINE_as_alliu;
+// #define __ALLIU_SOURCE__ (__alliu_source_t) UNIT_as_alliu;
 #else
 #define __ALLIU_SOURCE__ (__alliu_source_t) UNIT_as_alliu;
 #endif
@@ -104,9 +110,9 @@ typedef __cwcn_type_t (*__function_pointer_t)(__cwcn_type_t);
 #define _ENTROPY_GAMMA_RESOLUTION_ (unsigned int) 1024
 
 // #define _DUURUVA_NORM_STAND_JKIMYEI_UWAABO_
-#define _DUURUVA_NORM_STAND_JKIMYEI_UWAABO_DUURUVA_
+// #define _DUURUVA_NORM_STAND_JKIMYEI_UWAABO_DUURUVA_
 // #define _DUURUVA_NORM_STAND_ALLIU_ // do not define
-#define _DUURUVA_NORM_STAND_ALLIU_DUURUVA_
+// #define _DUURUVA_NORM_STAND_ALLIU_DUURUVA_
 // #define __NORM_STAND_DUURUVA_ADVENTAGE__ // #FIXME acivate 
 /* set the expenses * expend is to compute, "to expend the computing effort"  */
 
@@ -152,13 +158,13 @@ BUILD ON : fixme
         [0x7] : __IN_MUNAAJPI_W_BASE_IMIBAJCHO_MUNAAJPI_IS_INCLUDED__
 */
 #if defined(__EXPEND_ALLIU_DUURUVA__) && defined(__PROPAGATE_ALLIU_DUURUVA__)
-#define __IN_MUNAAJPI_W_BASE_ALLIU_DUURUVA_IS_INCLUDED__
+// #define __IN_MUNAAJPI_W_BASE_ALLIU_DUURUVA_IS_INCLUDED__
 #endif
 #define __IN_MUNAAJPI_W_BASE_ALLIU_IS_INCLUDED__
-#define __IN_MUNAAJPI_W_BASE_nonuwaaboALLIU_IS_INCLUDED__
+// #define __IN_MUNAAJPI_W_BASE_nonuwaaboALLIU_IS_INCLUDED__
 #define __IN_MUNAAJPI_W_BASE_UAWAABO_IS_INCLUDED__
 #define __IN_MUNAAJPI_W_BASE_TASNE_IS_INCLUDED__
-#define __IN_MUNAAJPI_W_BASE_ENTROPY_IS_INCLUDED__
+// #define __IN_MUNAAJPI_W_BASE_ENTROPY_IS_INCLUDED__
 #define __IN_MUNAAJPI_W_BASE_IMIBAJCHO_MUNAAJPI_IS_INCLUDED__
 /* set the masks for the trayectory */
 /*
@@ -183,8 +189,8 @@ BUILD ON : fixme
         0x1, \
         0x0, \
         0x0, \
-        0x1, \
-        0x1, \
+        0x0, \
+        0x0, \
         0x0, \
         0x0, \
         0x0, \

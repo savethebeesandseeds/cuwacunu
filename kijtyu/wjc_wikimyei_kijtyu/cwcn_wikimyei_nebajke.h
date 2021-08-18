@@ -31,10 +31,12 @@ void ___tsane_dehash(__wikimyei_t *_wikimyei);
 void ___jkimyei_uwaabo_munaajpi_hash(__wikimyei_t *_wikimyei);
 void ___jkimyei_uwaabo_munaajpi_duuruva_hash(__wikimyei_t *_wikimyei);
 void ___imibajcho_munaajpi_hash(__wikimyei_t *_wikimyei);
+void ___uwaabo_exploration_hash(__wikimyei_t *_wikimyei);
 
 void wikimyei_live_one(__wikimyei_t *_wikimyei);
 void wikimyei_live_load(__wikimyei_t *_wikimyei, int _size_of_load);
 void wikimyei_relive_alliu_one(__wikimyei_t *_wikimyei); // does not request next alliu
 void wikimyei_relive_alliu_load(__wikimyei_t *_wikimyei); // does not request alliu
-
+void wikimyei_live_uwaabo_exploration_one(__wikimyei_t *_wikimyei);
+void wikimyei_live_uwaabo_exploration_load(__wikimyei_t *_wikimyei, int _size_of_load);
 #endif

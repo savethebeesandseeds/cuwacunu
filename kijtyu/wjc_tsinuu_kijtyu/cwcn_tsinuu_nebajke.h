@@ -36,9 +36,10 @@
     // void dist_node_form_kemu(__tsinuu_t *_tsinuu, __node_kemu_t *_n_kemu, __cwcn_type_t _value);
     void dist_node(__tsinuu_t *_tsinuu, __node_tsinuu_t *_node);
 
-    void tsinuu_inverse_uwaabo_full_parametric(__tsinuu_t *_tsinuu);
-    void tsinuu_direct_uwaabo_full_parametric(__tsinuu_t *_tsinuu);
-    void tsinuu_direct_uwaabo_fast(__tsinuu_t *_tsinuu);
+    void tsinuu_inverse_full_parametric(__tsinuu_t *_tsinuu);
+    void tsinuu_inverse_fast(__tsinuu_t *_tsinuu);
+    void tsinuu_direct_full_parametric(__tsinuu_t *_tsinuu);
+    void tsinuu_direct_fast(__tsinuu_t *_tsinuu);
     
     void jkimyei_tsinuu_byinverseNABLA(__tsinuu_t *_tsinuu);
     void jkimyei_tsinuu_bydirectNABLA(__tsinuu_t *_tsinuu);

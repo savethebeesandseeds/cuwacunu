@@ -27,19 +27,19 @@
     UTILS
 */
 unsigned int total_layers(__tsinuu_t *_tsinuu){
-    #ifdef TSINUU_DEBUG
+    #ifdef TSINUU_DEBUG_v2
         fprintf(stdout, ">>>> request <total_layers> suspect element __NUM_TOTAL_LAYERS %d \n",_tsinuu->__attributes->__NUM_TOTAL_LAYERS);
     #endif
     return _tsinuu->__attributes->__NUM_TOTAL_LAYERS;
 }
 unsigned int total_nodes(__tsinuu_t *_tsinuu){
-    #ifdef TSINUU_DEBUG
+    #ifdef TSINUU_DEBUG_v2
         fprintf(stdout, ">>>> request <total_nodes> suspect element __NUM_TOTAL_NODES %d \n",_tsinuu->__attributes->__NUM_TOTAL_NODES);
     #endif
     return _tsinuu->__attributes->__NUM_TOTAL_NODES;
 }
 unsigned int total_lines(__tsinuu_t *_tsinuu){
-    #ifdef TSINUU_DEBUG
+    #ifdef TSINUU_DEBUG_v2
         fprintf(stdout, ">>>> request <total_lines> suspect element __NUM_TOTAL_LINES %d \n",_tsinuu->__attributes->__NUM_TOTAL_LINES);
     #endif
     return _tsinuu->__attributes->__NUM_TOTAL_LINES;
@@ -66,37 +66,37 @@ __layer_coords_t *n_coord_to_l_coord(__node_coords_t *_n_coord){
     Reverse access
 */
 __layer_stack_coord_t *layer_index_to_layer_stack_coord(__tsinuu_t *_tsinuu, unsigned int _l_s_index){
-    #ifdef TSINUU_DEBUG
+    #ifdef TSINUU_DEBUG_v2
         fprintf(stdout, ">>>> request <layer_index_to_layer_stack_coord>.\n");
     #endif
     return _tsinuu->__layers[_l_s_index]->__l_coord->__l_s_coord;
 }
 __layer_coords_t *layer_index_to_layer_coord(__tsinuu_t *_tsinuu, unsigned int _l_s_index){
-    #ifdef TSINUU_DEBUG
+    #ifdef TSINUU_DEBUG_v2
         fprintf(stdout, ">>>> request <layer_index_to_layer_coord>.\n");
     #endif
     return _tsinuu->__layers[_l_s_index]->__l_coord;
 }
 __line_stack_coord_t *line_index_to_line_stack_coord(__tsinuu_t *_tsinuu, unsigned int _ln_s_index){
-    #ifdef TSINUU_DEBUG
+    #ifdef TSINUU_DEBUG_v2
         fprintf(stdout, ">>>> request <line_index_to_line_stack_coord>.\n");
     #endif
     return _tsinuu->__lines[_ln_s_index]->__ln_coord->__ln_s_coord;
 }
 __line_coords_t *line_index_to_line_coord(__tsinuu_t *_tsinuu, unsigned int _ln_s_index){
-    #ifdef TSINUU_DEBUG
+    #ifdef TSINUU_DEBUG_v2
         fprintf(stdout, ">>>> request line_index_to_line_coord.\n");
     #endif
     return _tsinuu->__lines[_ln_s_index]->__ln_coord;
 }
 __node_stack_coord_t *node_index_to_node_stack_coord(__tsinuu_t *_tsinuu, unsigned int _l_s_index, unsigned int _n_s_index){
-    #ifdef TSINUU_DEBUG
+    #ifdef TSINUU_DEBUG_v2
         fprintf(stdout, ">>>> request <node_index_to_node_stack_coord>.\n");
     #endif
     return _tsinuu->__layers[_l_s_index]->__nodes[_n_s_index]->__n_coord->__n_s_coord;
 }
 __node_coords_t *node_index_to_node_coord(__tsinuu_t *_tsinuu, unsigned int _l_s_index, unsigned int _n_s_index){
-    #ifdef TSINUU_DEBUG
+    #ifdef TSINUU_DEBUG_v2
         fprintf(stdout, ">>>> request <node_index_to_node_coord>.\n");
     #endif
     return _tsinuu->__layers[_l_s_index]->__nodes[_n_s_index]->__n_coord;
@@ -114,7 +114,7 @@ ___cwcn_bool_t is_layer_index_output(__tsinuu_t *_tsinuu, unsigned int __l_index
 
 */
 unsigned int layer_size_from_layer_coord(__tsinuu_t *_tsinuu, __layer_coords_t *_l_coord){
-    #ifdef TSINUU_DEBUG
+    #ifdef TSINUU_DEBUG_v2
         fprintf(stdout, ">>>> request <layer_size_from_layer_coord> suspect element _layer_index: %d has __node_count: %d \n", l_coord_to_l_index(_l_coord), _tsinuu->__layers[l_coord_to_l_index(_l_coord)]->__node_count);
         if(l_coord_to_l_index(_l_coord)>=total_layers(_tsinuu)){
             fprintf(stderr, "ERROR: idx__line exceeds maxima, try NUM_LAYERS-0x01, for last layer.");
@@ -124,7 +124,7 @@ unsigned int layer_size_from_layer_coord(__tsinuu_t *_tsinuu, __layer_coords_t *
     return _tsinuu->__layers[l_coord_to_l_index(_l_coord)]->__node_count;
 }
 unsigned int layer_size_from_layer_stack_index(__tsinuu_t *_tsinuu, unsigned int _l_s_index){
-    #ifdef TSINUU_DEBUG
+    #ifdef TSINUU_DEBUG_v2
         fprintf(stdout, ">>>> request <layer_size_from_layer_stack_index>\n");
         fprintf(stdout, ">>>> request <layer_size_from_layer_stack_index> suspect element _layer_index: %d has __node_count: %d \n", _l_s_index, _tsinuu->__layers[_l_s_index]->__node_count);
         if(_l_s_index>=total_layers(_tsinuu)){
@@ -135,7 +135,7 @@ unsigned int layer_size_from_layer_stack_index(__tsinuu_t *_tsinuu, unsigned int
     return _tsinuu->__layers[_l_s_index]->__node_count;
 }
 unsigned int input_size(__tsinuu_t *_tsinuu){
-    #ifdef TSINUU_DEBUG
+    #ifdef TSINUU_DEBUG_v2
         fprintf(stdout, ">>>> request <input_size> suspect element layer_id: %d\n",0x00);
         if(!is_layer_index_input(_tsinuu, 0x00)){
             fprintf(stdout, ">>>> ERROR layer_index %d expected to be class input.\n",0x00);
@@ -144,7 +144,7 @@ unsigned int input_size(__tsinuu_t *_tsinuu){
     return _tsinuu->__layers[0x00]->__node_count;
 }
 unsigned int output_size(__tsinuu_t *_tsinuu){
-    #ifdef TSINUU_DEBUG
+    #ifdef TSINUU_DEBUG_v2
         fprintf(stdout, ">>>> request <output_size> suspect element layer_id: %d \n", output_layer_index(_tsinuu));
         if(!is_layer_index_output(_tsinuu, output_layer_index(_tsinuu))){
             fprintf(stdout, ">>>> ERROR layer_index %d expected to be class output.\n", output_layer_index(_tsinuu));
@@ -180,25 +180,25 @@ unsigned int count_total_lines(__tsinuu_t *_tsinuu){
 
 */
 __cartecian_tensor_t *get_node_xyz(__tsinuu_t *_tsinuu, __node_coords_t *_n_coord){
-    #ifdef TSINUU_DEBUG
+    #ifdef TSINUU_DEBUG_v2
         fprintf(stdout, ">>>> request <get_node_xyz>\n");
     #endif
     return _tsinuu->__layers[n_coord_to_l_index(_n_coord)]->__nodes[n_coord_to_n_index(_n_coord)]->__n_coord->__xyz_coord;
 }
 __cwcn_type_t get_node_x(__tsinuu_t *_tsinuu, __node_coords_t *_n_coord){
-    #ifdef TSINUU_DEBUG
+    #ifdef TSINUU_DEBUG_v2
         fprintf(stdout, ">>>> request <get_node_x>\n");
     #endif
     return _tsinuu->__layers[n_coord_to_l_index(_n_coord)]->__nodes[n_coord_to_n_index(_n_coord)]->__n_coord->__xyz_coord->__coord_x;
 }
 __cwcn_type_t get_node_y(__tsinuu_t *_tsinuu, __node_coords_t *_n_coord){
-    #ifdef TSINUU_DEBUG
+    #ifdef TSINUU_DEBUG_v2
         fprintf(stdout, ">>>> request <get_node_y>\n");
     #endif
     return _tsinuu->__layers[n_coord_to_l_index(_n_coord)]->__nodes[n_coord_to_n_index(_n_coord)]->__n_coord->__xyz_coord->__coord_y;
 }
 __cwcn_type_t get_node_z(__tsinuu_t *_tsinuu, __node_coords_t *_n_coord){
-    #ifdef TSINUU_DEBUG
+    #ifdef TSINUU_DEBUG_v2
         fprintf(stdout, ">>>> request <get_node_z>\n");
     #endif
     return _tsinuu->__layers[n_coord_to_l_index(_n_coord)]->__nodes[n_coord_to_n_index(_n_coord)]->__n_coord->__xyz_coord->__coord_z;
@@ -208,25 +208,25 @@ __cwcn_type_t get_node_z(__tsinuu_t *_tsinuu, __node_coords_t *_n_coord){
 
 
 __cartecian_tensor_t *get_line_xyz(__tsinuu_t *_tsinuu, __line_coords_t *_ln_coord){
-    #ifdef TSINUU_DEBUG
+    #ifdef TSINUU_DEBUG_v2
         fprintf(stdout, ">>>> request <get_line_xyz>\n");
     #endif
     return _tsinuu->__lines[ln_coord_to_ln_index(_ln_coord)]->__ln_coord->__xyz_coord;
 }
 __cwcn_type_t get_line_x(__tsinuu_t *_tsinuu, __line_coords_t *_ln_coord){
-    #ifdef TSINUU_DEBUG
+    #ifdef TSINUU_DEBUG_v2
         fprintf(stdout, ">>>> request <get_line_x>\n");
     #endif
     return _tsinuu->__lines[ln_coord_to_ln_index(_ln_coord)]->__ln_coord->__xyz_coord->__coord_x;
 }
 __cwcn_type_t get_line_y(__tsinuu_t *_tsinuu, __line_coords_t *_ln_coord){
-    #ifdef TSINUU_DEBUG
+    #ifdef TSINUU_DEBUG_v2
         fprintf(stdout, ">>>> request <get_line_y>\n");
     #endif
     return _tsinuu->__lines[ln_coord_to_ln_index(_ln_coord)]->__ln_coord->__xyz_coord->__coord_y;
 }
 __cwcn_type_t get_line_z(__tsinuu_t *_tsinuu, __line_coords_t *_ln_coord){
-    #ifdef TSINUU_DEBUG
+    #ifdef TSINUU_DEBUG_v2
         fprintf(stdout, ">>>> request <get_line_z>\n");
     #endif
     return _tsinuu->__lines[ln_coord_to_ln_index(_ln_coord)]->__ln_coord->__xyz_coord->__coord_z;
@@ -235,7 +235,7 @@ __cwcn_type_t get_line_z(__tsinuu_t *_tsinuu, __line_coords_t *_ln_coord){
 
 */
 __node_tsinuu_t *node(__tsinuu_t *_tsinuu, __node_coords_t *_n_coord){
-    #ifdef TSINUU_DEBUG
+    #ifdef TSINUU_DEBUG_v2
         fprintf(stdout, ">>>> request <node> \n");
         if(n_coord_to_l_index(_n_coord) >= total_layers(_tsinuu)){
             fprintf(stderr, ">>>> ERROR: tsinuu <node> request layer index exceeds tsinuu limits.");
@@ -249,19 +249,19 @@ __node_tsinuu_t *node(__tsinuu_t *_tsinuu, __node_coords_t *_n_coord){
     return _tsinuu->__layers[n_coord_to_l_index(_n_coord)]->__nodes[n_coord_to_n_index(_n_coord)];
 }
 __node_kemu_t *node_kemu(__tsinuu_t *_tsinuu, __node_coords_t *_n_coord){
-    #ifdef TSINUU_DEBUG
+    #ifdef TSINUU_DEBUG_v2
         fprintf(stdout, ">>>> request <node_kemu>\n");
     #endif
     return node(_tsinuu, _n_coord)->__n_kemu;
 }
 __cwcn_type_t node_bias(__tsinuu_t *_tsinuu, __node_coords_t *_n_coord){
-    #ifdef TSINUU_DEBUG
+    #ifdef TSINUU_DEBUG_v2
         fprintf(stdout, ">>>> request <node bias>\n");
     #endif
     return node_kemu(_tsinuu, _n_coord)->__bias;
 }
 __node_coords_t *node_coords_from_xyz(__tsinuu_t *_tsinuu, __cartecian_tensor_t *_xyz){
-    #ifdef TSINUU_DEBUG
+    #ifdef TSINUU_DEBUG_v2
         fprintf(stdout, ">>>> request <node_coords_from_xyz>, x:%f, y:%f, z:%f\n", _xyz->__coord_x, _xyz->__coord_y, _xyz->__coord_z);
         fprintf(stdout, ">>>> WARNING <node_coords_from_xyz> is slow\n");
         fprintf(stdout, ">>>> WARNING <node_coords_from_xyz> might be wrong\n");
@@ -282,33 +282,33 @@ __node_coords_t *node_coords_from_xyz(__tsinuu_t *_tsinuu, __cartecian_tensor_t 
     return ((void *)0x00);
 }
 __line_tsinuu_t *line(__tsinuu_t *_tsinuu, __line_coords_t *_ln_coord){
-    #ifdef TSINUU_DEBUG
+    #ifdef TSINUU_DEBUG_v2
         fprintf(stdout, ">>>> request <line> \n");
         #ifdef SYMETRIC_TSINUU
             if(n_coord_to_l_index(_ln_coord->__from_node) - n_coord_to_l_index(_ln_coord->__to_node) + 0.01 == 0x00){
-                fprintf(stderr, "ERROR: tsinuu <line> unreachable, SYMETRIC_TSINUU requires (from_layer == to_layer - 0x01)");
+                fprintf(stderr, "ERROR: tsinuu <line> unreachable, SYMETRIC_TSINUU requires (from_layer == to_layer - 0x01)\n");
                 assert(0x00);
             } else if(n_coord_to_l_index(_ln_coord->__from_node) >= output_layer_index(_tsinuu)){
-                fprintf(stdout, "WARNING: tsinuu <line> from_node line index exceeds layer maxima.");
+                fprintf(stdout, "WARNING: tsinuu <line> from_node line index exceeds layer maxima.\n");
             } else if(n_coord_to_n_index(_ln_coord->__from_node) > layer_size_from_layer_coord(_tsinuu, _ln_coord->__from_node->__l_coord)){
-                fprintf(stdout, "WARNING: tsinuu <line> from_node node index exceeds layer node maxima.");
+                fprintf(stdout, "WARNING: tsinuu <line> from_node node index exceeds layer node maxima.\n");
             } else if(n_coord_to_l_index(_ln_coord->__to_node) >= total_layers(_tsinuu)){
-                fprintf(stdout, "WARNING: tsinuu <line> to_node line index exceeds layer maxima.");
+                fprintf(stdout, "WARNING: tsinuu <line> to_node line index exceeds layer maxima.\n");
             } else if(n_coord_to_n_index(_ln_coord->__to_node) >= layer_size_from_layer_coord(_tsinuu, _ln_coord->__to_node->__l_coord)){
-                fprintf(stdout, "WARNING: tsinuu <line> to_node node index exceeds layer node maxima.");
+                fprintf(stdout, "WARNING: tsinuu <line> to_node node index exceeds layer node maxima.\n");
             }
         #endif
     #endif
     return _tsinuu->__lines[ln_coord_to_ln_index(_ln_coord)];
 }
 __line_kemu_t *line_kemu(__tsinuu_t *_tsinuu, __line_coords_t *_ln_coord){
-    #ifdef TSINUU_DEBUG
+    #ifdef TSINUU_DEBUG_v2
         fprintf(stdout, ">>>> request <line_kemu>\n");
     #endif
     return line(_tsinuu, _ln_coord)->__ln_kemu;
 }
 __cwcn_type_t line_weight(__tsinuu_t *_tsinuu, __line_coords_t *_ln_coord){
-    #ifdef TSINUU_DEBUG
+    #ifdef TSINUU_DEBUG_v2
         fprintf(stdout, ">>>> request <line_weight>\n");
     #endif
     return line_kemu(_tsinuu, _ln_coord)->__weight;
@@ -317,8 +317,8 @@ __cwcn_type_t line_weight(__tsinuu_t *_tsinuu, __line_coords_t *_ln_coord){
 
 */
 void set_layerbooleanpardon_parametric(__tsinuu_t *_tsinuu, __layer_coords_t *_l_coord){
-    #ifdef TSINUU_DEBUG
-        fprintf(stdout, ">>>> WARNING: there are no layerbooleanparametric");
+    #ifdef TSINUU_DEBUG_v2
+        fprintf(stdout, ">>>> WARNING: there are no layerbooleanparametric\n");
     #endif
 }
 void set_linebooleanpardon_parametric(
@@ -326,8 +326,8 @@ void set_linebooleanpardon_parametric(
     __line_coords_t *_ln_coord, 
     ___cwcn_bool_t _pardon_grad,
     ___cwcn_bool_t _pardon_weight){
-    #ifdef TSINUU_DEBUG
-        fprintf(stdout, ">>>> request <set_linebooleanpardon_parametric>");
+    #ifdef TSINUU_DEBUG_v2
+        fprintf(stdout, ">>>> request <set_linebooleanpardon_parametric>\n");
     #endif
     line(_tsinuu, _ln_coord)->__lnbp->__pardon_grad=_pardon_grad;
     line(_tsinuu, _ln_coord)->__lnbp->__pardon_weight=_pardon_weight;
@@ -343,8 +343,8 @@ void set_nodebooleanpardon_parametric(
     ___cwcn_bool_t _pardon_dist,
     ___cwcn_bool_t _pardon_count,
     ___cwcn_bool_t _pardon_error){ // set 00x0 to deny pardon, 0x01 to set pardon
-    #ifdef TSINUU_DEBUG
-        fprintf(stdout, ">>>> request <set_nodebooleanpardon_parametric>");
+    #ifdef TSINUU_DEBUG_v2
+        fprintf(stdout, ">>>> request <set_nodebooleanpardon_parametric>\n");
     #endif
     node(_tsinuu, _n_coord)->__nbp->__pardon_value=_pardon_value;
     node(_tsinuu, _n_coord)->__nbp->__pardon_grad=_pardon_grad;
@@ -360,8 +360,8 @@ void set_nodebooleanpardon_parametric(
 
 */
 void set_all_layerbooleanpardon_parametric(__tsinuu_t *_tsinuu){
-    #ifdef TSINUU_DEBUG
-        fprintf(stdout, ">>>> request <set_all_layerbooleanpardon_parametric>");
+    #ifdef TSINUU_DEBUG_v2
+        fprintf(stdout, ">>>> request <set_all_layerbooleanpardon_parametric>\n");
     #endif
     for(unsigned int idx_l=0x00;idx_l<total_layers(_tsinuu);idx_l++){
         set_layerbooleanpardon_parametric(_tsinuu, layer_index_to_layer_coord(_tsinuu, idx_l));
@@ -376,8 +376,8 @@ void set_all_nodebooleanpardon_parametric(__tsinuu_t *_tsinuu,
     ___cwcn_bool_t _pardon_dist,
     ___cwcn_bool_t _pardon_count,
     ___cwcn_bool_t _pardon_error){
-    #ifdef TSINUU_DEBUG
-        fprintf(stdout, ">>>> request <set_all_nodebooleanpardon_parametric>");
+    #ifdef TSINUU_DEBUG_v2
+        fprintf(stdout, ">>>> request <set_all_nodebooleanpardon_parametric>\n");
     #endif
     for(unsigned int idx_l=0x00;idx_l<total_layers(_tsinuu);idx_l++){
         for(unsigned int idx_n=0x00;idx_n<layer_size_from_layer_stack_index(_tsinuu, idx_l);idx_n++){
@@ -399,8 +399,8 @@ void set_all_nodebooleanpardon_parametric(__tsinuu_t *_tsinuu,
 void set_all_linebooleanpardon_parametric(__tsinuu_t *_tsinuu, 
         ___cwcn_bool_t _pardon_grad,
         ___cwcn_bool_t _pardon_weight){
-    #ifdef TSINUU_DEBUG
-        fprintf(stdout, ">>>> request <set_all_linebooleanpardon_parametric>");
+    #ifdef TSINUU_DEBUG_v2
+        fprintf(stdout, ">>>> request <set_all_linebooleanpardon_parametric>\n");
     #endif
     for(unsigned int idx_ln=0x00;idx_ln<total_lines(_tsinuu);idx_ln++){
         set_linebooleanpardon_parametric(_tsinuu, line_index_to_line_coord(_tsinuu, idx_ln), _pardon_grad,_pardon_weight);
@@ -410,22 +410,22 @@ void set_all_linebooleanpardon_parametric(__tsinuu_t *_tsinuu,
 
 */
 void set_node(__tsinuu_t *_tsinuu, __node_tsinuu_t *_node, __node_coords_t *_n_coord){
-    #ifdef TSINUU_DEBUG
+    #ifdef TSINUU_DEBUG_v2
         fprintf(stdout, ">>>> request <set_node> 4 suspects, 1 warning\n");
         fprintf(stdout, ">>>> WARNING: <set_node> might be wrong\n");
         fprintf(stdout, ">>>> suspect element value _ %f  (may) not be equal to _ %f\n", get_node_x(_tsinuu, _n_coord), _node->__n_coord->__xyz_coord->__coord_x);
     #endif
     *node(_tsinuu, _n_coord) = *_node;
     node(_tsinuu, _n_coord)->__nbp->__is_reset=___CWCN_FALSE;
-    #ifdef TSINUU_DEBUG
+    #ifdef TSINUU_DEBUG_v2
         fprintf(stdout, ">>>> suspect element value _ %f  (must) be equal to _ %f\n", get_node_x(_tsinuu, _n_coord), _node->__n_coord->__xyz_coord->__coord_x);
     #endif
 }
 void set_node_kemu(__tsinuu_t *_tsinuu, __node_kemu_t *_n_kemu,  __node_coords_t *_n_coord){
-    fprintf(stdout, "WARNING: <set_node_kemu> might be wrong");
+    fprintf(stdout, "WARNING: <set_node_kemu> might be wrong\n");
     *node_kemu(_tsinuu, _n_coord) = *_n_kemu;
     node(_tsinuu, _n_coord)->__nbp->__is_reset=___CWCN_FALSE;
-    #ifdef TSINUU_DEBUG
+    #ifdef TSINUU_DEBUG_v2
         fprintf(stdout, ">>>> request <set_node_kemu>\n");
         fprintf(stdout, ">>>> WARNING: <set_node_kemu> might be wrong\n");
         fprintf(stdout, ">>>> suspect element value _ %f  must be equal to _ %f\n", node_kemu(_tsinuu, _n_coord)->__value, _n_kemu->__value);
@@ -483,7 +483,7 @@ void reset_node_kemu(__node_tsinuu_t *_node){
         _node->__n_kemu->__error=0x00;
     }
     _node->__nbp->__is_reset = ___CWCN_TRUE;
-    #ifdef TSINUU_DEBUG
+    #ifdef TSINUU_DEBUG_v2
         fprintf(stdout, ">>>> request <reset_node_kemu>\n");
         fprintf(stdout, ">>>> suspect element value %f  must be zero\n",_node->__n_kemu->__value);
         fprintf(stdout, ">>>> suspect element value %f  must be zero\n",_node->__n_kemu->__value);
@@ -491,7 +491,7 @@ void reset_node_kemu(__node_tsinuu_t *_node){
 }
 
 void reset_all_nodes_value(__tsinuu_t *_tsinuu){
-    #ifdef TSINUU_DEBUG
+    #ifdef TSINUU_DEBUG_v2
         fprintf(stdout, ">>>> request <reset_all_nodes_value>\n");
     #endif
     for(unsigned int idx_l=0x00;idx_l<total_layers(_tsinuu);idx_l++){
@@ -501,7 +501,7 @@ void reset_all_nodes_value(__tsinuu_t *_tsinuu){
     }
 }
 void reset_all_noninputnodes_values(__tsinuu_t *_tsinuu){
-    #ifdef TSINUU_DEBUG
+    #ifdef TSINUU_DEBUG_v2
         fprintf(stdout, ">>>> request <reset_all_noninputnodes_values>\n");
     #endif
     __node_tsinuu_t *c_node;
@@ -515,7 +515,7 @@ void reset_all_noninputnodes_values(__tsinuu_t *_tsinuu){
     }
 }
 void reset_all_nonoutputnodes_values(__tsinuu_t *_tsinuu){
-    #ifdef TSINUU_DEBUG
+    #ifdef TSINUU_DEBUG_v2
         fprintf(stdout, ">>>> request <reset_all_nonoutputnodes_values>\n");
     #endif
     __node_tsinuu_t *c_node;
@@ -530,7 +530,7 @@ void reset_all_nonoutputnodes_values(__tsinuu_t *_tsinuu){
 }
 
 void reset_all_nodes_grad(__tsinuu_t *_tsinuu){
-    #ifdef TSINUU_DEBUG
+    #ifdef TSINUU_DEBUG_v2
         fprintf(stdout, ">>>> request <reset_all_nodes_grad>\n");
     #endif
     for(unsigned int idx_l=0x00;idx_l<total_layers(_tsinuu);idx_l++){
@@ -540,7 +540,7 @@ void reset_all_nodes_grad(__tsinuu_t *_tsinuu){
     }
 }
 void reset_all_lines_grad(__tsinuu_t *_tsinuu){
-    #ifdef TSINUU_DEBUG
+    #ifdef TSINUU_DEBUG_v2
         fprintf(stdout, ">>>> request <reset_all_lines_grad>\n");
     #endif
     for(unsigned int idx_ln=0x00;idx_ln<total_lines(_tsinuu);idx_ln++){
@@ -548,7 +548,7 @@ void reset_all_lines_grad(__tsinuu_t *_tsinuu){
     }
 }
 void reset_all_nodes_error(__tsinuu_t *_tsinuu){
-    #ifdef TSINUU_DEBUG
+    #ifdef TSINUU_DEBUG_v2
         fprintf(stdout, ">>>> request <reset_all_nodes_error>\n");
     #endif
     for(unsigned int idx_l=0x00;idx_l<total_layers(_tsinuu);idx_l++){
@@ -558,7 +558,7 @@ void reset_all_nodes_error(__tsinuu_t *_tsinuu){
     }
 }
 void reset_all_nodes_kemu(__tsinuu_t *_tsinuu){
-    #ifdef TSINUU_DEBUG
+    #ifdef TSINUU_DEBUG_v2
         fprintf(stdout, ">>>> request <reset_all_nodes_kemu>\n");
     #endif
     for(unsigned int idx_l=0x00;idx_l<total_layers(_tsinuu);idx_l++){
@@ -575,13 +575,13 @@ void reset_line_kemu(__line_tsinuu_t *_line){
     if(!_line->__lnbp->__pardon_weight){
         _line->__ln_kemu->__weight=0x00;
     }
-    #ifdef TSINUU_DEBUG
+    #ifdef TSINUU_DEBUG_v2
         fprintf(stdout, ">>>> request <reset_line_kemu>\n");
     #endif
 }
 
 void reset_all_lines_kemu(__tsinuu_t *_tsinuu){
-    #ifdef TSINUU_DEBUG
+    #ifdef TSINUU_DEBUG_v2
         fprintf(stdout, ">>>> request <reset_all_lines_kemu>\n");
     #endif
     for(unsigned int idx_ln=0x00;idx_ln<total_lines(_tsinuu);idx_ln++){
@@ -600,7 +600,7 @@ void reset_layerdentities(__tsinuu_t *_tsinuu){
 
 */
 void read_layer_value_as_vector_from_coord(__tsinuu_t *_tsinuu, __layer_coords_t *_l_coord, __cwcn_type_t *_result_vector){
-    #ifdef TSINUU_DEBUG
+    #ifdef TSINUU_DEBUG_v2
         fprintf(stdout, ">>>> request <read_layer_value_as_vector_from_coord>\n");
     #endif
     const unsigned int n_l = layer_size_from_layer_coord(_tsinuu, _l_coord);
@@ -619,18 +619,21 @@ void read_layer_value_as_vector_from_stack_coord(__tsinuu_t *_tsinuu, __layer_st
 */
 
 void read_tsinuu_output(__tsinuu_t *_tsinuu, __cwcn_type_t *_result_vector){
-    #ifdef TSINUU_DEBUG
+    #ifdef TSINUU_DEBUG_v2
         fprintf(stdout, ">>>> request <read_ouput_value>\n");
     #endif
     read_layer_value_as_vector_from_stack_coord(_tsinuu, layer_index_to_layer_stack_coord(_tsinuu, output_layer_index(_tsinuu)), _result_vector); 
 }
 void read_tsinuu_input(__tsinuu_t *_tsinuu, __cwcn_type_t *_result_vector){
-    #ifdef TSINUU_DEBUG
+    #ifdef TSINUU_DEBUG_v2
         fprintf(stdout, ">>>> request <read_input_value>\n");
     #endif
     read_layer_value_as_vector_from_stack_coord(_tsinuu, layer_index_to_layer_stack_coord(_tsinuu, 0x00), _result_vector); 
 }
 void read_wapaajco(__tsinuu_t *_tsinuu, __cwcn_type_t *_wapaajco_vector){
+    #ifdef TSINUU_DEBUG_v2
+        fprintf(stdout, ">>>> request <read_wapaajco>\n");
+    #endif
     for(unsigned int idx_n=0x00;idx_n<layer_size_from_layer_stack_index(_tsinuu, output_layer_index(_tsinuu));idx_n++){
         _wapaajco_vector[idx_n]=_tsinuu->__wapaajco->__w_vector[idx_n];
     }
@@ -643,10 +646,10 @@ void set_tsinuu_input(__tsinuu_t *_tsinuu, __cwcn_type_t *_input_vector){
         node_kemu(_tsinuu, node_index_to_node_coord(_tsinuu, 0x00, idx_n))->__value = _input_vector[idx_n]; // #FIXME no assert for input vector size. & #FIXME add function for input_layer_index
         node(_tsinuu, node_index_to_node_coord(_tsinuu, 0x00, idx_n))->__nbp->__is_reset=___CWCN_FALSE;
         #ifdef TSINUU_FORWARD
-            dist_node(_tsinuu, node(_tsinuu, node_index_to_node_coord(_tsinuu, 0x00, idx_n)));
+        dist_node(_tsinuu, node(_tsinuu, node_index_to_node_coord(_tsinuu, 0x00, idx_n)));
         #endif
     }
-    #ifdef TSINUU_DEBUG
+    #ifdef TSINUU_DEBUG_v2
         fprintf(stdout, ">>>> request <set_input> suspect element layer_id: %d\n",0x00);
         if(!is_layer_index_input(_tsinuu, 0x00)){
             fprintf(stdout, ">>>> ERROR set_input %d expected to be class input.\n",0x00);
@@ -662,7 +665,7 @@ void set_tsinuu_output(__tsinuu_t *_tsinuu, __cwcn_type_t *_output_vector){
             dist_node(_tsinuu, node(_tsinuu, node_index_to_node_coord(_tsinuu, 0x00, idx_n)));
         #endif
     }
-    #ifdef TSINUU_DEBUG
+    #ifdef TSINUU_DEBUG_v2
         fprintf(stdout, ">>>> request <set_output> suspect element layer_id: %d\n",0x00);
         if(!is_layer_index_output(_tsinuu, 0x00)){
             fprintf(stdout, ">>>> ERROR set_output %d expected to be class output.\n",0x00);
@@ -688,7 +691,7 @@ void pardon_all_bias(__tsinuu_t *_tsinuu){
         }
     }
     if(ctx_n>=total_layers(_tsinuu)-0x01){
-        fprintf(stdout,">>>> WARINING! pardon_all_bias with beeing defined all central layers as SIGMOID might rise problems.");
+        fprintf(stdout,">>>> WARINING! pardon_all_bias with beeing defined all central layers as SIGMOID might rise problems.\n");
     }
     for(unsigned int idx_l=0x00;idx_l<total_layers(_tsinuu);idx_l++){
         for(unsigned int idx_n=0x00;idx_n<layer_size_from_layer_stack_index(_tsinuu, idx_l);idx_n++){
@@ -777,11 +780,11 @@ __tsinuu_t *tsinuu_fabric(__attribute_tsinuu_t *_attributes){
         fprintf(stdout,">> request <tsinuu_fabric> for a new_tsinuu\n");
     #endif
     #ifndef NAT_TYPE
-        fprintf(stderr, "ERROR: tsinuu_fabric requirest NAT_TYPE definition");
+        fprintf(stderr, "ERROR: tsinuu_fabric requirest NAT_TYPE definition\n");
         assert(0x00);
     #endif
     #ifndef SYMETRIC_TSINUU
-        fprintf(stderr, "The method used b for tsinuu_fabric assumes SYMETRIC_TSINUU definition.");
+        fprintf(stderr, "The method used b for tsinuu_fabric assumes SYMETRIC_TSINUU definition.\n");
         assert(0x00);
     #endif
     if(!_attributes->__is_symetric){
@@ -809,7 +812,7 @@ __tsinuu_t *tsinuu_fabric(__attribute_tsinuu_t *_attributes){
     new_tsinuu->__attributes->__layers_activation=_attributes->__layers_activation;
     new_tsinuu->__layers = malloc(total_layers(new_tsinuu)*sizeof(__layer_tsinuu_t));
     if(!new_tsinuu->__layers){
-        fprintf(stderr, ">>>> ERROR: malloc falied allocating __layers");
+        fprintf(stderr, ">>>> ERROR: malloc falied allocating __layers\n");
         assert(0x00);
     }
     for(unsigned int idx_l=0x00;idx_l<total_layers(new_tsinuu);idx_l++){
@@ -887,7 +890,7 @@ __tsinuu_t *tsinuu_fabric(__attribute_tsinuu_t *_attributes){
             }
             new_tsinuu->__layers[idx_l]->__nodes[idx_n]->__n_coord=malloc(sizeof(__node_coords_t));
             #ifdef TSINUU_DEBUG
-                fprintf(stdout, ">>>> WARNING: (relax) must check changes to expression new_tsinuu->__layers[idx_l]->__nodes[idx_n]->__n_coord->__l_coord=new_tsinuu->__layers[idx_l]->__l_coord");
+                fprintf(stdout, ">>>> WARNING: (relax) must check changes to expression new_tsinuu->__layers[idx_l]->__nodes[idx_n]->__n_coord->__l_coord=new_tsinuu->__layers[idx_l]->__l_coord\n");
             #endif
             new_tsinuu->__layers[idx_l]->__nodes[idx_n]->__n_coord->__l_coord = malloc(sizeof(__layer_coords_t));
             new_tsinuu->__layers[idx_l]->__nodes[idx_n]->__n_coord->__l_coord=new_tsinuu->__layers[idx_l]->__l_coord;
@@ -915,7 +918,7 @@ __tsinuu_t *tsinuu_fabric(__attribute_tsinuu_t *_attributes){
             reset_node_kemu(new_tsinuu->__layers[idx_l]->__nodes[idx_n]);
             new_tsinuu->__layers[idx_l]->__nodes[idx_n]->__nbp->__pardon_bias=___CWCN_TRUE; // #FIXME why true?
             #ifdef TSINUU_DEBUG
-                fprintf(stdout, "WARNING: tsinuu new_tsinuu->__layers[idx_l]->__nodes[idx_n] asigment might be incorrect after free");
+                fprintf(stdout, "WARNING: tsinuu new_tsinuu->__layers[idx_l]->__nodes[idx_n] asigment might be incorrect after free\n");
             #endif
         }
     }
@@ -938,7 +941,7 @@ __tsinuu_t *tsinuu_fabric(__attribute_tsinuu_t *_attributes){
         LOOP OVER LINES
     */
     new_tsinuu->__lines = malloc(total_lines(new_tsinuu) *sizeof(__line_tsinuu_t));
-    unsigned int ln_ctx = 0x00;
+    int ln_ctx = 0x00;
     for(unsigned int idx_l_to=0x01; idx_l_to<total_layers(new_tsinuu); idx_l_to++){
         for(unsigned int idx_n_from=0x00;idx_n_from<layer_size_from_layer_stack_index(new_tsinuu, idx_l_to-0x01);idx_n_from++){
             for(unsigned int idx_n_to=0x00;idx_n_to<layer_size_from_layer_stack_index(new_tsinuu, idx_l_to);idx_n_to++){
@@ -966,11 +969,11 @@ __tsinuu_t *tsinuu_fabric(__attribute_tsinuu_t *_attributes){
         }
     }
     __line_coords_t *c_ln_coord;
-    unsigned int ln_ctx3=0x00;
+    int ln_ctx3=0x00;
     for(unsigned int idx_l_to=0x01;idx_l_to<total_layers(new_tsinuu);idx_l_to++){
         for(unsigned int idx_n_to=0x00;idx_n_to<layer_size_from_layer_stack_index(new_tsinuu, idx_l_to);idx_n_to++){
             for(unsigned int idx_n_from=0x00;idx_n_from<layer_size_from_layer_stack_index(new_tsinuu, idx_l_to-0x01);idx_n_from++){
-                for(unsigned int ln_ctx2=0x00;ln_ctx2<ln_ctx;ln_ctx2++){
+                for(int ln_ctx2=0x00;ln_ctx2<ln_ctx;ln_ctx2++){
                     c_ln_coord = new_tsinuu->__lines[ln_ctx2]->__ln_coord;
                     if(n_coord_to_l_index(c_ln_coord->__to_node)==idx_l_to && n_coord_to_n_index(c_ln_coord->__to_node)==idx_n_to){
                         if(n_coord_to_l_index(c_ln_coord->__from_node)==idx_l_to-0x01 && n_coord_to_n_index(c_ln_coord->__from_node)==idx_n_from){
@@ -984,7 +987,7 @@ __tsinuu_t *tsinuu_fabric(__attribute_tsinuu_t *_attributes){
         }
     }
     if(ln_ctx3 != ln_ctx){
-        fprintf(stderr, ">>>> ERROR: forward and backwatds line index mismatch.");
+        fprintf(stderr, ">>>> ERROR: forward and backwatds line index mismatch.\n");
         assert(0x00);
     }
     // 
@@ -1038,7 +1041,7 @@ void tsinuu_destroy(__tsinuu_t *_tsinuu){
     free(_tsinuu->__attributes->__layerbias_density); //
     free(_tsinuu->__attributes); //
     free(_tsinuu); //
-    #ifdef TSINUU_DEBUG
+    #ifdef TSINUU_DEBUG_v2
         fprintf(stdout, ">>>> request <tsinuu_destroy>\n");
     #endif
 }
@@ -1061,7 +1064,7 @@ void print_node_by_coord_with_argument(__tsinuu_t *_tsinuu, __node_coords_t *_n_
     node_kemu(_tsinuu, _n_coord)->__bias);
 }
 void print_line_by_coord(__tsinuu_t *_tsinuu, __line_coords_t *_ln_coord){
-    fprintf(stdout,"Line:coord:[%d][%d]->[%d][%d]:line_weight:(%3.3f).", 
+    fprintf(stdout,"Line:coord:[%d][%d]->[%d][%d]:line_weight:(%3.3f).\n", 
     _ln_coord->__from_node->__l_coord->__l_s_coord->__layer_index, 
     _ln_coord->__from_node->__n_s_coord->__node_index, 
     _ln_coord->__to_node->__l_coord->__l_s_coord->__layer_index, 
@@ -1112,8 +1115,15 @@ void print_all_lines(__tsinuu_t *_tsinuu){
     for(unsigned int idx_ln=0x00;idx_ln<total_lines(_tsinuu);idx_ln++){
         fprintf(stdout,"[%d]/%d",idx_ln,total_lines(_tsinuu));
         print_line_by_coord(_tsinuu, line_index_to_line_coord(_tsinuu,idx_ln));
-        fprintf(stdout,"\n");
+        // fprintf(stdout,"\n");
     }
+}
+__cwcn_type_t sum_all_weights(__tsinuu_t *_tsinuu){
+    __cwcn_type_t c_sum=0x00;
+    for(unsigned int idx_ln=0x00;idx_ln<total_lines(_tsinuu);idx_ln++){
+        c_sum+=line(_tsinuu, line_index_to_line_coord(_tsinuu,idx_ln))->__ln_kemu->__weight;
+    }
+    return c_sum;
 }
 void print_all_nodes(__tsinuu_t *_tsinuu){
     for(unsigned int idx_l=0x00;idx_l<total_layers(_tsinuu);idx_l++){
@@ -1123,6 +1133,15 @@ void print_all_nodes(__tsinuu_t *_tsinuu){
             fprintf(stdout,"\n");
         }
     }
+}
+__cwcn_type_t sum_all_biases(__tsinuu_t *_tsinuu){
+    __cwcn_type_t c_sum=0x00;
+    for(unsigned int idx_l=0x00;idx_l<total_layers(_tsinuu);idx_l++){
+        for(unsigned int idx_n=0x00;idx_n<layer_size_from_layer_stack_index(_tsinuu,idx_l);idx_n++){
+            c_sum+=node(_tsinuu,node_index_to_node_coord(_tsinuu, idx_l,idx_n))->__n_kemu->__bias;
+        }
+    }
+    return c_sum;
 }
 /*
 

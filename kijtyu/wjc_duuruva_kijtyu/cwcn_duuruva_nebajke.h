@@ -8,7 +8,7 @@
 #define __ALLOW_DUURUVA_DUMPFILE__
 
 #define BUGGER_SIZE_DUURUVA (unsigned int) 12
-#define BUGGER_READY_DUURUVA_COUNT (unsigned int) 5
+#define BUGGER_READY_DUURUVA_COUNT (unsigned int) 10
 #define BUGGER_MAX_DUURUVA_COUNT (__cwcn_type_t) 100.0
 #define BUGGER_DUURUVA_MIN_STD (float) 0.0001
 #define NAT_TYPE
