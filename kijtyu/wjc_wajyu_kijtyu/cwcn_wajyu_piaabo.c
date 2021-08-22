@@ -41,11 +41,11 @@ __wajyu_metric_t *wajyu_metric_fabric(void *_wikimyei){
     reset_duuruva(new_wajyu_metric->__jkimyei_uwaabo_munaajpi_duuruva);
     /* UWAABO GAE RETURNS METRIC */
     aux_dumpfile=__DUMPFILE_UWAABO_GAE_RETURNS_DUURUVA__;
-    new_wajyu_metric->__uwaabo_gae_returns_duuruva=duuruva_fabric(((__wikimyei_t *)_wikimyei)->__uwaabo->__uwaabo_state_size,aux_dumpfile);
+    new_wajyu_metric->__uwaabo_gae_returns_duuruva=duuruva_fabric(((__wikimyei_t *)_wikimyei)->__munaajpi->__jkimyei_uwaabo_munaajpi_state_size,aux_dumpfile);
     reset_duuruva(new_wajyu_metric->__uwaabo_gae_returns_duuruva);
     /* UWAABO GAE ADVENTAGE METRIC */
     aux_dumpfile=__DUMPFILE_UWAABO_GAE_ADVENTAGE_DUURUVA__;
-    new_wajyu_metric->__uwaabo_gae_adventage_duuruva=duuruva_fabric(((__wikimyei_t *)_wikimyei)->__uwaabo->__uwaabo_state_size,aux_dumpfile);
+    new_wajyu_metric->__uwaabo_gae_adventage_duuruva=duuruva_fabric(((__wikimyei_t *)_wikimyei)->__munaajpi->__jkimyei_uwaabo_munaajpi_state_size,aux_dumpfile);
     reset_duuruva(new_wajyu_metric->__uwaabo_gae_adventage_duuruva);
     /*
         LOSSES METRIC
@@ -62,13 +62,13 @@ __wajyu_metric_t *wajyu_metric_fabric(void *_wikimyei){
         HANDLERS
     */
     aux_dumpfile=__DUMPFILE_RATIO_HANDLER_DUURUVA__;
-    new_wajyu_metric->__ratio_handler_duuruva=duuruva_fabric(((__wikimyei_t *)_wikimyei)->__munaajpi->__jkimyei_uwaabo_munaajpi_state_size,aux_dumpfile);
+    new_wajyu_metric->__ratio_handler_duuruva=duuruva_fabric(((__wikimyei_t *)_wikimyei)->__uwaabo->__uwaabo_state_size,aux_dumpfile);
     reset_duuruva(new_wajyu_metric->__ratio_handler_duuruva);
     aux_dumpfile=__DUMPFILE_SURR1_HANDLER_DUURUVA__;
-    new_wajyu_metric->__surr1_handler_duuruva=duuruva_fabric(((__wikimyei_t *)_wikimyei)->__munaajpi->__jkimyei_uwaabo_munaajpi_state_size,aux_dumpfile);
+    new_wajyu_metric->__surr1_handler_duuruva=duuruva_fabric(((__wikimyei_t *)_wikimyei)->__uwaabo->__uwaabo_state_size,aux_dumpfile);
     reset_duuruva(new_wajyu_metric->__surr1_handler_duuruva);
     aux_dumpfile=__DUMPFILE_SURR2_HANDLER_DUURUVA__;
-    new_wajyu_metric->__surr2_handler_duuruva=duuruva_fabric(((__wikimyei_t *)_wikimyei)->__munaajpi->__jkimyei_uwaabo_munaajpi_state_size,aux_dumpfile);
+    new_wajyu_metric->__surr2_handler_duuruva=duuruva_fabric(((__wikimyei_t *)_wikimyei)->__uwaabo->__uwaabo_state_size,aux_dumpfile);
     reset_duuruva(new_wajyu_metric->__surr2_handler_duuruva);
 
     return new_wajyu_metric;

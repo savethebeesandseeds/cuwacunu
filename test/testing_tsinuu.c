@@ -135,7 +135,7 @@ int main(void){
             print_tsninuu_jkimyei_results(c_tsinuu);
             // fprintf(stdout,"\n");
             print_all_lines(c_tsinuu);
-            getchar();
+            //getchar();
         }
         // fprintf(stdout, "--------->END OF EPOCH<---------\n");
     }

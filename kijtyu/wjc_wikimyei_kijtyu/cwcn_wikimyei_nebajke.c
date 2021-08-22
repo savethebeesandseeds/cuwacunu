@@ -91,7 +91,7 @@ void ___uwaabo_exploration_hash(__wikimyei_t *_wikimyei){
         glti(_wikimyei)->__uwaabo_state[idx]=((__cwcn_type_t)(rand() % 98)-.02)/((__cwcn_type_t)100.0)+0.01;
     }
     #else
-    fprintf(stderr,"BAD CONFIGURATION, set UWAABO_EXPLORATION_*\n");
+    fprintf(stderr,"BAD CONFIGURATION, set UWAABO_EXPLORATION_*, only aviable UWAABO_EXPLORATION_RANDOM\n");
     assert(0x00);
     #endif
     #if defined(__EXPEND_UWAABO_DUURUVA__) // #FIXME might not needed
@@ -183,12 +183,12 @@ void ___jkimyei_uwaabo_munaajpi_hash(__wikimyei_t *_wikimyei){
 	tsinuu_direct_full_parametric(_wikimyei->__munaajpi->__munaajpi_tsinuu);
     read_tsinuu_output(_wikimyei->__munaajpi->__munaajpi_tsinuu, glti(_wikimyei)->__jkimyei_uwaabo_munaajpi_state);
     #ifdef WIKIMYEI_DEBUG
-        fprintf(stdout,"%s>> > load_index: [%d] ... request jkimyei uwaabo munaajpi_hash:\n",COLOR_MUNAAJPI,_wikimyei->__load_index);
-        fprintf(stdout,">> > load_index: [%d] ... jkimyei uwaabo munaajpi_state: [",_wikimyei->__load_index);
-        for(unsigned int idx=0x00;idx<_wikimyei->__munaajpi->__jkimyei_uwaabo_munaajpi_state_size;idx++){
-            fprintf(stdout," %.2f",glti(_wikimyei)->__jkimyei_uwaabo_munaajpi_state[idx]);
-        }
-        fprintf(stdout," ]%s\n",COLOR_REGULAR);
+    fprintf(stdout,"%s>> > load_index: [%d] ... request jkimyei uwaabo munaajpi_hash:\n",COLOR_MUNAAJPI,_wikimyei->__load_index);
+    fprintf(stdout,">> > load_index: [%d] ... jkimyei uwaabo munaajpi_state: [",_wikimyei->__load_index);
+    for(unsigned int idx=0x00;idx<_wikimyei->__munaajpi->__jkimyei_uwaabo_munaajpi_state_size;idx++){
+        fprintf(stdout," %.2f",glti(_wikimyei)->__jkimyei_uwaabo_munaajpi_state[idx]);
+    }
+    fprintf(stdout," ]%s\n",COLOR_REGULAR);
     #endif
 }
 void ___jkimyei_uwaabo_munaajpi_duuruva_hash(__wikimyei_t *_wikimyei){
@@ -276,6 +276,9 @@ void wikimyei_live_one(__wikimyei_t *_wikimyei){
     ___uwaabo_hash(_wikimyei);
     ___entropy_hash(_wikimyei);
     ___tsane_dehash(_wikimyei);
+    // STAND FOR UWAABO MUNAAJPI
+    ___jkimyei_uwaabo_munaajpi_hash(_wikimyei);
+    ___jkimyei_uwaabo_munaajpi_duuruva_hash(_wikimyei);
     // begin=clock();
     // end=clock();
     // printf("\033[1;31m exe time [___tsane_dehash] %f:\033[0m\n", (double)(end-begin)/CLOCKS_PER_SEC);
@@ -294,6 +297,9 @@ void wikimyei_relive_alliu_one(__wikimyei_t *_wikimyei){
     ___uwaabo_hash(_wikimyei);
     ___entropy_hash(_wikimyei);
     ___tsane_dehash(_wikimyei); // #FIXME maybe one wants to keep track
+    // STAND FOR UWAABO MUNAAJPI
+    ___jkimyei_uwaabo_munaajpi_hash(_wikimyei);
+    ___jkimyei_uwaabo_munaajpi_duuruva_hash(_wikimyei);
     // # no set pending munaajpi seems correct
     _wikimyei->__flags->__done=___CWCN_TRUE;
 }
@@ -318,6 +324,9 @@ void wikimyei_live_uwaabo_exploration_one(__wikimyei_t *_wikimyei){
     ___uwaabo_exploration_hash(_wikimyei);
     ___entropy_hash(_wikimyei);
     ___tsane_dehash(_wikimyei);
+    // STAND FOR UWAABO MUNAAJPI
+    ___jkimyei_uwaabo_munaajpi_hash(_wikimyei);
+    ___jkimyei_uwaabo_munaajpi_duuruva_hash(_wikimyei);
     // begin=clock();
     // end=clock();
     // printf("\033[1;31m exe time [___tsane_dehash] %f:\033[0m\n", (double)(end-begin)/CLOCKS_PER_SEC);

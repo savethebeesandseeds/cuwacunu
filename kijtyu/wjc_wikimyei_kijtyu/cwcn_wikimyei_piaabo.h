@@ -47,7 +47,7 @@ typedef __cwcn_type_t (*__function_pointer_t)(__cwcn_type_t);
 // #define WIKIMYEI_DEBUG_LOAD
 // #define WIKIMYEI_DEBUG_HEALT
 // #define DUURUVA_DEBUG
-// #define JKIMYEI_DEBUG
+#define JKIMYEI_DEBUG
 // #define JKIMYEI_DEBUG_v2
 // #define MUNAAJPI_DEBUG
 
@@ -69,20 +69,19 @@ typedef __cwcn_type_t (*__function_pointer_t)(__cwcn_type_t);
 #define __DUMPFILE_SURR1_HANDLER_DUURUVA__ __WAJYU_DUMPFOLDER__ "wajyu.surr1_handler.dumpfile"
 #define __DUMPFILE_SURR2_HANDLER_DUURUVA__ __WAJYU_DUMPFOLDER__ "wajyu.surr2_handler.dumpfile"
 
-// #define DEFINED_RANDOM_JK // #FIXME do not activate, terrible!
-#define DEFINED_LOAD_SEQ_JK
 #define UWAABO_EXPLORATION_RANDOM
+#define _JK_BREAK_COUNTER_ (unsigned int) 0x999
 
 #define __JK_SIZE__ (unsigned int) 0x01
-#define __EPOCHS__ (unsigned int) 0x05
-#define __SIZE_OF_LOAD__ (int) 100
+#define __EPOCHS__ (unsigned int) 0x01
+#define __SIZE_OF_LOAD__ (int) 10
 
 #define __GAE_GAMMA__ (__cwcn_type_t) 0.99
-#define __GAE_LAMBDA__ (__cwcn_type_t) 0.95
+#define __GAE_LAMBDA__ (__cwcn_type_t) 0.095
 #define __CLIP_PARAM__ (__cwcn_type_t) 0.2
-#define __UWAABO_BETA__ (__cwcn_type_t) 0.005
-#define __MUNAAJPI_BETA__ (__cwcn_type_t) 0.0005
-#define __ENTROPY_BETA__ (__cwcn_type_t) 0.001 // #FIXME findme
+#define __UWAABO_BETA__ (__cwcn_type_t) 0.1
+#define __MUNAAJPI_BETA__ (__cwcn_type_t) 0.1
+#define __ENTROPY_BETA__ (__cwcn_type_t) 0.01 // #FIXME findme
 
 #define __UWAABO_WAAPAJCO_POTENCY__ (__cwcn_type_t) 1.0
 #define __MUNAAJPI_WAAPAJCO_POTENCY__ (__cwcn_type_t) 1.0
@@ -100,8 +99,8 @@ typedef __cwcn_type_t (*__function_pointer_t)(__cwcn_type_t);
 
 #ifndef DEBUG_LINEAR_EXPERIMENT
 // #define __ALLIU_SOURCE__ (__alliu_source_t) negINDEX_as_alliu;
-// #define __ALLIU_SOURCE__ (__alliu_source_t) INDEX_as_alliu;
-#define __ALLIU_SOURCE__ (__alliu_source_t) SINE_as_alliu;
+#define __ALLIU_SOURCE__ (__alliu_source_t) INDEX_as_alliu;
+// #define __ALLIU_SOURCE__ (__alliu_source_t) SINE_as_alliu;
 // #define __ALLIU_SOURCE__ (__alliu_source_t) UNIT_as_alliu;
 #else
 #define __ALLIU_SOURCE__ (__alliu_source_t) UNIT_as_alliu;

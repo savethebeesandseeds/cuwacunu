@@ -61,6 +61,43 @@ void diff_duuruva(__duuruva_t *_duuruva){
     }
     free(aux_diff_1_holder);
 }
+
+void diff_duuruva_from_past_duuruva_vector(__duuruva_t *_duuruva, __cwcn_type_t *_past_duuruva_vect, ___cwcn_bool_t *_is_norm_stand){ // #FIXME functional but not in use, diff values in duuruvas
+    /* ASSUMES _duuruva->__value has been computed.  
+        BE CAREFULL with this method, assumes that __value has been comuted and that 
+        _past_duuruva_vect hast the vector of the past computations (from read_duuruva_vector)
+        _is_norm_stand express whether or not the _past_duuruva_vect was norm_stand
+        ___duuruva_bolean_parametrics {
+            (not) __pardon_maxmin
+            (not) __pardon_dist
+            __pardon_diff
+            (not) __pardon_count
+        }
+        __dv_dist_coord_t {
+            __diff_1
+            __diff_2
+        }
+    */
+    int v_ctx=0x00;
+    __cwcn_type_t c_past_value=0x00;
+    __cwcn_type_t *aux_diff_1_holder=malloc(_duuruva->__duuruva_base_size*sizeof(__cwcn_type_t)); // for diff_2 calculation
+    if(!_duuruva->__dvbp->__pardon_diff){
+        for(unsigned int idx=0x00;idx<_duuruva->__duuruva_base_size;idx++){
+            aux_diff_1_holder[idx]=_duuruva->__dv_diff[idx].__diff_1;
+            if(_is_norm_stand){
+                c_past_value=duuruva_destandarize_inindex(_duuruva, _past_duuruva_vect[BUGGER_SIZE_DUURUVA*v_ctx], idx);
+            }else{
+                c_past_value=_past_duuruva_vect[BUGGER_SIZE_DUURUVA*v_ctx];
+            }
+            v_ctx++;
+            _duuruva->__dv_diff[idx].__diff_1=(_duuruva->__value[idx]-c_past_value);
+            _duuruva->__dv_diff[idx].__diff_2=(_duuruva->__dv_diff[idx].__diff_1-aux_diff_1_holder[idx]);
+            _duuruva->__dv_diff[idx].__past_v=_duuruva->__value[idx];
+        }
+    }
+    free(aux_diff_1_holder);
+}
+
 void dist_duuruva(__duuruva_t *_duuruva){ // #FIXME might be util to check for __is_reset 
     /* ASSUMES _duuruva->__value has been computed.  
         ___duuruva_bolean_parametrics {
@@ -229,6 +266,7 @@ void read_duuruva_vector(__duuruva_t *_duuruva, __cwcn_type_t *_dvx, ___cwcn_boo
             [0xA] : __kurtosis
             [0xB] : __skewness
     */
+    // value must be in position 0x00+idx*BUGGER_SIZE_DUURUVA due to method diff_duuruva_from_past_duuruva_vector 
     unsigned int ctx_check=0x00;
     for(unsigned int _idx=0x00;_idx<_duuruva->__duuruva_base_size;_idx++){
         // if(!isnan(_duuruva->__dv_dist[_idx].__count)){_dvx[_idx+0x01]=_duuruva->__dv_dist[_idx].__count;}else{_dvx[_idx+0x01]=0x00;}

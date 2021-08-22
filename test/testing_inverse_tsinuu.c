@@ -139,7 +139,7 @@ int main(void){
             tsinuu_inverse_full_parametric(c_tsinuu);
             read_tsinuu_input(c_tsinuu,aux_input);
             fprintf(stdout,"[TESTING INVERSE]\t: input <%f>, output:<%f>\n",aux_input[0x0],aux_output[0x0]);
-            getchar();
+            //getchar();
             ... #INVERSE TSINUU IS UNDONE
         }
         // fprintf(stdout, "--------->END OF EPOCH<---------\n");

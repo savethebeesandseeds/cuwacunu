@@ -9,6 +9,9 @@ void copy_c_cwcn_blocks_from_b_to_a(__cwcn_type_t *_a, __cwcn_type_t *_b, unsign
         _a[idx]=_b[idx];
     }
 }
+__cwcn_type_t sign_fun(__cwcn_type_t x){
+    return (__cwcn_type_t)((x > 0) ? 1 : ((x < 0) ? -1 : 0));
+}
 
 // __jk_queue_t *jk_queue_fabric(__jkimyei_t *__jkimyei){
 //     __jk_queue_t *new_jk_queue=malloc(sizeof(__jk_queue_t));
@@ -81,56 +84,50 @@ void copy_c_cwcn_blocks_from_b_to_a(__cwcn_type_t *_a, __cwcn_type_t *_b, unsign
 
 void GAE(__wikimyei_t *_wikimyei){
     // assumes __imibajcho_munaajpi_state[0x00] has been computed
+    are_munaajpi_pending(_wikimyei);
     #ifdef JKIMYEI_DEBUG
     fprintf(stdout,"%s>> > ... request GAE\n",COLOR_GAE);
     #endif
-    assert(_wikimyei->__munaajpi->__jkimyei_uwaabo_munaajpi_state_size==_wikimyei->__uwaabo->__uwaabo_state_size); // crazy but needed, assert it works; here can be a hidden reason for underperfomance as other architectures use jkimyei_uwaabo_munaajpi size as == 1
+    assert(_wikimyei->__munaajpi->__jkimyei_uwaabo_munaajpi_state_size==0x01);
     int c_index=_wikimyei->__load_index;
     __cwcn_type_t *delta=malloc(0x01*sizeof(__cwcn_type_t));
     __cwcn_type_t *aux_jums=malloc(0x01*sizeof(__cwcn_type_t));
-    __cwcn_type_t *gae=malloc(_wikimyei->__uwaabo->__uwaabo_state_size*sizeof(__cwcn_type_t));
+    __cwcn_type_t *gae=malloc(_wikimyei->__munaajpi->__jkimyei_uwaabo_munaajpi_state_size*sizeof(__cwcn_type_t));
 
-    for(unsigned int idx=0x00;idx<_wikimyei->__uwaabo->__uwaabo_state_size;idx++){gae[0x00]=0x00;}
+    for(unsigned int idx=0x00;idx<_wikimyei->__munaajpi->__jkimyei_uwaabo_munaajpi_state_size;idx++){gae[0x00]=0x00;}
     load_to_start(_wikimyei);
     do{ // reset trayectory gae variables 
-       for(unsigned int idx=0x00;idx<_wikimyei->__uwaabo->__uwaabo_state_size;idx++){
+       for(unsigned int idx=0x00;idx<_wikimyei->__munaajpi->__jkimyei_uwaabo_munaajpi_state_size;idx++){
             glti(_wikimyei)->__uwaabo_gae_adventage[idx]=0x00;
             glti(_wikimyei)->__uwaabo_gae_returns[idx]=0x00;
        } 
     }while(load_go_up(_wikimyei)!=-1);
     // load_to_index(_wikimyei, _wikimyei->__load_size-_wikimyei->__horizon_munaajpi); // never reaches the terminal state?
     load_to_end(_wikimyei);
+    load_go_up(_wikimyei); // #FIX LOAD GO UP
     do{
         if(!glti(_wikimyei)->__pending_munaajpi){
+            aux_jums[0x00]=glti(_wikimyei)->__jkimyei_uwaabo_munaajpi_state[0x00];
+            break; // just to capture the first aviable (backward)
+        }
+    }while(load_go_down(_wikimyei)!=-1);
+    assert(load_go_down(_wikimyei)!=-1); // Load is really short problem.
+    do{
+        if(!glti(_wikimyei)->__pending_munaajpi){
+            // #FIXME add mask usage, mask is allways on
+            delta[0x00]=glti(_wikimyei)->__imibajcho_munaajpi_state[0x00]+\
+                _wikimyei->__gae_gamma*aux_jums[0x00]*glti(_wikimyei)->__uwaabo_mask-\
+                glti(_wikimyei)->__jkimyei_uwaabo_munaajpi_state[0x00];
+            gae[0x00]=delta[0x00]+\
+                _wikimyei->__gae_gamma*_wikimyei->__gae_lambda*glti(_wikimyei)->__uwaabo_mask*\
+                gae[0x00];
+            glti(_wikimyei)->__uwaabo_gae_returns[0x00]=gae[0x00]+glti(_wikimyei)->__jkimyei_uwaabo_munaajpi_state[0x00]; // #FIXME this sum is redundant, algebra on the full expression to see it; leave it here for graph visualization
+            glti(_wikimyei)->__uwaabo_gae_adventage[0x00]=glti(_wikimyei)->__uwaabo_gae_returns[0x00]-glti(_wikimyei)->__jkimyei_uwaabo_munaajpi_state[0x00];
+            fprintf(stdout,"%s>> > ... [%d] :: [%d], %s uwaabo_gae_adventage: %s%.4f,%s uwaabo_gae_returns: %s%.4f, %s jk_w_munaajpi_state:%s%.4f, %simibajcho_munaajpi: %s%.4f, delta: %.4f, gae: %.4f\n",COLOR_GAE,_wikimyei->__load_index,0x00,COLOR_UWAABO,COLOR_REGULAR,glti(_wikimyei)->__uwaabo_gae_adventage[0x00],COLOR_UWAABO,COLOR_REGULAR,glti(_wikimyei)->__uwaabo_gae_returns[0x00],COLOR_MUNAAJPI,COLOR_REGULAR,glti(_wikimyei)->__jkimyei_uwaabo_munaajpi_state[0x00],COLOR_MUNAAJPI,COLOR_REGULAR,glti(_wikimyei)->__imibajcho_munaajpi_state[0x00],delta[0x00],gae[0x00]);
             #ifdef JKIMYEI_DEBUG
-            fprintf(stdout,"%s>> > ... ---- ---- ... ---- ----\n",COLOR_GAE);
+            // fprintf(stdout,"%s>> > ... [%d] :: [%d], %s uwaabo_gae_adventage: %s%.4f,%s uwaabo_gae_returns: %s%.4f, %s munaajpi_state:%s%.4f\n",COLOR_GAE,_wikimyei->__load_index,0x00,COLOR_UWAABO,COLOR_REGULAR,glti(_wikimyei)->__uwaabo_gae_adventage[0x00],COLOR_UWAABO,COLOR_REGULAR,glti(_wikimyei)->__uwaabo_gae_returns[0x00],COLOR_MUNAAJPI,COLOR_REGULAR,glti(_wikimyei)->__jkimyei_uwaabo_munaajpi_state[0x00]);
             #endif
-            for(unsigned int idx=0x00;idx<_wikimyei->__uwaabo->__uwaabo_state_size;idx++){
-                load_go_up(_wikimyei);
-                aux_jums[0x00]=glti(_wikimyei)->__jkimyei_uwaabo_munaajpi_state[idx];
-                load_go_down(_wikimyei);
-                // #FIXME fix mask usage (seems fine)
-                delta[0x00]=glti(_wikimyei)->__imibajcho_munaajpi_state[0x00]+\
-                    _wikimyei->__gae_gamma*aux_jums[0x00]*glti(_wikimyei)->__uwaabo_mask-\
-                    glti(_wikimyei)->__jkimyei_uwaabo_munaajpi_state[idx];
-                gae[idx]=delta[0x00]+\
-                    _wikimyei->__gae_gamma*_wikimyei->__gae_lambda*glti(_wikimyei)->__uwaabo_mask*\
-                    gae[idx];
-                glti(_wikimyei)->__uwaabo_gae_returns[idx]=gae[idx]+glti(_wikimyei)->__jkimyei_uwaabo_munaajpi_state[idx]; // #FIXME this sum is redundant, algebra on the full expression to see it; leave it here for graph visualization
-                glti(_wikimyei)->__uwaabo_gae_adventage[idx]=glti(_wikimyei)->__uwaabo_gae_returns[idx]-glti(_wikimyei)->__jkimyei_uwaabo_munaajpi_state[idx];
-                // fprintf(stdout,">> > ... [%d] :: [%d], gae: %.4f, delta: %.4f, imibajcho_munaajpi_state: %.4f\n",_wikimyei->__load_index,idx,gae[idx],delta[0x00],glti(_wikimyei)->__imibajcho_munaajpi_state[0x00]);
-                // fprintf(stdout,">> > ... [%d] :: [%d], uwaabo_gae_adventage: %.4f, uwaabo_gae_returns: %.4f, munaajpi_state:%.4f\n",_wikimyei->__load_index,idx,glti(_wikimyei)->__uwaabo_gae_adventage[idx],glti(_wikimyei)->__uwaabo_gae_returns[idx],glti(_wikimyei)->__jkimyei_uwaabo_munaajpi_state[idx]);
-                #ifdef JKIMYEI_DEBUG
-                fprintf(stdout,"%s>> > ... [%d] :: [%d], %s uwaabo_gae_adventage: %s%.4f,%s uwaabo_gae_returns: %s%.4f, %s munaajpi_state:%s%.4f\n",COLOR_GAE,_wikimyei->__load_index,idx,COLOR_UWAABO,COLOR_REGULAR,glti(_wikimyei)->__uwaabo_gae_adventage[idx],COLOR_UWAABO,COLOR_REGULAR,glti(_wikimyei)->__uwaabo_gae_returns[idx],COLOR_MUNAAJPI,COLOR_REGULAR,glti(_wikimyei)->__jkimyei_uwaabo_munaajpi_state[idx]);
-                #endif
-                // printf("-------------------\n");
-                // printf("waka : aux_jums  [%d] : %f\n",0x00,aux_jums[0x00]);
-                // printf("waka : delta[%d] : %f\n",0x00,delta[0x00]);
-                // printf("waka : gae  [%d] : %f\n",idx,gae[0x00]);
-                // printf("waka : munaj[%d] : %f\n",0x00,glti(_wikimyei)->__imibajcho_munaajpi_state[0x00]);
-                // printf("waka : value[%d] : %f\n",idx,glti(_wikimyei)->__jkimyei_uwaabo_munaajpi_state[idx]);
-                // printf("-------------------\n");
-            }
+            aux_jums[0x00]=glti(_wikimyei)->__jkimyei_uwaabo_munaajpi_state[0x00];
         }
     }while(load_go_down(_wikimyei)!=-1);
     do{
@@ -166,16 +163,17 @@ __cwcn_type_t jk_clamp(__cwcn_type_t d, __cwcn_type_t min, __cwcn_type_t max){
 */
 void jkimyei_one(void *_wikimyei){
     __cwcn_type_t *_uwaabo_loss_handler=malloc(((__wikimyei_t *)_wikimyei)->__uwaabo->__uwaabo_state_size*sizeof(__cwcn_type_t));
-    __cwcn_type_t *_munaajpi_loss_handler=malloc(((__wikimyei_t *)_wikimyei)->__uwaabo->__uwaabo_state_size*sizeof(__cwcn_type_t));
+    __cwcn_type_t *_munaajpi_loss_handler=malloc(((__wikimyei_t *)_wikimyei)->__munaajpi->__jkimyei_uwaabo_munaajpi_state_size*sizeof(__cwcn_type_t));
     __cwcn_type_t *_entropy_loss_handler=malloc(sizeof(__cwcn_type_t));
     __cwcn_type_t *_old_uwaabo_handler=malloc(((__wikimyei_t *)_wikimyei)->__uwaabo->__uwaabo_state_size*sizeof(__cwcn_type_t));
     __cwcn_type_t *_surr1_handler=malloc(((__wikimyei_t *)_wikimyei)->__uwaabo->__uwaabo_state_size*sizeof(__cwcn_type_t));
     __cwcn_type_t *_surr2_handler=malloc(((__wikimyei_t *)_wikimyei)->__uwaabo->__uwaabo_state_size*sizeof(__cwcn_type_t));
     __cwcn_type_t *_ratio_handler=malloc(((__wikimyei_t *)_wikimyei)->__uwaabo->__uwaabo_state_size*sizeof(__cwcn_type_t));
+    __cwcn_type_t pow_aux_arg;
+    fprintf(stdout,"%s>> request jkimyei_one, on load index [%d]%s\n",COLOR_JKIMYEI,((__wikimyei_t *)_wikimyei)->__load_index,COLOR_REGULAR);
     #ifdef JKIMYEI_DEBUG
-    fprintf(stdout,"%s>> > ... --- --- --- --- --- ---%s\n",COLOR_DANGER,COLOR_REGULAR);
-    fprintf(stdout,"%s>> request jkimyei_one%s\n",COLOR_JKIMYEI,COLOR_REGULAR);
-    fprintf(stdout,"%sENTER TO STEP JKIMYEI:%s",COLOR_GOOD,COLOR_REGULAR);
+    fprintf(stdout,"%s>> > ... --- --- --- --- --- ---%s ",COLOR_DANGER,COLOR_REGULAR);
+    // fprintf(stdout,"%sENTER TO STEP JKIMYEI:%s",COLOR_GOOD,COLOR_REGULAR);
     // getchar();
     fprintf(stdout," %s",COLOR_JKIMYEI);
     #endif
@@ -204,50 +202,51 @@ void jkimyei_one(void *_wikimyei){
     */
     // glti(_wikimyei)->__pending_munaajpi=___CWCN_TRUE;
     // glti(_wikimyei)->__pending_munaajpi_index=0x00; 
-    wikimyei_relive_alliu_one(((__wikimyei_t *)_wikimyei)); 
+    wikimyei_relive_alliu_one(((__wikimyei_t *)_wikimyei));
     // set_load_pending_munaajpi(((__wikimyei_t *)_wikimyei)); // #FIXME was the constant wuwaabo munaajpi validated nor fix? 
     /*
         -- -- -- 
     */
+    // printf("waka : glti(_wikimyei)->__imibajcho_munaajpi_state[0x00]: %f\n",glti(_wikimyei)->__imibajcho_munaajpi_state[0x00]);
     if(is_wajyu_ready(((__wikimyei_t *)_wikimyei)->__wajyu)){
         for(unsigned int idx=0x00;idx<((__wikimyei_t *)_wikimyei)->__uwaabo->__uwaabo_state_size;idx++){
             _ratio_handler[idx]=exp(log(glti(((__wikimyei_t *)_wikimyei))->__uwaabo_state[idx])-log(_old_uwaabo_handler[idx]));
-            _surr1_handler[idx]=_ratio_handler[idx]*glti(((__wikimyei_t *)_wikimyei))->__uwaabo_gae_adventage[idx];
+            _surr1_handler[idx]=_ratio_handler[idx]*glti(((__wikimyei_t *)_wikimyei))->__uwaabo_gae_adventage[0x00];
             _surr2_handler[idx]=\
                 jk_clamp(_ratio_handler[idx], \
                     0x01-((__wikimyei_t *)_wikimyei)->__clip_param,\
                     0x01+((__wikimyei_t *)_wikimyei)->__clip_param)*\
-                glti(((__wikimyei_t *)_wikimyei))->__uwaabo_gae_adventage[idx];
+                glti(((__wikimyei_t *)_wikimyei))->__uwaabo_gae_adventage[0x00];
             // fprintf(stdout,"index: %d, uwaabo beta: %.2f, uwaabo: %.2fm ");
             #ifdef JKIMYEI_DEBUG_v2
+            fprintf(stdout,">> > ... ratio[%d]: %.4f, adventage: %.4f\n",idx,_ratio_handler[idx],glti(((__wikimyei_t *)_wikimyei))->__uwaabo_gae_adventage[0x00]);
             fprintf(stdout,"%s",COLOR_JKIMYEI);
             fprintf(stdout,">> > ... uwaabo_index: [%d], value:%f\n",idx,glti(((__wikimyei_t *)_wikimyei))->__uwaabo_state[idx]);
-            fprintf(stdout,">> > ... ratio: %.4f, adventage: %.4f\n",_ratio_handler[idx],glti(((__wikimyei_t *)_wikimyei))->__uwaabo_gae_adventage[idx]);
             fprintf(stdout,">> > ... log(uwaabo_state[idx]): %f, log(old_uwaabo): %f\n",log(glti(((__wikimyei_t *)_wikimyei))->__uwaabo_state[idx]),log(_old_uwaabo_handler[idx]));
             fprintf(stdout,">> > ... uwaabo_beta: %.4f, surr1: %.4f, surr2: %.4f\n",((__wikimyei_t *)_wikimyei)->__uwaabo_beta,_surr1_handler[idx],_surr2_handler[idx]);
             fprintf(stdout,">> > ... entropy_beta: %.4f, entropy: %.4f\n",((__wikimyei_t *)_wikimyei)->__entropy_beta,glti(((__wikimyei_t *)_wikimyei))->__entropy_state[0x00]);
-            fprintf(stdout,">> > ... uwaabo_gae_returns: %.4f, munaajpi_state: %.4f\n",glti(((__wikimyei_t *)_wikimyei))->__uwaabo_gae_returns[idx],glti(((__wikimyei_t *)_wikimyei))->__jkimyei_uwaabo_munaajpi_state[idx]);
+            fprintf(stdout,">> > ... uwaabo_gae_returns: %.4f, munaajpi_state: %.4f\n",glti(((__wikimyei_t *)_wikimyei))->__uwaabo_gae_returns[0x00],glti(((__wikimyei_t *)_wikimyei))->__jkimyei_uwaabo_munaajpi_state[0x00]);
             fprintf(stdout,"%s",COLOR_REGULAR);
             #endif
             _entropy_loss_handler[0x00]=((__wikimyei_t *)_wikimyei)->__entropy_beta*glti(((__wikimyei_t *)_wikimyei))->__entropy_state[0x00];
             _uwaabo_loss_handler[idx]=((__wikimyei_t *)_wikimyei)->__uwaabo_beta*min(_surr1_handler[idx],_surr2_handler[idx]) - _entropy_loss_handler[0x00];
-            _munaajpi_loss_handler[idx]=((__wikimyei_t *)_wikimyei)->__munaajpi_beta*pow(glti(((__wikimyei_t *)_wikimyei))->__uwaabo_gae_returns[idx]-glti(((__wikimyei_t *)_wikimyei))->__jkimyei_uwaabo_munaajpi_state[idx],2) - _entropy_loss_handler[0x00];
             #ifdef JKIMYEI_DEBUG_v2
             fprintf(stdout,"%s>> > ... jkimyei_one: set_uwaabo:\t(uw_beta*min(sur1,sur2)-h_beta*H)%s\n",COLOR_JKIMYEI,COLOR_REGULAR);
             fprintf(stdout,"%s>> > ... jkimyei_one: munaajpi_loss:\t(mjpi_beta*(uw_returns-mjpi_state)^2-h_beta*H)%s\n",COLOR_JKIMYEI,COLOR_REGULAR);
-            #endif
-            #ifdef JKIMYEI_DEBUG
-            fprintf(stdout,"%s>> > [%d] UWAABO INDEX: [%d] %s _entropy_loss: %f, \t %s_uwaabo_loss: %f, \t %s_munaajpi_loss: %f%s\n",COLOR_JKIMYEI,((__wikimyei_t *)_wikimyei)->__load_index,idx,COLOR_ENTROPY,_entropy_loss_handler[0x00],COLOR_UWAABO,_uwaabo_loss_handler[idx],COLOR_MUNAAJPI,_munaajpi_loss_handler[idx],COLOR_JKIMYEI);
             #endif
             set_wapaajco_index_eq(\
                 ((__wikimyei_t *)_wikimyei)->__uwaabo->__uwaabo_tsinuu, \
                 _uwaabo_loss_handler[idx], \
                 idx);
-            set_wapaajco_index_eq(\
-            ((__wikimyei_t *)_wikimyei)->__munaajpi->__munaajpi_tsinuu, \
-                _munaajpi_loss_handler[idx],
-                idx);
         }
+        // This way the loss is cuadratic but keeps the sign
+        pow_aux_arg=glti(((__wikimyei_t *)_wikimyei))->__uwaabo_gae_returns[0x00]-glti(((__wikimyei_t *)_wikimyei))->__jkimyei_uwaabo_munaajpi_state[0x00];
+        _munaajpi_loss_handler[0x00]=((__wikimyei_t *)_wikimyei)->__munaajpi_beta*sign_fun(pow_aux_arg)*pow(pow_aux_arg,2) - _entropy_loss_handler[0x00];
+        // printf("waka: -> munaajpi_loss [%d] : %f\n",0x00,_munaajpi_loss_handler[0x00]);
+        set_wapaajco_index_eq(\
+        ((__wikimyei_t *)_wikimyei)->__munaajpi->__munaajpi_tsinuu, \
+            _munaajpi_loss_handler[0x00],
+            0x00);
         // COMPUTE THE UPDATE (by direct nabla, nabla as in grek for gradient)
         jkimyei_tsinuu_bydirectNABLA(((__wikimyei_t *)_wikimyei)->__uwaabo->__uwaabo_tsinuu);
         jkimyei_tsinuu_bydirectNABLA(((__wikimyei_t *)_wikimyei)->__munaajpi->__munaajpi_tsinuu);
@@ -277,22 +276,31 @@ void jkimyei_one(void *_wikimyei){
         diff_duuruva(((__wikimyei_t *)_wikimyei)->__wajyu->__metric->__jkimyei_uwaabo_munaajpi_loss_duuruva);
         dist_duuruva(((__wikimyei_t *)_wikimyei)->__wajyu->__metric->__jkimyei_uwaabo_munaajpi_loss_duuruva);
         #endif
+        // --- --- 
         #ifdef TSINUU_DEBUG
         fprintf(stdout,"%sUWAABO:\n",COLOR_UWAABO);print_tsninuu_jkimyei_results(((__wikimyei_t *)_wikimyei)->__uwaabo->__uwaabo_tsinuu);
         fprintf(stdout,"%sMUNAAJPI:\n",COLOR_MUNAAJPI);print_tsninuu_jkimyei_results(((__wikimyei_t *)_wikimyei)->__munaajpi->__munaajpi_tsinuu);
         #endif
         #ifdef JKIMYEI_DEBUG
+        fprintf(stdout,"%s>> > [%d] JKIMYEI LOSSES: %s _entropy_loss: %.4f, \t %s_munaajpi_loss: %.4f%s\t",\
+            COLOR_JKIMYEI,((__wikimyei_t *)_wikimyei)->__load_index,\
+            COLOR_ENTROPY,_entropy_loss_handler[0x00],\
+            COLOR_MUNAAJPI,_munaajpi_loss_handler[0x00],\
+            COLOR_REGULAR);
+        fprintf(stdout,"%s_uwaabo_loss: [",COLOR_UWAABO);
+        for(unsigned int idx=0x00;idx<((__wikimyei_t *)_wikimyei)->__uwaabo->__uwaabo_state_size;idx++){fprintf(stdout,"%.4f, ",_uwaabo_loss_handler[idx]);}
+        fprintf(stdout,"]%s\n",COLOR_REGULAR);
         fprintf(stdout,">> > jkimyei_one, jkimyei ready for load index %d\n",((__wikimyei_t *)_wikimyei)->__load_index);
         #endif
         // RESET HANDLERS // #FIXME trust it, there is on need to reset
-        _entropy_loss_handler[0x00]=0x00;
         for(unsigned int idx=0x00;idx<((__wikimyei_t *)_wikimyei)->__uwaabo->__uwaabo_state_size;idx++){
             _uwaabo_loss_handler[idx]=0x00;
-            _munaajpi_loss_handler[idx]=0x00;
+            _ratio_handler[idx]=0x00;
+            _surr1_handler[idx]=0x00;
+            _surr2_handler[idx]=0x00;
         }
-        _ratio_handler=0x00;
-        _surr1_handler=0x00;
-        _surr2_handler=0x00;
+        _munaajpi_loss_handler[0x00]=0x00;
+        _entropy_loss_handler[0x00]=0x00;
     }else{
         #ifdef JKIMYEI_DEBUG
         fprintf(stdout,">> > jkimyei_one, skip jkimyei; duuruva not ready for load index %d\n",((__wikimyei_t *)_wikimyei)->__load_index);
@@ -310,57 +318,198 @@ void jkimyei_one(void *_wikimyei){
     free(_entropy_loss_handler);
 }
 /*
-    WIKIMYJKYEI
+    JKIMYEI (jk)
+
+        JK_return means the flag state for more aviable elements for jk over the whole load.
 */
-void wikimyei_jkimyei(__wikimyei_t *_wikimyei, unsigned int _epochs){ // Asumes load is full
+/*
+    LOAD NEXT
+*/
+___cwcn_bool_t ___JK_COMPUTE_FOR_AVIABLE_NEXT(__wikimyei_t *_wikimyei){
+    fprintf(stdout, "___JK_COMPUTE_FOR_AVIABLE_NEXT\n");
+    ___cwcn_bool_t jk_noBreak_flag_aux_2=load_go_up(_wikimyei)!=-1;
+    ___cwcn_bool_t jk_noBreak_flag_aux_1=___JK_ONE_JK_SIZE_WRAPPER(_wikimyei);
+    return jk_noBreak_flag_aux_1 && jk_noBreak_flag_aux_2;
+}
+___cwcn_bool_t ___JK_COMPUTE_FOR_AVIABLE_NEXT_POSITIVE(__wikimyei_t *_wikimyei){
+    fprintf(stdout, "___JK_COMPUTE_FOR_AVIABLE_NEXT_POSITIVE\n");
+    ___cwcn_bool_t jk_noBreak_flag_aux_1=___CWCN_FALSE;
+    ___cwcn_bool_t jk_noBreak_flag_aux_2=___CWCN_FALSE;
+    do{jk_noBreak_flag_aux_2=(load_go_up(_wikimyei)!=-1);
+    }while(glti(_wikimyei)->__imibajcho_munaajpi_state[0x00]<0x00 && jk_noBreak_flag_aux_2);
+    if(!jk_noBreak_flag_aux_2){jk_noBreak_flag_aux_1=___JK_ONE_JK_SIZE_WRAPPER(_wikimyei);}
+    return jk_noBreak_flag_aux_1 && jk_noBreak_flag_aux_2;
+}
+___cwcn_bool_t ___JK_COMPUTE_FOR_AVIABLE_NEXT_NEGATIVE(__wikimyei_t *_wikimyei){
+    fprintf(stdout, "___JK_COMPUTE_FOR_AVIABLE_NEXT_NEGATIVE\n");
+    ___cwcn_bool_t jk_noBreak_flag_aux_1=___CWCN_FALSE;
+    ___cwcn_bool_t jk_noBreak_flag_aux_2=___CWCN_FALSE;
+    do{jk_noBreak_flag_aux_2=(load_go_up(_wikimyei)!=-1);
+    }while(glti(_wikimyei)->__imibajcho_munaajpi_state[0x00]>0x00 && jk_noBreak_flag_aux_2);
+    if(!jk_noBreak_flag_aux_2){jk_noBreak_flag_aux_1=___JK_ONE_JK_SIZE_WRAPPER(_wikimyei);}
+    return jk_noBreak_flag_aux_1 && jk_noBreak_flag_aux_2;
+}
+/*
+    LOAD PAST
+*/
+___cwcn_bool_t ___JK_COMPUTE_FOR_AVIABLE_PAST(__wikimyei_t *_wikimyei){
+    fprintf(stdout, "___JK_COMPUTE_FOR_AVIABLE_PAST\n");
+    ___cwcn_bool_t jk_noBreak_flag_aux_2=load_go_down(_wikimyei)!=-1;
+    ___cwcn_bool_t jk_noBreak_flag_aux_1=___JK_ONE_JK_SIZE_WRAPPER(_wikimyei);
+    return jk_noBreak_flag_aux_1 && jk_noBreak_flag_aux_2;
+}
+___cwcn_bool_t ___JK_COMPUTE_FOR_AVIABLE_PAST_POSITIVE(__wikimyei_t *_wikimyei){
+    ___cwcn_bool_t jk_noBreak_flag_aux_1=___CWCN_FALSE;
+    ___cwcn_bool_t jk_noBreak_flag_aux_2=___CWCN_FALSE;
+    do{jk_noBreak_flag_aux_2=(load_go_down(_wikimyei)!=-1);
+    }while(glti(_wikimyei)->__imibajcho_munaajpi_state[0x00]<0x00 && jk_noBreak_flag_aux_2);
+    if(!jk_noBreak_flag_aux_2){jk_noBreak_flag_aux_1=___JK_ONE_JK_SIZE_WRAPPER(_wikimyei);}
+    return jk_noBreak_flag_aux_1 && jk_noBreak_flag_aux_2;
+}
+___cwcn_bool_t ___JK_COMPUTE_FOR_AVIABLE_PAST_NEGATIVE(__wikimyei_t *_wikimyei){
+    fprintf(stdout, "___JK_COMPUTE_FOR_AVIABLE_PAST_NEGATIVE\n");
+    ___cwcn_bool_t jk_noBreak_flag_aux_1=___CWCN_FALSE;
+    ___cwcn_bool_t jk_noBreak_flag_aux_2=___CWCN_FALSE;
+    do{jk_noBreak_flag_aux_2=(load_go_down(_wikimyei)!=-1);
+    }while(glti(_wikimyei)->__imibajcho_munaajpi_state[0x00]>0x00 && jk_noBreak_flag_aux_2);
+    if(!jk_noBreak_flag_aux_2){jk_noBreak_flag_aux_1=___JK_ONE_JK_SIZE_WRAPPER(_wikimyei);}
+    return jk_noBreak_flag_aux_1 && jk_noBreak_flag_aux_2;
+}
+/*
+    RANDOM
+*/
+___cwcn_bool_t ___JK_COMPUTE_FOR_AVIABLE_RANDOM(__wikimyei_t *_wikimyei){// #FIXME assert jk_rand_index gives valid values
+    fprintf(stdout, "___JK_COMPUTE_FOR_AVIABLE_RANDOM\n");
+    load_to_index(_wikimyei, jk_rand_index(_wikimyei));
+    ___cwcn_bool_t jk_noBreak_flag_aux_1=___JK_ONE_JK_SIZE_WRAPPER(_wikimyei);
+    return jk_noBreak_flag_aux_1;
+}
+___cwcn_bool_t ___JK_COMPUTE_FOR_AVIABLE_RANDOM_POSITIVE(__wikimyei_t *_wikimyei){
+    fprintf(stdout, "___JK_COMPUTE_FOR_AVIABLE_RANDOM_POSITIVE\n");
+    unsigned int c_break_counter_c=0x00;
+    ___cwcn_bool_t jk_noBreak_flag_aux_1=___CWCN_TRUE;
+    do{c_break_counter_c++;
+        if(c_break_counter_c>_JK_BREAK_COUNTER_){
+            fprintf(stderr,"\n\n\t\t%s[_JK_BREAK_COUNTER_ INTERRUPT] : unable to find aviable random positive.%s\n\n",COLOR_DANGER,COLOR_REGULAR);
+            jk_noBreak_flag_aux_1=___CWCN_FALSE;
+            break;
+        }
+        load_to_index(_wikimyei, jk_rand_index(_wikimyei));
+    }while(glti(_wikimyei)->__imibajcho_munaajpi_state[0x00]<0x00);
+    if(jk_noBreak_flag_aux_1){jk_noBreak_flag_aux_1=___JK_ONE_JK_SIZE_WRAPPER(_wikimyei);}
+    return jk_noBreak_flag_aux_1;
+}
+___cwcn_bool_t ___JK_COMPUTE_FOR_AVIABLE_RANDOM_NEGATIVE(__wikimyei_t *_wikimyei){
+    fprintf(stdout, "___JK_COMPUTE_FOR_AVIABLE_RANDOM_NEGATIVE\n");
+    unsigned int c_break_counter_c=0x00;
+    ___cwcn_bool_t jk_noBreak_flag_aux_1=___CWCN_TRUE;
+    do{c_break_counter_c++;
+        if(c_break_counter_c>_JK_BREAK_COUNTER_){
+            fprintf(stderr,"\n\n\t\t%s[_JK_BREAK_COUNTER_ INTERRUPT] : unable to find aviable random negative.%s\n\n",COLOR_DANGER,COLOR_REGULAR);
+            jk_noBreak_flag_aux_1=___CWCN_FALSE;
+            break;
+        }
+        load_to_index(_wikimyei, jk_rand_index(_wikimyei));
+    }while(glti(_wikimyei)->__imibajcho_munaajpi_state[0x00]>0x00);
+    if(jk_noBreak_flag_aux_1){jk_noBreak_flag_aux_1=___JK_ONE_JK_SIZE_WRAPPER(_wikimyei);}
+    return jk_noBreak_flag_aux_1;
+}
+
+/*
+    WRAPPERS
+*/
+___cwcn_bool_t ___JK_ONE_JK_SIZE_WRAPPER(__wikimyei_t *_wikimyei){
+    if(!glti(_wikimyei)->__pending_munaajpi){
+        for(unsigned int jk_ctx=0x00;jk_ctx<((__wikimyei_t *)_wikimyei)->__jkimyei->__jk_size;jk_ctx++){
+            _wikimyei->__jkimyei->__jk_one(((void *)_wikimyei));
+        }
+    }
+    return ___CWCN_TRUE; // allways aviable
+}
+___cwcn_bool_t ___JK_ONE_JK_COMPUTE_MULTIPLEXER_WRAPPER(__wikimyei_t *_wikimyei, __list_jk_load_method_t _jk_load_method){
+    ___cwcn_bool_t jk_noBreak_flag_m=___CWCN_FALSE;
+    switch(_jk_load_method){
+        case JK_LOAD_AVIABLE_NEXT:  jk_noBreak_flag_m=___JK_COMPUTE_FOR_AVIABLE_NEXT(_wikimyei);break;
+        case JK_LOAD_AVIABLE_NEXT_POSITIVE:jk_noBreak_flag_m=___JK_COMPUTE_FOR_AVIABLE_NEXT_POSITIVE(_wikimyei);break;
+        case JK_LOAD_AVIABLE_NEXT_NEGATIVE:jk_noBreak_flag_m=___JK_COMPUTE_FOR_AVIABLE_NEXT_NEGATIVE(_wikimyei);break;
+        case JK_LOAD_AVIABLE_PAST:jk_noBreak_flag_m=___JK_COMPUTE_FOR_AVIABLE_PAST(_wikimyei);break;
+        case JK_LOAD_AVIABLE_PAST_POSITIVE:jk_noBreak_flag_m=___JK_COMPUTE_FOR_AVIABLE_PAST_POSITIVE(_wikimyei);break;
+        case JK_LOAD_AVIABLE_PAST_NEGATIVE:jk_noBreak_flag_m=___JK_COMPUTE_FOR_AVIABLE_PAST_NEGATIVE(_wikimyei);break;
+        case JK_LOAD_AVIABLE_RANDOM:jk_noBreak_flag_m=___JK_COMPUTE_FOR_AVIABLE_RANDOM(_wikimyei);break;
+        case JK_LOAD_AVIABLE_RANDOM_POSITIVE:jk_noBreak_flag_m=___JK_COMPUTE_FOR_AVIABLE_RANDOM_POSITIVE(_wikimyei);break;
+        case JK_LOAD_AVIABLE_RANDOM_NEGATIVE:jk_noBreak_flag_m=___JK_COMPUTE_FOR_AVIABLE_RANDOM_NEGATIVE(_wikimyei);break;
+        default:
+            fprintf(stderr,">> ERROR, encounter unknown <_jk_load_method> on <__JK_ONE_JK_MULTIPLEXER_WRAPPER>\n\n");
+            assert(0x00);
+            break;
+    }
+    return jk_noBreak_flag_m;
+
+}
+void ___JK_EPOCH_JK_METHOD_MULTIPLEXER_WRAPPER(__wikimyei_t *_wikimyei, __list_jk_method_t _jk_method){
+    // This method operates over all epoch
+    unsigned int l_ctx_e=0x00;
+    ___cwcn_bool_t c_noBreak_flag_e=0x00;
+    switch(_jk_method){
+        case JK_METHOD_FORWARD_SEQUENTAL: // training is done in a forward sequential manner, as if it where reliving the network
+            load_to_start(_wikimyei);
+            do{if(l_ctx_e>_wikimyei->__load_size){break;}else{l_ctx_e++;}
+            }while(___JK_ONE_JK_COMPUTE_MULTIPLEXER_WRAPPER(_wikimyei,\
+            JK_LOAD_AVIABLE_NEXT));
+            break;
+        case JK_METHOD_RANDOM: // training is done by random sampling
+            do{if(l_ctx_e>_wikimyei->__load_size){break;}else{l_ctx_e++;}
+            }while(___JK_ONE_JK_COMPUTE_MULTIPLEXER_WRAPPER(_wikimyei,\
+            JK_LOAD_AVIABLE_RANDOM));
+            break;
+        case JK_METHOD_RANDOM_POSITIVE: // training is done on random sampling of positive imibajcho_munaajpi, 
+            do{if(l_ctx_e>_wikimyei->__load_size){break;}else{l_ctx_e++;}
+            }while(___JK_ONE_JK_COMPUTE_MULTIPLEXER_WRAPPER(_wikimyei,\
+            JK_LOAD_AVIABLE_RANDOM_POSITIVE));
+            break;
+        case JK_METHOD_RANDOM_NEGATIVE: // training is done on random sampling of positive imibajcho_munaajpi, 
+            do{if(l_ctx_e>_wikimyei->__load_size){break;}else{l_ctx_e++;}
+            }while(___JK_ONE_JK_COMPUTE_MULTIPLEXER_WRAPPER(_wikimyei,\
+            JK_LOAD_AVIABLE_RANDOM_NEGATIVE));
+            break;
+        case JK_METHOD_RANDOM_2_POSITIVE_1_NEGATIVE:
+            do{
+                if(l_ctx_e%3!=0)    {   c_noBreak_flag_e=___JK_ONE_JK_COMPUTE_MULTIPLEXER_WRAPPER(_wikimyei,JK_LOAD_AVIABLE_RANDOM_POSITIVE);}
+                else                {   c_noBreak_flag_e=___JK_ONE_JK_COMPUTE_MULTIPLEXER_WRAPPER(_wikimyei,JK_LOAD_AVIABLE_RANDOM_NEGATIVE);}
+                if(l_ctx_e>_wikimyei->__load_size){break;}else{l_ctx_e++;}
+            }while(c_noBreak_flag_e);
+            break;
+        case JK_METHOD_RANDOM_3_POSITIVE_1_NEGATIVE:
+            do{
+                if(l_ctx_e%4!=0)    {   c_noBreak_flag_e=___JK_ONE_JK_COMPUTE_MULTIPLEXER_WRAPPER(_wikimyei,JK_LOAD_AVIABLE_RANDOM_POSITIVE);}
+                else                {   c_noBreak_flag_e=___JK_ONE_JK_COMPUTE_MULTIPLEXER_WRAPPER(_wikimyei,JK_LOAD_AVIABLE_RANDOM_NEGATIVE);}
+                if(l_ctx_e>_wikimyei->__load_size){break;}else{l_ctx_e++;}
+            }while(c_noBreak_flag_e);
+            break;
+        default:
+            fprintf(stderr, ">> ERROR, encounter unknown <__list_jk_method_t> in <wikimyei_jkimyei>\n\n");
+            assert(0x00);
+            break;
+    }
+}
+/*
+        JKIMYEI THE WIKIMYEI
+*/
+void wikimyei_jkimyei(__wikimyei_t *_wikimyei, unsigned int _epochs, __list_jk_method_t _jk_method){ // Asumes load is full
+    // #FIXME add breaks for infinite loops when searching for load item
 	#ifdef JKIMYEI_DEBUG
 	fprintf(stdout,">> request wikimyei_jkimyei\n");
 	#endif
     // int c_index=_wikimyei->__load_index;
-    if(_wikimyei->__load_size>_wikimyei->__horizon_munaajpi){
-        for(unsigned int e_ctx=0x00;e_ctx<_epochs;e_ctx++){
-            #ifdef WIKIMYEI_DEBUG
-            fprintf(stdout,"%s>> > --- --- --- --- --- --- --- --- --- --- --- JKIMYEI EPOCH: %d%s\n",COLOR_DANGER,e_ctx,COLOR_REGULAR);
-            #endif
-            GAE(_wikimyei); // #FIXME maybe, ¿changes with epoch? ¿not redundant?
-            load_to_start(_wikimyei);
-            do{
-                if(!glti(_wikimyei)->__pending_munaajpi){
-                    for(unsigned int jk_ctx=0x00;jk_ctx<((__wikimyei_t *)_wikimyei)->__jkimyei->__jk_size;jk_ctx++){
-                        _wikimyei->__jkimyei->__jk_one(((void *)_wikimyei));
-                    }
-                }
-            }while(load_go_up(_wikimyei)!=-1);
-        }
-        // load_to_index(_wikimyei,c_index); // #FIXME, might rise to many index displacements, slow.
-    }else{
-        fprintf(stdout,">> > ... [WARNING] [skipin] wikimyei_jkimyei, load size is too small, for horizon munaajpi.\n");
+    for(unsigned int e_ctx=0x00;e_ctx<_epochs;e_ctx++){
+        fprintf(stdout,"%s>> > ... --- --- --- --- --- --- EPOCH : [%d] %s - JK_METHOD : [%d]\n",COLOR_DANGER,e_ctx,COLOR_REGULAR,_jk_method);
+        if(_wikimyei->__load_size<_wikimyei->__horizon_munaajpi){fprintf(stdout,">> > ... [WARNING] [skipin] wikimyei_jkimyei, load size is too small, for horizon munaajpi.\n");}
+        GAE(_wikimyei); // #FIXME maybe, ¿changes with epoch? ¿not redundant? ¿aint it the same for every epoch?
+        ___JK_EPOCH_JK_METHOD_MULTIPLEXER_WRAPPER(_wikimyei, _jk_method);
     }
-}
-void wikimyei_jkimyei_uwaabo_exploration(__wikimyei_t *_wikimyei, unsigned int _epochs){ // Asumes load is full
-	#ifdef JKIMYEI_DEBUG
-	fprintf(stdout,">> request wikimyei_jkimyei_uwaabo_exploration\n");
-	#endif
-    // int c_index=_wikimyei->__load_index;
-    if(_wikimyei->__load_size>_wikimyei->__horizon_munaajpi){
-        for(unsigned int e_ctx=0x00;e_ctx<_epochs;e_ctx++){
-            #ifdef WIKIMYEI_DEBUG
-            fprintf(stdout,"%s>> > --- --- --- --- --- --- --- --- --- --- --- JKIMYEI UWAABO EXPLORATION EPOCH: %d%s\n",COLOR_DANGER,e_ctx,COLOR_REGULAR);
-            #endif
-            for(unsigned int l_ctx=0x00;l_ctx<_wikimyei->__load_size;l_ctx++){ // !!! not with while due to rand
-                #ifdef WIKIMYEI_DEBUG
-                    fprintf(stdout,"%s>> > --- --- --- --- --- --- --- --- --- --- --- JKIMYEI UWAABO EXPLORATION EPOCH: %d JK %d%s\n",COLOR_DANGER,e_ctx, l_ctx,COLOR_REGULAR);
-                #endif
-                for(unsigned int jk_ctx=0x00;jk_ctx<((__wikimyei_t *)_wikimyei)->__jkimyei->__jk_size;jk_ctx++){
-                    // _wikimyei->__jkimyei->__jk_one(((void *)_wikimyei));
-
-                }
-            }
-        }
-        // load_to_index(_wikimyei,c_index); // #FIXME, might rise to many index displacements, slow.
-    }else{
-        fprintf(stdout,">> > ... [WARNING] [skipin] wikimyei_jkimyei_uwaabo_exploration, load size is too small, for horizon munaajpi.\n");
-    }
+    // load_to_index(_wikimyei,c_index); // #FIXME, might rise to many index displacements, slow.
+    // #FIXME train on random iter
+    // #FIXME 
 }
 /*
 

@@ -71,6 +71,7 @@ void reset_duuruva(__duuruva_t *_duuruva);
 void reset_duuruva_max_min(__duuruva_t *_duurva);
 void diff_duuruva(__duuruva_t *_duuruva);
 void dist_duuruva(__duuruva_t *_duuruva);
+void diff_duuruva_from_past_duuruva_vector(__duuruva_t *_duuruva, __cwcn_type_t *_past_duuruva_vect, ___cwcn_bool_t *_is_norm_stand);
 void print_duuruva(__duuruva_t *_duuruva);
 
 void set_duuruva_value(__duuruva_t *_duuruva, __cwcn_type_t *_set_vector);

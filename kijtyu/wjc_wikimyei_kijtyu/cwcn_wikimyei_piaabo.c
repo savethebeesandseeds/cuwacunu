@@ -14,8 +14,8 @@ __trayectory_t *trayectory_fabric(__wikimyei_t *_wikimyei){
     new_trayectory->__alliu_state=malloc(_wikimyei->__alliu->__source_size*sizeof(__cwcn_type_t));
     new_trayectory->__nonuwaabo_alliu_state=malloc(_wikimyei->__alliu->__source_size*sizeof(__cwcn_type_t));
     new_trayectory->__uwaabo_state=malloc(_wikimyei->__uwaabo->__uwaabo_state_size*sizeof(__cwcn_type_t));
-    new_trayectory->__uwaabo_gae_returns=malloc(_wikimyei->__uwaabo->__uwaabo_state_size*sizeof(__cwcn_type_t));
-    new_trayectory->__uwaabo_gae_adventage=malloc(_wikimyei->__uwaabo->__uwaabo_state_size*sizeof(__cwcn_type_t));
+    new_trayectory->__uwaabo_gae_returns=malloc(_wikimyei->__munaajpi->__jkimyei_uwaabo_munaajpi_state_size*sizeof(__cwcn_type_t));
+    new_trayectory->__uwaabo_gae_adventage=malloc(_wikimyei->__munaajpi->__jkimyei_uwaabo_munaajpi_state_size*sizeof(__cwcn_type_t));
     new_trayectory->__tsane_state=malloc(_wikimyei->__tsane->__tsane_size*sizeof(__cwcn_type_t));
     new_trayectory->__jkimyei_uwaabo_munaajpi_state=malloc(_wikimyei->__munaajpi->__jkimyei_uwaabo_munaajpi_state_size*sizeof(__cwcn_type_t));
     new_trayectory->__imibajcho_munaajpi_state=malloc(0x01*sizeof(__cwcn_type_t)); // #FIXME, is J onedimensional
@@ -36,8 +36,8 @@ __trayectory_t *trayectory_fabric(__wikimyei_t *_wikimyei){
     new_trayectory->__jkimyei_uwaabo_munaajpi_duuruva_state=malloc(_wikimyei->__wajyu->__metric->__jkimyei_uwaabo_munaajpi_duuruva->__duuruva_vector_size*sizeof(__cwcn_type_t));
     for(unsigned int idx=0x00;idx<_wikimyei->__wajyu->__metric->__jkimyei_uwaabo_munaajpi_duuruva->__duuruva_vector_size;idx++){new_trayectory->__jkimyei_uwaabo_munaajpi_duuruva_state[idx]=0x00;}
     #endif
-    for(unsigned int idx=0x00;idx<_wikimyei->__uwaabo->__uwaabo_state_size;idx++){new_trayectory->__uwaabo_gae_adventage[idx]=0x00;}
-    for(unsigned int idx=0x00;idx<_wikimyei->__uwaabo->__uwaabo_state_size;idx++){new_trayectory->__uwaabo_gae_returns[idx]=0x00;}
+    for(unsigned int idx=0x00;idx<_wikimyei->__munaajpi->__jkimyei_uwaabo_munaajpi_state_size;idx++){new_trayectory->__uwaabo_gae_adventage[idx]=0x00;}
+    for(unsigned int idx=0x00;idx<_wikimyei->__munaajpi->__jkimyei_uwaabo_munaajpi_state_size;idx++){new_trayectory->__uwaabo_gae_returns[idx]=0x00;}
     #if defined(ALOCATION_DEBUG) // #FIXME this is only used here!
     fprintf(stdout,"%s     +++ [trayectory_fabric]:\n%s",COLOR_ALOCATION_ADD,COLOR_REGULAR);
     fprintf(stdout,"%s\t __alliu_state: %s%p:\n",COLOR_ALOCATION_ADD,COLOR_REGULAR,new_trayectory->__alliu_state);
@@ -216,7 +216,7 @@ __wikimyei_t *wikimyei_fabric(
     new_wikimyei->__alliu=alliu_fabric(_alliu_source,_alliu_source_size);
     new_wikimyei->__tsane=tsane_fabric(_take_tsane, _tsane_size);
     new_wikimyei->__uwaabo=uwaabo_fabric(c_uwaabo_base_w_size, c_uwaabo_state_size,_uwaabo_waapajco_potency);
-    new_wikimyei->__munaajpi=munaajpi_fabric(c_munaajpi_base_size, c_uwaabo_state_size,_munaajpi_waapajco_potency);
+    new_wikimyei->__munaajpi=munaajpi_fabric(c_munaajpi_base_size, 0x01,_munaajpi_waapajco_potency);
     new_wikimyei->__wajyu=wajyu_fabric(new_wikimyei);
     /* flags */
     new_wikimyei->__flags=malloc(sizeof(__wk_flags_t));

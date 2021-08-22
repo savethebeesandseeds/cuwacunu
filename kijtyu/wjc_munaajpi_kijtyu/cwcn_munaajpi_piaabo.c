@@ -5,17 +5,22 @@ __munaajpi_t *munaajpi_fabric(\
             __cwcn_type_t _munaajpi_waapajco_potency){
     /* config */
     __munaajpi_t *new_munaajpi=malloc(sizeof(__munaajpi_t));
-    new_munaajpi->__jkimyei_uwaabo_munaajpi_state_size=_munaajpi_state_size;
+    new_munaajpi->__jkimyei_uwaabo_munaajpi_state_size=_munaajpi_state_size; // 0x01 equal to the size of imibajcho_munaajpi
     new_munaajpi->__munaajpi_base_w_size=_munaajpi_base_size;
     new_munaajpi->__munaajpi_w_base=malloc(new_munaajpi->__munaajpi_base_w_size*sizeof(__cwcn_type_t));
     for(unsigned int idx=0x00;idx<_munaajpi_base_size;idx++){new_munaajpi->__munaajpi_w_base[idx]=0x00;}
     /* tsinuu */
-    unsigned int mjpi_total_layers=0x04;
+    unsigned int mjpi_total_layers=0x05;
     unsigned int mjpi_input_size=_munaajpi_base_size; // huge thing
     unsigned int mjpi_output_size=_munaajpi_state_size;
-    unsigned int mjpi_layers_sizes[0x04] = {mjpi_input_size,32,16,mjpi_output_size};
+    unsigned int mjpi_layers_sizes[0x05] = {mjpi_input_size,32,42,16,mjpi_output_size};
     #ifndef DEBUG_LINEAR_EXPERIMENT
-    __list_activations_t mjpi_activations_iho[0x04] = {LINEAR, SIGNEDSIGMOID, SIGNEDSIGMOID,SIGNEDSIGMOID};
+    __list_activations_t mjpi_activations_iho[0x05] = {
+                            LINEAR, 
+                            SIGNEDSIGMOID, 
+                            SIGNEDSIGMOID, 
+                            SIGNEDSIGMOID, 
+                            SIGNEDSIGMOID}; // must be signed sigmoid
     #else
     __list_activations_t mjpi_activations_iho[0x05] = {LINEAR, LINEAR, SIGMOID, SIGMOID, SIGNEDSIGMOID};
     #endif
@@ -48,13 +53,13 @@ __munaajpi_t *munaajpi_fabric(\
 
     #ifndef DEBUG_LINEAR_EXPERIMENT
     tsinuu_initialize_weights_random(new_munaajpi->__munaajpi_tsinuu, 0.5, -0.5);
-    tsinuu_initialize_bias_random(new_munaajpi->__munaajpi_tsinuu, 0.5, -0.5);
+    // tsinuu_initialize_bias_random(new_munaajpi->__munaajpi_tsinuu, 0.5, -0.5);
+    // tsinuu_initialize_weights_zero(new_munaajpi->__munaajpi_tsinuu);
+    tsinuu_initialize_bias_zero(new_munaajpi->__munaajpi_tsinuu);
     #else
     tsinuu_initialize_weights_fixed(new_munaajpi->__munaajpi_tsinuu,1.0);
     tsinuu_initialize_bias_fixed(new_munaajpi->__munaajpi_tsinuu,1.0);
     #endif
-    // tsinuu_initialize_weights_zero(new_munaajpi->__munaajpi_tsinuu);
-    tsinuu_initialize_bias_zero(new_munaajpi->__munaajpi_tsinuu);
     set_all_nodebooleanpardon_parametric(new_munaajpi->__munaajpi_tsinuu, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00);
     pardon_inputoutput_bias(new_munaajpi->__munaajpi_tsinuu); // #FIXME check if needed of enabled
     set_all_linebooleanpardon_parametric(new_munaajpi->__munaajpi_tsinuu, 0x00, 0x00);
@@ -105,12 +110,9 @@ ___cwcn_bool_t set_load_pending_munaajpi(__wikimyei_t *_wikimyei){
                 #endif
             }if(c_item->__pending_munaajpi_index>=_wikimyei->__horizon_munaajpi){
                 load_to_index(_wikimyei,c_index);
-                _wikimyei->__flags->__nonuwaabo_alliu_done=___CWCN_TRUE;
+                _wikimyei->__flags->__nonuwaabo_alliu_done=___CWCN_TRUE; // #FIXME makes no sence
                 // STAND FOR IMIBAJCHO MUNAAJPI
                 ___imibajcho_munaajpi_hash(_wikimyei);
-                // STAND FOR UWAABO MUNAAJPI
-                ___jkimyei_uwaabo_munaajpi_hash(_wikimyei);
-                ___jkimyei_uwaabo_munaajpi_duuruva_hash(_wikimyei);
                 break;
             }
         }while(load_go_up(_wikimyei)!=-1); // here one might try to make time go backward
@@ -225,11 +227,11 @@ void compute_imibajcho_munaajpi(__wikimyei_t *_wikimyei){ // J, meaning the stat
     fprintf(stdout," ]%s\n",COLOR_REGULAR);
     #endif
     #ifdef MUNJAAPI_DEBUG
-        printf(">> > .g. nonuwaabo alliu state:\t[");
-        for(unsigned int m_idx=0x00;m_idx<_wikimyei->__alliu->__source_size;m_idx++){
-            printf(" %.2f",glti(_wikimyei)->__nonuwaabo_alliu_state[m_idx]);
-        }
-        printf(" ]\n");
+    printf(">> > .g. nonuwaabo alliu state:\t[");
+    for(unsigned int m_idx=0x00;m_idx<_wikimyei->__alliu->__source_size;m_idx++){
+        printf(" %.2f",glti(_wikimyei)->__nonuwaabo_alliu_state[m_idx]);
+    }
+    printf(" ]\n");
     #endif
 }
 void imibajcho_munaajpi_cajtucu_transformation(__wikimyei_t *_wikimyei){
@@ -267,7 +269,7 @@ void imibajcho_munaajpi_cajtucu_transformation(__wikimyei_t *_wikimyei){
     */
     glti(_wikimyei)->__imibajcho_munaajpi_state[0x00]=__IMIBAJCHO_MUNAAJPI_POTENCY__*(2.0*vlx_aux-1.0);
 
-    printf("waka: tsn: %f, ims: %f, vlx: %f, final: %f\n",tsn_aux,ims_aux,vlx_aux,glti(_wikimyei)->__imibajcho_munaajpi_state[0x00]);
+    // printf("waka: tsn: %f, ims: %f, vlx: %f, final: %f\n",tsn_aux,ims_aux,vlx_aux,glti(_wikimyei)->__imibajcho_munaajpi_state[0x00]);
     // glti(_wikimyei)->__imibajcho_munaajpi_state[0x00]=max(glti(_wikimyei)->__imibajcho_munaajpi_state[0x00],-1.0);
     // glti(_wikimyei)->__imibajcho_munaajpi_state[0x00]=min(glti(_wikimyei)->__imibajcho_munaajpi_state[0x00],1.0);
 
