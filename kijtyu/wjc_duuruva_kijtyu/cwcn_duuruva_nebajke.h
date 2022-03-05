@@ -58,6 +58,7 @@ typedef struct __duuruva {
     __duuruva_dist_tensor_t *__dv_dist;
     __duuruva_diff_tensor_t *__dv_diff;
 } __duuruva_t;
+__cwcn_type_t sign_d_fun(__cwcn_type_t x);
 void set_duuruvaboleanparametrics(
     __duuruva_t *_duuruva,
     ___cwcn_bool_t _pardon_maxmin,

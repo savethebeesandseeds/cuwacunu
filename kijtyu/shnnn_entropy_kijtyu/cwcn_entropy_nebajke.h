@@ -9,7 +9,10 @@
 // #FIXME fix dependencies
 // #FIXME duuruva instead of entropy dist (what!)
 // #define ENTROPY_DEBUG 
-#define BUGGER_ENTROPYCOSA_SIZE (unsigned int) 3 // cauchy +beta +normal =3
+// #define __ENTROPYCOSA_EXPEND_BETA__
+// #define __ENTROPYCOSA_EXPEND_CAUCHY__
+#define __ENTROPYCOSA_EXPEND_GNORMAL__
+
 #define GAMMA_SCALE (__cwcn_type_t) 1 // change to a higher number?
 #define clrscr() printf("\e[1;1H\e[2J")
 typedef _Bool ___cwcn_bool_t;

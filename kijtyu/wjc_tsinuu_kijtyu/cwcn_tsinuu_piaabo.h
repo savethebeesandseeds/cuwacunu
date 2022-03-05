@@ -15,8 +15,8 @@
 
 #define __MIN_SUM_NABLA__ (__cwcn_type_t) 0.0
 #define __TSINUU_NODE_SUM_MAX__ (__cwcn_type_t) 5.0
-#define __TSINUU_MAX_DELTA_WEIGHT__ (__cwcn_type_t) 0.01
-#define __TSINUU_MAX_DELTA_BIAS__ (__cwcn_type_t) 0.01
+#define __TSINUU_MAX_DELTA_WEIGHT__ (__cwcn_type_t) 0.1
+#define __TSINUU_MAX_DELTA_BIAS__ (__cwcn_type_t) 0.1
 
 // #define TSINUU_VERBOSE_1
 // #define TSINUU_VERBOSE_2

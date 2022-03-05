@@ -45,16 +45,16 @@ int main(){
     // JK_METHOD_RANDOM_2_POSITIVE_1_NEGATIVE
     // JK_METHOD_RANDOM_3_POSITIVE_1_NEGATIVE
 
-    for(unsigned int f_ctx=0x00;f_ctx<1;f_ctx++){       
-        printf("%s ENTER TO LIVE EXPLORATION LOAD:%s\n",COLOR_GOOD,COLOR_REGULAR);
-        begin=clock();      wikimyei_live_uwaabo_exploration_load       (c_wikimyei, c_size_of_load);                                           end=clock();printf("%s exe time [wikimyei_live_uwaabo_exploration_load] %f:%s\n", COLOR_DANGER, (double)(end-begin)/CLOCKS_PER_SEC,COLOR_REGULAR);
-        printf("%s ENTER TO EXPLORATION JK_METHOD_RANDOM_3_POSITIVE_1_NEGATIVE:%s\n",COLOR_GOOD,COLOR_REGULAR);
-        begin=clock();      wikimyei_jkimyei                            (c_wikimyei, c_epochs, JK_METHOD_RANDOM_3_POSITIVE_1_NEGATIVE);         end=clock();printf("%s exe time [wikimyei_jkimyei uwaabo exploration] %f:%s\n", COLOR_DANGER, (double)(end-begin)/CLOCKS_PER_SEC,COLOR_REGULAR);
+    for(unsigned int f_ctx=0x00;f_ctx<3;f_ctx++){
+        // printf("%s ENTER TO LIVE EXPLORATION LOAD:%s\n",COLOR_GOOD,COLOR_REGULAR);
+        // begin=clock();      wikimyei_live_uwaabo_exploration_load       (c_wikimyei, c_size_of_load);                                           end=clock();printf("%s exe time [wikimyei_live_uwaabo_exploration_load] %f:%s\n", COLOR_DANGER, (double)(end-begin)/CLOCKS_PER_SEC,COLOR_REGULAR);
+        // printf("%s ENTER TO EXPLORATION JK_METHOD_RANDOM_3_POSITIVE_1_NEGATIVE:%s\n",COLOR_GOOD,COLOR_REGULAR);
+        // begin=clock();      wikimyei_jkimyei                            (c_wikimyei, c_epochs, JK_METHOD_RANDOM_2_POSITIVE_1_NEGATIVE);                      end=clock();printf("%s exe time [wikimyei_jkimyei uwaabo exploration] %f:%s\n", COLOR_DANGER, (double)(end-begin)/CLOCKS_PER_SEC,COLOR_REGULAR);
         
         printf("%s ENTER TO LIVE LOAD ... :%s\n",COLOR_GOOD,COLOR_REGULAR);
         begin=clock();      wikimyei_live_load                          (c_wikimyei, c_size_of_load);                                           end=clock();printf("%s exe time [wikimyei_live_load] %f:%s\n", COLOR_DANGER, (double)(end-begin)/CLOCKS_PER_SEC,COLOR_REGULAR);
         printf("%s ENTER TO JK_METHOD_RANDOM_POSITIVE:%s\n",COLOR_GOOD,COLOR_REGULAR);
-        begin=clock();      wikimyei_jkimyei                            (c_wikimyei, c_epochs, JK_METHOD_RANDOM_POSITIVE);                      end=clock();printf("%s exe time [wikimyei_jkimyei] %f:%s\n", COLOR_DANGER, (double)(end-begin)/CLOCKS_PER_SEC,COLOR_REGULAR);
+        begin=clock();      wikimyei_jkimyei                            (c_wikimyei, c_epochs, JK_METHOD_FORWARD_SEQUENTAL);         end=clock();printf("%s exe time [wikimyei_jkimyei] %f:%s\n", COLOR_DANGER, (double)(end-begin)/CLOCKS_PER_SEC,COLOR_REGULAR);
     }
     //
     printf("%s ENTER TO LIVE LOAD:%s\n",COLOR_GOOD,COLOR_REGULAR);

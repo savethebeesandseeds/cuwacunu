@@ -1,5 +1,7 @@
 #include "cwcn_duuruva_nebajke.h"
-
+__cwcn_type_t sign_d_fun(__cwcn_type_t x){
+    return (__cwcn_type_t)((x > 0) ? 1 : ((x < 0) ? -1 : 0));
+}
 void set_duuruvaboleanparametrics(
         __duuruva_t *_duuruva,
         ___cwcn_bool_t _pardon_maxmin,
@@ -150,10 +152,18 @@ void dist_duuruva(__duuruva_t *_duuruva){ // #FIXME might be util to check for _
     }
 }
 __cwcn_type_t duuruva_standarize_inindex(__duuruva_t *_duuruva, __cwcn_type_t _value_scalar, unsigned int _idx){
-    return (_value_scalar) / (_duuruva->__dv_dist[_idx].__std+BUGGER_DUURUVA_MIN_STD);
+    if(is_duuruva_ready(_duuruva)){
+        return (_value_scalar) / (_duuruva->__dv_dist[_idx].__std+BUGGER_DUURUVA_MIN_STD);
+    }else{
+        return sign_d_fun(_value_scalar);
+    }
 }
 __cwcn_type_t duuruva_normalize_inindex(__duuruva_t *_duuruva, __cwcn_type_t _value_scalar, unsigned int _idx){
-    return (_value_scalar-_duuruva->__dv_dist[_idx].__mean) / (_duuruva->__dv_dist[_idx].__std+BUGGER_DUURUVA_MIN_STD);
+    if(is_duuruva_ready(_duuruva)){
+        return (_value_scalar-_duuruva->__dv_dist[_idx].__mean) / (_duuruva->__dv_dist[_idx].__std+BUGGER_DUURUVA_MIN_STD);
+    }else{
+        return sign_d_fun(_value_scalar);
+    }
 }
 void duuruva_standarize(__duuruva_t *_duuruva, __cwcn_type_t *_value_vect){
     for(unsigned int _idx=0x00;_idx<_duuruva->__duuruva_base_size;_idx++){

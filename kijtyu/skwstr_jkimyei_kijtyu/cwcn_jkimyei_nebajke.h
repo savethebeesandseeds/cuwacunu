@@ -37,7 +37,7 @@ typedef enum{
 /*
 
 */
-__cwcn_type_t sign_fun(__cwcn_type_t x);
+__cwcn_type_t sign_j_fun(__cwcn_type_t x);
 /*
 
 */

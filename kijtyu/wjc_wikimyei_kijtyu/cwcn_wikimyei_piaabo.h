@@ -73,14 +73,14 @@ typedef __cwcn_type_t (*__function_pointer_t)(__cwcn_type_t);
 #define _JK_BREAK_COUNTER_ (unsigned int) 0x999
 
 #define __JK_SIZE__ (unsigned int) 0x01
-#define __EPOCHS__ (unsigned int) 0x01
-#define __SIZE_OF_LOAD__ (int) 10
+#define __EPOCHS__ (unsigned int) 0x05
+#define __SIZE_OF_LOAD__ (int) 100
 
 #define __GAE_GAMMA__ (__cwcn_type_t) 0.99
 #define __GAE_LAMBDA__ (__cwcn_type_t) 0.095
 #define __CLIP_PARAM__ (__cwcn_type_t) 0.2
 #define __UWAABO_BETA__ (__cwcn_type_t) 0.1
-#define __MUNAAJPI_BETA__ (__cwcn_type_t) 0.1
+#define __MUNAAJPI_BETA__ (__cwcn_type_t) 0.5
 #define __ENTROPY_BETA__ (__cwcn_type_t) 0.01 // #FIXME findme
 
 #define __UWAABO_WAAPAJCO_POTENCY__ (__cwcn_type_t) 1.0
@@ -99,8 +99,8 @@ typedef __cwcn_type_t (*__function_pointer_t)(__cwcn_type_t);
 
 #ifndef DEBUG_LINEAR_EXPERIMENT
 // #define __ALLIU_SOURCE__ (__alliu_source_t) negINDEX_as_alliu;
-#define __ALLIU_SOURCE__ (__alliu_source_t) INDEX_as_alliu;
-// #define __ALLIU_SOURCE__ (__alliu_source_t) SINE_as_alliu;
+// #define __ALLIU_SOURCE__ (__alliu_source_t) INDEX_as_alliu;
+#define __ALLIU_SOURCE__ (__alliu_source_t) SINE_as_alliu;
 // #define __ALLIU_SOURCE__ (__alliu_source_t) UNIT_as_alliu;
 #else
 #define __ALLIU_SOURCE__ (__alliu_source_t) UNIT_as_alliu;
@@ -112,7 +112,7 @@ typedef __cwcn_type_t (*__function_pointer_t)(__cwcn_type_t);
 // #define _DUURUVA_NORM_STAND_JKIMYEI_UWAABO_DUURUVA_
 // #define _DUURUVA_NORM_STAND_ALLIU_ // do not define
 // #define _DUURUVA_NORM_STAND_ALLIU_DUURUVA_
-// #define __NORM_STAND_DUURUVA_ADVENTAGE__ // #FIXME acivate 
+#define __NORM_STAND_DUURUVA_ADVENTAGE__ // #FIXME acivate 
 /* set the expenses * expend is to compute, "to expend the computing effort"  */
 
 #define __EXPEND_WAJYU_SIMPLE_VALUE_DUURUVA__
@@ -185,7 +185,7 @@ BUILD ON : fixme
 #define _ALLIU_DUURUVA_MASK_ (__cwcn_type_t[BUGGER_SIZE_DUURUVA]){\
         0x1, \
         0x1, \
-        0x1, \
+        0x0, \
         0x0, \
         0x0, \
         0x0, \

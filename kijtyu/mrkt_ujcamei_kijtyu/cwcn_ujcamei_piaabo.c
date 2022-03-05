@@ -32,6 +32,7 @@ void getnext_alliu(__alliu_t *_alliu){
         case SINE_as_alliu:
             for(unsigned int idx=0x00;idx<_alliu->__source_size;idx++){
                 _alliu->__source_value[idx]=(__cwcn_type_t)sin((__cwcn_type_t)2.0*(__cwcn_type_t)3.141592*(__cwcn_type_t)0.01*(__cwcn_type_t)_alliu->__source_count);
+                // _alliu->__source_value[idx]=(__cwcn_type_t)sin((__cwcn_type_t)2.0*(__cwcn_type_t)3.141592*(__cwcn_type_t)0.01*(__cwcn_type_t)_alliu->__source_count);
                 // printf("waka : _alliu->__source_value[%d] : %d : %f \n",idx,_alliu->__source_count,_alliu->__source_value[idx]);
                 // printf("\t\t\twaka alliu: [%d]=%f\n",_alliu->__source_count,sin(3.14+2*3.141592*0.01*_alliu->__source_count));
             }

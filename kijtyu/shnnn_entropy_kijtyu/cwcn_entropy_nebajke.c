@@ -814,121 +814,201 @@ void entropycosa_plot_tsane(void *_ec){
     }
 }
 void entropycosa_plot_statistics(void *_ec){
-    beta_plot_statistics(((__beta_pdf_t *)((__entropycosa_t *)_ec)->__cosa[0]));
-    cauchy_plot_statistics(((__cauchy_pdf_t *)((__entropycosa_t *)_ec)->__cosa[1]));
-    normal_plot_statistics(((__normal_pdf_t *)((__entropycosa_t *)_ec)->__cosa[2]));
+    unsigned int aux_cosa_idx=0x00;
+    #ifdef __ENTROPYCOSA_EXPEND_BETA__
+    beta_plot_statistics(((__beta_pdf_t *)((__entropycosa_t *)_ec)->__cosa[aux_cosa_idx]));aux_cosa_idx++;
+    #endif
+    #ifdef __ENTROPYCOSA_EXPEND_CAUCHY__
+    cauchy_plot_statistics(((__cauchy_pdf_t *)((__entropycosa_t *)_ec)->__cosa[aux_cosa_idx]));aux_cosa_idx++;
+    #endif
+    #ifdef __ENTROPYCOSA_EXPEND_GNORMAL__
+    normal_plot_statistics(((__normal_pdf_t *)((__entropycosa_t *)_ec)->__cosa[aux_cosa_idx]));aux_cosa_idx++;
+    #endif
 }
 void entropycosa_tsane(void *_ec){
     __cwcn_type_t c_sum=0x00;
+    unsigned int aux_cosa_idx=0x00;
     for(unsigned int idx_tsane=0x00;idx_tsane<((__entropycosa_t *)_ec)->__num_tsane;idx_tsane++){
 		((__entropycosa_t *)_ec)->__tsane[idx_tsane]=0x00;
-		((__entropycosa_t *)_ec)->__tsane[idx_tsane]+=((__beta_pdf_t*)((__entropycosa_t *)_ec)->__cosa[0])->__tsane_map[idx_tsane];
+    }
+    #ifdef __ENTROPYCOSA_EXPEND_BETA__
+    for(unsigned int idx_tsane=0x00;idx_tsane<((__entropycosa_t *)_ec)->__num_tsane;idx_tsane++){
+		((__entropycosa_t *)_ec)->__tsane[idx_tsane]+=((__beta_pdf_t*)((__entropycosa_t *)_ec)->__cosa[aux_cosa_idx])->__tsane_map[idx_tsane];
         c_sum+=((__entropycosa_t *)_ec)->__tsane[idx_tsane];
-		((__entropycosa_t *)_ec)->__tsane[idx_tsane]+=((__cauchy_pdf_t*)((__entropycosa_t *)_ec)->__cosa[1])->__tsane_map[idx_tsane];
+    }aux_cosa_idx++;
+    #endif
+    #ifdef __ENTROPYCOSA_EXPEND_CAUCHY__
+    for(unsigned int idx_tsane=0x00;idx_tsane<((__entropycosa_t *)_ec)->__num_tsane;idx_tsane++){
+		((__entropycosa_t *)_ec)->__tsane[idx_tsane]+=((__cauchy_pdf_t*)((__entropycosa_t *)_ec)->__cosa[aux_cosa_idx])->__tsane_map[idx_tsane];
         c_sum+=((__entropycosa_t *)_ec)->__tsane[idx_tsane];
-        ((__entropycosa_t *)_ec)->__tsane[idx_tsane]+=((__cauchy_pdf_t*)((__entropycosa_t *)_ec)->__cosa[2])->__tsane_map[idx_tsane];
+    }aux_cosa_idx++;
+    #endif
+    #ifdef __ENTROPYCOSA_EXPEND_GNORMAL__
+    for(unsigned int idx_tsane=0x00;idx_tsane<((__entropycosa_t *)_ec)->__num_tsane;idx_tsane++){
+        ((__entropycosa_t *)_ec)->__tsane[idx_tsane]+=((__cauchy_pdf_t*)((__entropycosa_t *)_ec)->__cosa[aux_cosa_idx])->__tsane_map[idx_tsane];
         c_sum+=((__entropycosa_t *)_ec)->__tsane[idx_tsane];
-	}
+	}aux_cosa_idx++;
+    #endif
     for(unsigned int idx_tsane=0x00;idx_tsane<((__entropycosa_t *)_ec)->__num_tsane;idx_tsane++){
         ((__entropycosa_t *)_ec)->__tsane[idx_tsane]/=(__cwcn_type_t)((__entropycosa_t *)_ec)->__cosa_size;
     }
 }
 void entropycosa_print(void *_ec, int _print_lvel){
+    unsigned int aux_cosa_idx=0x00;
     assert(_print_lvel==0 || _print_lvel==1 || _print_lvel==2);
     fprintf(stdout,">> > ... ENTROPYCOSA:\n");
     if(_print_lvel==0){
         entropycosa_plot_tsane(_ec);
         entropycosa_plot_statistics(_ec);
     } else{
+        #ifdef __ENTROPYCOSA_EXPEND_BETA__
         fprintf(stdout,">> > ... printing BETA:\n");
-        ((__beta_pdf_t *)((__entropycosa_t *)_ec)->__cosa[0])->__print(((__beta_pdf_t *)((__entropycosa_t *)_ec)->__cosa[0]),_print_lvel);
+        ((__beta_pdf_t *)((__entropycosa_t *)_ec)->__cosa[aux_cosa_idx])->__print(((__beta_pdf_t *)((__entropycosa_t *)_ec)->__cosa[aux_cosa_idx]),_print_lvel);
+        aux_cosa_idx++;
+        #endif
+        #ifdef __ENTROPYCOSA_EXPEND_CAUCHY__
         fprintf(stdout,">> > ... printing CAUCHY:\n");
-        ((__cauchy_pdf_t *)((__entropycosa_t *)_ec)->__cosa[1])->__print(((__cauchy_pdf_t *)((__entropycosa_t *)_ec)->__cosa[1]),_print_lvel);
+        ((__cauchy_pdf_t *)((__entropycosa_t *)_ec)->__cosa[aux_cosa_idx])->__print(((__cauchy_pdf_t *)((__entropycosa_t *)_ec)->__cosa[aux_cosa_idx]),_print_lvel);
+        aux_cosa_idx++;
+        #endif
+        #ifdef __ENTROPYCOSA_EXPEND_GNORMAL__
         fprintf(stdout,">> > ... printing NORMAL:\n");
-        ((__normal_pdf_t *)((__entropycosa_t *)_ec)->__cosa[2])->__print(((__normal_pdf_t *)((__entropycosa_t *)_ec)->__cosa[2]),_print_lvel);
+        ((__normal_pdf_t *)((__entropycosa_t *)_ec)->__cosa[aux_cosa_idx])->__print(((__normal_pdf_t *)((__entropycosa_t *)_ec)->__cosa[aux_cosa_idx]),_print_lvel);
+        aux_cosa_idx++;
+        #endif
         fprintf(stdout,">> > ... printing ENTROPYCOSA TSNAE:\n");
         entropycosa_plot_tsane(_ec);
     }
 }
 void entropycosa_forward(void *_ec, __cwcn_type_t *_param_vect){
-    __cwcn_type_t _ec_delta;
-    __cwcn_type_t *c_param=malloc(0x0F*sizeof(__cwcn_type_t)); // #FIXME might overflow
-    _ec_delta=0x00;
+    __cwcn_type_t *aux_param=malloc(0x0F*sizeof(__cwcn_type_t)); // #FIXME might overflow
+    ((__entropycosa_t *)_ec)->__entropy=0x00;
+    __cwcn_type_t _ec_delta=0x00;
+    unsigned int aux_cosa_idx=0x00;
+    unsigned int aux_param_idx=0x00;
+    #ifdef __ENTROPYCOSA_EXPEND_BETA__
+    aux_param[aux_param_idx]=_param_vect[aux_param_idx];aux_param_idx++;
+    aux_param[aux_param_idx]=_param_vect[aux_param_idx];aux_param_idx++;
     while(0x01){ // beta
-        c_param[0]=_param_vect[0]+_ec_delta;
-        c_param[1]=_param_vect[1]+_ec_delta;
-        ((__beta_pdf_t *)((__entropycosa_t *)_ec)->__cosa[0])->__forward(\
-            ((__entropycosa_t *)_ec)->__cosa[0], \
-                c_param[0], \
-                c_param[1]);
-        if(!((__beta_pdf_t *)((__entropycosa_t *)_ec)->__cosa[0])->__is_nan){break;}
+        aux_param[aux_param_idx-0x02]+=_ec_delta;
+        aux_param[aux_param_idx-0x01]+=_ec_delta;
+        ((__beta_pdf_t *)((__entropycosa_t *)_ec)->__cosa[aux_cosa_idx])->__forward(\
+            ((__entropycosa_t *)_ec)->__cosa[aux_cosa_idx], \
+                aux_param[aux_param_idx-0x02], \
+                aux_param[aux_param_idx-0x01]);
+        if(!((__beta_pdf_t *)((__entropycosa_t *)_ec)->__cosa[aux_cosa_idx])->__is_nan){break;} // #FIXME is nan seems weird
         _ec_delta+=0.05;
     }
+    ((__entropycosa_t *)_ec)->__entropy+=((__beta_pdf_t *)((__entropycosa_t *)_ec)->__cosa[aux_cosa_idx])->__entropy;
+    aux_cosa_idx++;
     _ec_delta=0x00;
+    #endif
+    #ifdef __ENTROPYCOSA_EXPEND_CAUCHY__
+    aux_param[aux_param_idx]=_param_vect[aux_param_idx];aux_param_idx++;
+    aux_param[aux_param_idx]=_param_vect[aux_param_idx];aux_param_idx++;
     while(0x01){ // cauchy
-        c_param[2]=_param_vect[2]+_ec_delta;
-        c_param[3]=_param_vect[3]+_ec_delta;
-	    ((__cauchy_pdf_t *)((__entropycosa_t *)_ec)->__cosa[1])->__forward(
-            ((__entropycosa_t *)_ec)->__cosa[1], \
-                c_param[2], \
-                c_param[3]);
-        if(!((__cauchy_pdf_t *)((__entropycosa_t *)_ec)->__cosa[1])->__is_nan){break;}
+        aux_param[aux_param_idx-0x02]+=_ec_delta;
+        aux_param[aux_param_idx-0x01]+=_ec_delta;
+        ((__cauchy_pdf_t *)((__entropycosa_t *)_ec)->__cosa[aux_cosa_idx])->__forward(
+            ((__entropycosa_t *)_ec)->__cosa[aux_cosa_idx], \
+                aux_param[aux_param_idx-0x02], \
+                aux_param[aux_param_idx-0x01]);
+        if(!((__cauchy_pdf_t *)((__entropycosa_t *)_ec)->__cosa[aux_cosa_idx])->__is_nan){break;}
         _ec_delta+=0.01;
     }
+    ((__entropycosa_t *)_ec)->__entropy+=((__cauchy_pdf_t *)((__entropycosa_t *)_ec)->__cosa[aux_cosa_idx])->__entropy;
+    aux_cosa_idx++;
     _ec_delta=0x00;
+    #endif
+    #ifdef __ENTROPYCOSA_EXPEND_GNORMAL__
+    aux_param[aux_param_idx]=_param_vect[aux_param_idx];aux_param_idx++;
+    aux_param[aux_param_idx]=_param_vect[aux_param_idx];aux_param_idx++;
+    aux_param[aux_param_idx]=_param_vect[aux_param_idx];aux_param_idx++;
     while(0x01){ // normal
-        c_param[4]=_param_vect[4]+_ec_delta;
-        c_param[5]=_param_vect[5]+_ec_delta;
-        c_param[6]=_param_vect[6]+_ec_delta;
-	    ((__normal_pdf_t *)((__entropycosa_t *)_ec)->__cosa[2])->__forward(
-            ((__entropycosa_t *)_ec)->__cosa[2], \
-                c_param[4], \
-                c_param[5], \
-                c_param[6]);
-        if(!((__normal_pdf_t *)((__entropycosa_t *)_ec)->__cosa[2])->__is_nan){break;}
+        aux_param[aux_param_idx-0x03]+=_ec_delta;
+        aux_param[aux_param_idx-0x02]+=_ec_delta;
+        aux_param[aux_param_idx-0x01]+=_ec_delta;
+        ((__normal_pdf_t *)((__entropycosa_t *)_ec)->__cosa[aux_cosa_idx])->__forward(
+            ((__entropycosa_t *)_ec)->__cosa[aux_cosa_idx], \
+                aux_param[aux_param_idx-0x03], \
+                aux_param[aux_param_idx-0x02], \
+                aux_param[aux_param_idx-0x01]);
+        if(!((__normal_pdf_t *)((__entropycosa_t *)_ec)->__cosa[aux_cosa_idx])->__is_nan){break;}
         _ec_delta+=0.01;
     }
-    ((__entropycosa_t *)_ec)->__entropy=\
-        (\
-        ((__beta_pdf_t *)((__entropycosa_t *)_ec)->__cosa[0])->__entropy+\
-        ((__cauchy_pdf_t *)((__entropycosa_t *)_ec)->__cosa[1])->__entropy+\
-        ((__normal_pdf_t *)((__entropycosa_t *)_ec)->__cosa[2])->__entropy\
-        )/(__cwcn_type_t)((__entropycosa_t *)_ec)->__cosa_size;
+    ((__entropycosa_t *)_ec)->__entropy+=((__normal_pdf_t *)((__entropycosa_t *)_ec)->__cosa[aux_cosa_idx])->__entropy;
+    aux_cosa_idx++;
+    _ec_delta=0x00;
+    #endif
+    assert(aux_param_idx==((__entropycosa_t *)_ec)->__total_cosa_params); // Count must match expected value
+    ((__entropycosa_t *)_ec)->__entropy/=(__cwcn_type_t)((__entropycosa_t *)_ec)->__cosa_size;
     entropycosa_tsane(_ec);
-    free(c_param);
-    c_param=NULL;
+    free(aux_param);aux_param=NULL;
 }
 __entropycosa_t *entropycosa_fabric(unsigned int _d_res, unsigned int _n_tsane){
     __entropycosa_t *new_ec = malloc(sizeof(__entropycosa_t));
-    new_ec->__cosa_size=BUGGER_ENTROPYCOSA_SIZE;
     new_ec->__num_tsane=_n_tsane;
-    new_ec->__cosa=malloc(new_ec->__cosa_size*sizeof(void));
-    new_ec->__cosa[0]=malloc(sizeof(__beta_pdf_t));
-    new_ec->__cosa[1]=malloc(sizeof(__cauchy_pdf_t));
-    new_ec->__cosa[2]=malloc(sizeof(__normal_pdf_t));
-    new_ec->__cosa[0]=_ipivye_beta_pdf(_d_res,_n_tsane);
-    new_ec->__cosa[1]=_ipivye_cauchy_pdf(_d_res,_n_tsane);
-    new_ec->__cosa[2]=_ipivye_normal_pdf(_d_res,_n_tsane);
+    new_ec->__tsane=malloc(_n_tsane*sizeof(__cwcn_type_t));
+    new_ec->__cosa_size=0x00;
     new_ec->__total_cosa_params=0x00;
-    new_ec->__total_cosa_params+=((__beta_pdf_t *)new_ec->__cosa[0])->__num_params;
-    new_ec->__total_cosa_params+=((__cauchy_pdf_t *)new_ec->__cosa[1])->__num_params;
-    new_ec->__total_cosa_params+=((__normal_pdf_t *)new_ec->__cosa[2])->__num_params;
+    new_ec->__entropy=0x00;
+    unsigned int aux_cosa_idx=0x00;
+    // COSA SIZE
+    #ifdef __ENTROPYCOSA_EXPEND_BETA__
+    new_ec->__cosa_size++;
+    #endif
+    #ifdef __ENTROPYCOSA_EXPEND_CAUCHY__
+    new_ec->__cosa_size++;
+    #endif
+    #ifdef __ENTROPYCOSA_EXPEND_GNORMAL__
+    new_ec->__cosa_size++;
+    #endif
+    new_ec->__cosa=malloc(new_ec->__cosa_size*sizeof(void));
+    // Defining the cosas
+    #ifdef __ENTROPYCOSA_EXPEND_BETA__
+    new_ec->__cosa[aux_cosa_idx]=_ipivye_beta_pdf(_d_res,_n_tsane);
+    new_ec->__total_cosa_params+=((__beta_pdf_t *)new_ec->__cosa[aux_cosa_idx])->__num_params;
+    aux_cosa_idx++;
+    #endif
+    #ifdef __ENTROPYCOSA_EXPEND_CAUCHY__
+    new_ec->__cosa[aux_cosa_idx]=_ipivye_cauchy_pdf(_d_res,_n_tsane);
+    new_ec->__total_cosa_params+=((__cauchy_pdf_t *)new_ec->__cosa[aux_cosa_idx])->__num_params;
+    aux_cosa_idx++;
+    #endif
+    #ifdef __ENTROPYCOSA_EXPEND_GNORMAL__
+    new_ec->__cosa[aux_cosa_idx]=_ipivye_normal_pdf(_d_res,_n_tsane);
+    new_ec->__total_cosa_params+=((__normal_pdf_t *)new_ec->__cosa[aux_cosa_idx])->__num_params;
+    aux_cosa_idx++;
+    #endif
+    // wrapping up the cosa methods
     new_ec->__forward=&entropycosa_forward;
     new_ec->__print=&entropycosa_print;
-    new_ec->__tsane=malloc(_n_tsane*sizeof(__cwcn_type_t));
-    new_ec->__entropy=0x00;
+    if(new_ec->__cosa_size==0x00 || aux_cosa_idx==0x00){
+        fprintf(stderr,"ERROR, BAD CONFIGURATION, please allow one of __ENTROPYCOSA_EXPEND_BETA__, __ENTROPYCOSA_EXPEND_CAUCHY__,__ENTROPYCOSA_EXPEND_GNORMAL__\n");
+        assert(0x00);
+    }
     return new_ec;
 }
 void entropycosa_destroy(__entropycosa_t *_ec){
-    free(((__normal_pdf_t *)_ec->__cosa[2])->__direct_map);
-    free(((__normal_pdf_t *)_ec->__cosa[2])->__tsane_map);
-    free(((__normal_pdf_t *)_ec->__cosa[2]));
-    free(((__cauchy_pdf_t *)_ec->__cosa[1])->__direct_map);
-    free(((__cauchy_pdf_t *)_ec->__cosa[1])->__tsane_map);
-    free(((__cauchy_pdf_t *)_ec->__cosa[1]));
-    free(((__beta_pdf_t *)_ec->__cosa[0])->__direct_map);
-    free(((__beta_pdf_t *)_ec->__cosa[0])->__tsane_map);
-    free(((__beta_pdf_t *)_ec->__cosa[0]));
+    unsigned int aux_cosa_idx=0x00;
+    #ifdef __ENTROPYCOSA_EXPEND_BETA__
+    free(((__beta_pdf_t *)_ec->__cosa[aux_cosa_idx])->__direct_map);
+    free(((__beta_pdf_t *)_ec->__cosa[aux_cosa_idx])->__tsane_map);
+    free(((__beta_pdf_t *)_ec->__cosa[aux_cosa_idx]));
+    aux_cosa_idx++;
+    #endif
+    #ifdef __ENTROPYCOSA_EXPEND_CAUCHY__
+    free(((__cauchy_pdf_t *)_ec->__cosa[aux_cosa_idx])->__direct_map);
+    free(((__cauchy_pdf_t *)_ec->__cosa[aux_cosa_idx])->__tsane_map);
+    free(((__cauchy_pdf_t *)_ec->__cosa[aux_cosa_idx]));
+    aux_cosa_idx++;
+    #endif
+    #ifdef __ENTROPYCOSA_EXPEND_GNORMAL__
+    free(((__normal_pdf_t *)_ec->__cosa[aux_cosa_idx])->__direct_map);
+    free(((__normal_pdf_t *)_ec->__cosa[aux_cosa_idx])->__tsane_map);
+    free(((__normal_pdf_t *)_ec->__cosa[aux_cosa_idx]));
+    aux_cosa_idx++;
+    #endif
     free(_ec->__tsane);
     free(_ec->__cosa);
     free(_ec);

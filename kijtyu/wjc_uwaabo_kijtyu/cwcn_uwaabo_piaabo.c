@@ -9,15 +9,11 @@ __uwaabo_t *uwaabo_fabric(unsigned int _uwaabo_base_w_size, unsigned int _uwaabo
     /*
         ('ujcamei'->'cajtucu') TSINUU FABRIC
     */
-    unsigned int uw_total_layers=0x08;
-    unsigned int uw_layers_sizes[0x08] = {_uwaabo_base_w_size,32,32,32,32,32,32,_uwaabo_state_size};
+    unsigned int uw_total_layers=0x04;
+    unsigned int uw_layers_sizes[0x04] = {_uwaabo_base_w_size,32,32,_uwaabo_state_size};
     #ifndef DEBUG_LINEAR_EXPERIMENT
-    __list_activations_t uw_activations_iho[0x08] = {\
+    __list_activations_t uw_activations_iho[0x04] = {\
                             LINEAR,\
-                            SIGNEDSIGMOID,\
-                            SIGNEDSIGMOID,\
-                            SIGNEDSIGMOID,\
-                            SIGNEDSIGMOID,\
                             SIGNEDSIGMOID,\
                             SIGNEDSIGMOID,\
                             SIGMOID}; // must be sigmoid

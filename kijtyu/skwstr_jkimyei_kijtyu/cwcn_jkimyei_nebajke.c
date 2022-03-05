@@ -9,7 +9,7 @@ void copy_c_cwcn_blocks_from_b_to_a(__cwcn_type_t *_a, __cwcn_type_t *_b, unsign
         _a[idx]=_b[idx];
     }
 }
-__cwcn_type_t sign_fun(__cwcn_type_t x){
+__cwcn_type_t sign_j_fun(__cwcn_type_t x){
     return (__cwcn_type_t)((x > 0) ? 1 : ((x < 0) ? -1 : 0));
 }
 
@@ -123,7 +123,7 @@ void GAE(__wikimyei_t *_wikimyei){
                 gae[0x00];
             glti(_wikimyei)->__uwaabo_gae_returns[0x00]=gae[0x00]+glti(_wikimyei)->__jkimyei_uwaabo_munaajpi_state[0x00]; // #FIXME this sum is redundant, algebra on the full expression to see it; leave it here for graph visualization
             glti(_wikimyei)->__uwaabo_gae_adventage[0x00]=glti(_wikimyei)->__uwaabo_gae_returns[0x00]-glti(_wikimyei)->__jkimyei_uwaabo_munaajpi_state[0x00];
-            fprintf(stdout,"%s>> > ... [%d] :: [%d], %s uwaabo_gae_adventage: %s%.4f,%s uwaabo_gae_returns: %s%.4f, %s jk_w_munaajpi_state:%s%.4f, %simibajcho_munaajpi: %s%.4f, delta: %.4f, gae: %.4f\n",COLOR_GAE,_wikimyei->__load_index,0x00,COLOR_UWAABO,COLOR_REGULAR,glti(_wikimyei)->__uwaabo_gae_adventage[0x00],COLOR_UWAABO,COLOR_REGULAR,glti(_wikimyei)->__uwaabo_gae_returns[0x00],COLOR_MUNAAJPI,COLOR_REGULAR,glti(_wikimyei)->__jkimyei_uwaabo_munaajpi_state[0x00],COLOR_MUNAAJPI,COLOR_REGULAR,glti(_wikimyei)->__imibajcho_munaajpi_state[0x00],delta[0x00],gae[0x00]);
+            fprintf(stdout,"%s>> > ... [%d] :: %s uwaabo_gae_adventage: %s%.4f,%s uwaabo_gae_returns: %s%.4f, %s jk_w_munaajpi_state:%s%.4f, %simibajcho_munaajpi: %s%.4f, delta: %.4f, gae: %.4f\n",COLOR_GAE,_wikimyei->__load_index,COLOR_UWAABO,COLOR_REGULAR,glti(_wikimyei)->__uwaabo_gae_adventage[0x00],COLOR_UWAABO,COLOR_REGULAR,glti(_wikimyei)->__uwaabo_gae_returns[0x00],COLOR_MUNAAJPI,COLOR_REGULAR,glti(_wikimyei)->__jkimyei_uwaabo_munaajpi_state[0x00],COLOR_MUNAAJPI,COLOR_REGULAR,glti(_wikimyei)->__imibajcho_munaajpi_state[0x00],delta[0x00],gae[0x00]);
             #ifdef JKIMYEI_DEBUG
             // fprintf(stdout,"%s>> > ... [%d] :: [%d], %s uwaabo_gae_adventage: %s%.4f,%s uwaabo_gae_returns: %s%.4f, %s munaajpi_state:%s%.4f\n",COLOR_GAE,_wikimyei->__load_index,0x00,COLOR_UWAABO,COLOR_REGULAR,glti(_wikimyei)->__uwaabo_gae_adventage[0x00],COLOR_UWAABO,COLOR_REGULAR,glti(_wikimyei)->__uwaabo_gae_returns[0x00],COLOR_MUNAAJPI,COLOR_REGULAR,glti(_wikimyei)->__jkimyei_uwaabo_munaajpi_state[0x00]);
             #endif
@@ -191,7 +191,7 @@ void jkimyei_one(void *_wikimyei){
         glti(((__wikimyei_t *)_wikimyei))->__uwaabo_state, \
         ((__wikimyei_t *)_wikimyei)->__uwaabo->__uwaabo_state_size);
     #ifdef JKIMYEI_DEBUG
-    fprintf(stdout,"%s>> > ... (rand idx: [%d] start as:) alliu_state: [ ",COLOR_ALLIU,((__wikimyei_t*)_wikimyei)->__load_index);
+    fprintf(stdout,"%s>> > ... (rand idx: [%d] with imibajcho_munaajpi: %f, start as:) alliu_state: [ ",COLOR_ALLIU,((__wikimyei_t*)_wikimyei)->__load_index,glti(((__wikimyei_t*)_wikimyei))->__imibajcho_munaajpi_state[0x00]);
     for(unsigned int idx=0x00;idx<((__wikimyei_t *)_wikimyei)->__alliu->__source_size;idx++){
         fprintf(stdout," %.4f,",glti((__wikimyei_t *)_wikimyei)->__alliu_state[idx]);
     }
@@ -241,7 +241,7 @@ void jkimyei_one(void *_wikimyei){
         }
         // This way the loss is cuadratic but keeps the sign
         pow_aux_arg=glti(((__wikimyei_t *)_wikimyei))->__uwaabo_gae_returns[0x00]-glti(((__wikimyei_t *)_wikimyei))->__jkimyei_uwaabo_munaajpi_state[0x00];
-        _munaajpi_loss_handler[0x00]=((__wikimyei_t *)_wikimyei)->__munaajpi_beta*sign_fun(pow_aux_arg)*pow(pow_aux_arg,2) - _entropy_loss_handler[0x00];
+        _munaajpi_loss_handler[0x00]=((__wikimyei_t *)_wikimyei)->__munaajpi_beta*sign_j_fun(pow_aux_arg)*pow(pow_aux_arg,2) - _entropy_loss_handler[0x00];
         // printf("waka: -> munaajpi_loss [%d] : %f\n",0x00,_munaajpi_loss_handler[0x00]);
         set_wapaajco_index_eq(\
         ((__wikimyei_t *)_wikimyei)->__munaajpi->__munaajpi_tsinuu, \
@@ -282,8 +282,9 @@ void jkimyei_one(void *_wikimyei){
         fprintf(stdout,"%sMUNAAJPI:\n",COLOR_MUNAAJPI);print_tsninuu_jkimyei_results(((__wikimyei_t *)_wikimyei)->__munaajpi->__munaajpi_tsinuu);
         #endif
         #ifdef JKIMYEI_DEBUG
-        fprintf(stdout,"%s>> > [%d] JKIMYEI LOSSES: %s _entropy_loss: %.4f, \t %s_munaajpi_loss: %.4f%s\t",\
+        fprintf(stdout,"%s>> > [%d] %simibajcho_munaajpi: %.4f, JKIMYEI LOSSES: %s _entropy_loss: %.4f, \t %s_munaajpi_loss: %.4f%s\t",\
             COLOR_JKIMYEI,((__wikimyei_t *)_wikimyei)->__load_index,\
+            COLOR_MUNAAJPI,glti(_wikimyei)->__imibajcho_munaajpi_state[0x00],\
             COLOR_ENTROPY,_entropy_loss_handler[0x00],\
             COLOR_MUNAAJPI,_munaajpi_loss_handler[0x00],\
             COLOR_REGULAR);
@@ -294,6 +295,10 @@ void jkimyei_one(void *_wikimyei){
         #endif
         // RESET HANDLERS // #FIXME trust it, there is on need to reset
         for(unsigned int idx=0x00;idx<((__wikimyei_t *)_wikimyei)->__uwaabo->__uwaabo_state_size;idx++){
+            if(fabs(_uwaabo_loss_handler[idx])>1){
+                fprintf(stdout,"%suwaabo too high%s\n",COLOR_DANGER,COLOR_REGULAR);
+                getchar();
+            }
             _uwaabo_loss_handler[idx]=0x00;
             _ratio_handler[idx]=0x00;
             _surr1_handler[idx]=0x00;
@@ -303,7 +308,7 @@ void jkimyei_one(void *_wikimyei){
         _entropy_loss_handler[0x00]=0x00;
     }else{
         #ifdef JKIMYEI_DEBUG
-        fprintf(stdout,">> > jkimyei_one, skip jkimyei; duuruva not ready for load index %d\n",((__wikimyei_t *)_wikimyei)->__load_index);
+        fprintf(stdout,">> > jkimyei_one, skip jkimyei; wajyu not ready, load index %d\n",((__wikimyei_t *)_wikimyei)->__load_index);
         #endif
     }
     #ifdef JKIMYEI_DEBUG
@@ -419,7 +424,8 @@ ___cwcn_bool_t ___JK_COMPUTE_FOR_AVIABLE_RANDOM_NEGATIVE(__wikimyei_t *_wikimyei
     WRAPPERS
 */
 ___cwcn_bool_t ___JK_ONE_JK_SIZE_WRAPPER(__wikimyei_t *_wikimyei){
-    if(!glti(_wikimyei)->__pending_munaajpi){
+    if(!glti(_wikimyei)->__pending_munaajpi && \
+        (_wikimyei->__load_size-_wikimyei->__load_index)>(_wikimyei->__horizon_munaajpi+0x01)){
         for(unsigned int jk_ctx=0x00;jk_ctx<((__wikimyei_t *)_wikimyei)->__jkimyei->__jk_size;jk_ctx++){
             _wikimyei->__jkimyei->__jk_one(((void *)_wikimyei));
         }
